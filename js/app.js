@@ -118,11 +118,45 @@ function logPoint(c,type,amount,reason=''){
 // 🏅 Thang danh hiệu tự động: 100 ⭐ → 100.000 ⭐, mỗi 1.000 ⭐ một danh hiệu (101 mốc).
 const AUTO_RANKS=['Ngôi sao chăm chỉ','Chiến binh nhí','Kiện tướng nhí','Dũng sĩ nhí','Kim cương nhí','Siêu sao nhí','Nhà vô địch nhí','Anh hùng nhí','Bậc thầy nhí','Huyền thoại nhí'];
 const AUTO_RANK_ICONS=['⭐','🚀','🏅','🛡️','💎','🌟','🏆','🦸','🌈','👑'];
+// 30 danh hiệu riêng cho 30 mốc 1.000–30.000 ⭐ để khích lệ bé.
+const CUSTOM_AUTO_TITLES={
+  1000:'🐝 Chú ong chăm chỉ',
+  2000:'🌷 Bé ngoan gương mẫu',
+  3000:'📚 Ngôi sao lớp học',
+  4000:'👸 Công chúa chăm học',
+  5000:'🔟 Nàng tiên điểm mười',
+  6000:'✏️ Chiến binh bài tập',
+  7000:'🧭 Nhà thám hiểm tri thức',
+  8000:'🔤 Ngôi sao tiếng Anh',
+  9000:'🐼 Ngôi sao tiếng Trung',
+  10000:'💖 Cô bé hiếu thảo',
+  11000:'👐 Đôi tay vàng việc nhà',
+  12000:'🏅 Kiện tướng chăm ngoan',
+  13000:'🌸 Bông hoa điểm tốt',
+  14000:'☀️ Mặt trời bé con',
+  15000:'🦸 Siêu nhân chăm chỉ',
+  16000:'🏆 Nhà vô địch cố gắng',
+  17000:'💎 Viên ngọc sáng',
+  18000:'👑 Công chúa hiếu thảo',
+  19000:'👸 Nữ hoàng chăm ngoan',
+  20000:'😇 Thiên thần học tập',
+  21000:'✨ Ngôi sao tỏa sáng',
+  22000:'🛡️ Chiến binh kiên trì',
+  23000:'🎓 Bậc thầy chăm chỉ',
+  24000:'💠 Kim cương bé nhỏ',
+  25000:'🌟 Nữ anh hùng nhí',
+  26000:'🌈 Cầu vồng chăm ngoan',
+  27000:'🏰 Huyền thoại chăm ngoan',
+  28000:'🎖️ Huân chương vàng chăm ngoan',
+  29000:'🎁 Báu vật gia đình',
+  30000:'🌟 Công chúa sao vàng'
+};
 function autoAchievements(){
   const list=[{id:'auto_100',points:100,title:'🌱 Hạt mầm chăm chỉ'}];
   for(let s=1000;s<=100000;s+=1000){
     const lv=s/1000,rank=Math.min(10,Math.ceil(lv/10));
-    list.push({id:'auto_'+s,points:s,title:AUTO_RANK_ICONS[rank-1]+' '+AUTO_RANKS[rank-1]+' '+lv});
+    const custom=CUSTOM_AUTO_TITLES[s];
+    list.push({id:'auto_'+s,points:s,title:custom||(AUTO_RANK_ICONS[rank-1]+' '+AUTO_RANKS[rank-1]+' '+lv)});
   }
   return list;
 }
@@ -651,7 +685,7 @@ function renderAchievementManager(){
   }
   const c=selectedAchievementChild();if(!c){am.innerHTML='<div class="empty">Chưa có bé.</div>';return}
   const autoNote=document.createElement('div');autoNote.className='empty';
-  autoNote.textContent='Tự động: 101 danh hiệu từ 100 ⭐ tới 100.000 ⭐ (mỗi 1.000 ⭐ một danh hiệu). Dưới đây là mốc phụ huynh tự thêm.';
+  autoNote.textContent='Tự động: 101 danh hiệu từ 100 ⭐ tới 100.000 ⭐ (mỗi 1.000 ⭐ một danh hiệu, trong đó 30 mốc 1.000–30.000 ⭐ có tên riêng). Dưới đây là mốc phụ huynh tự thêm.';
   am.appendChild(autoNote);
   if(!c.achievements.length){const e=document.createElement('div');e.className='empty';e.textContent='Chưa có mốc tự thêm nào.';am.appendChild(e);return}
   c.achievements.map((a,idx)=>({a,idx})).sort((x,y)=>x.a.points-y.a.points).forEach(({a,idx})=>{

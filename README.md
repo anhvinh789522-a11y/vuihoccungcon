@@ -17,7 +17,7 @@ chuẩn để deploy Vercel.
 - Tích điểm khi hoàn thành (xác nhận 2 bước), bỏ hoàn thành trừ điểm lại
 - Thưởng điểm xuất sắc, phạt điểm có lý do (lưu vào Nhắc nhở / Điểm phạt)
 - Quà đổi điểm theo từng bé, mốc thành tích giữ nguyên khi đổi quà
-- 🏅 101 danh hiệu tự động từ 100 ⭐ tới 100.000 ⭐ (mỗi 1.000 ⭐ một danh hiệu, tên thăng hạng từ Hạt mầm tới Huyền thoại nhí); danh hiệu cao nhất hiện ngay đầu trang Hôm nay
+- 🏅 101 danh hiệu tự động từ 100 ⭐ tới 100.000 ⭐ (mỗi 1.000 ⭐ một danh hiệu; 30 mốc 1.000–30.000 ⭐ có tên riêng khích lệ bé, còn lại thăng hạng từ Ngôi sao tới Huyền thoại nhí); danh hiệu cao nhất hiện ngay đầu trang Hôm nay
 - Khu vực phụ huynh khóa mật khẩu (mặc định `1234`, nhập `****` để reset)
 - 💱 Đổi sao ra tiền mặt: một mốc duy nhất 100 ⭐ = 5.000đ (phụ huynh đổi được tỷ giá)
 - Lưu trình duyệt (`localStorage` key `nhiemvu_sieubiet_public_v2`)
