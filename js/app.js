@@ -11,7 +11,33 @@ function fmtDate(iso){ return parseISO(iso).toLocaleDateString('vi-VN'); }
 function uid(prefix='id'){ return prefix+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8); }
 function safe(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
-const defaultData={children:[],subjects:[],parentPassword:'1234'};
+function seedBaoNhi(){
+  return {
+    children:[{
+      id:uid('c'),name:'Bảo Nhi',gender:'female',score:0,highestScore:0,
+      tasks:[
+        {id:uid('t'),seriesId:null,name:'Đọc 1 câu chuyện',subject:'Tiếng Việt',date:todayISO(),points:10,duration:'15 phút',link:'',instruction:'Đọc to, rõ ràng rồi kể lại cho ba mẹ nghe nhé',done:false,awardedPoints:0,completedAt:null},
+        {id:uid('t'),seriesId:null,name:'Ôn bảng cửu chương',subject:'Toán',date:todayISO(),points:10,duration:'10 phút',link:'',instruction:'Đọc thuộc rồi đố nhanh cùng ba mẹ',done:false,awardedPoints:0,completedAt:null},
+        {id:uid('t'),seriesId:null,name:'Học 5 từ mới',subject:'Tiếng Anh',date:todayISO(),points:10,duration:'10 phút',link:'',instruction:'Đọc - viết - đặt câu với mỗi từ',done:false,awardedPoints:0,completedAt:null}
+      ],
+      giftHistory:[],pointHistory:[],
+      rewards:[
+        {id:uid('r'),name:'1 cây kem',cost:50,rule:'Đổi vào cuối tuần'},
+        {id:uid('r'),name:'30 phút xem phim hoạt hình',cost:80,rule:''},
+        {id:uid('r'),name:'Đi công viên cùng ba mẹ',cost:200,rule:'Cuối tuần'}
+      ],
+      achievements:[
+        {id:uid('a'),points:100,title:'Ngôi sao chăm chỉ'},
+        {id:uid('a'),points:300,title:'Siêu sao học tập'},
+        {id:uid('a'),points:500,title:'Nhà vô địch nhí'}
+      ],
+      earnedAchievements:[]
+    }],
+    subjects:['Toán','Tiếng Việt','Tiếng Anh','Kỹ năng sống'],
+    parentPassword:'1234'
+  };
+}
+const defaultData=seedBaoNhi();
 
 function loadData(){
   try{

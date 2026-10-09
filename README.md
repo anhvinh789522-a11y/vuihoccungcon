@@ -1,7 +1,8 @@
-# Vui Học Cùng Con — Nhiệm Vụ Siêu Biệt
+# Vui Học Cùng Bảo Nhi
 
-Web giúp phụ huynh giao nhiệm vụ, con tích điểm và đổi quà. Dựng từ bản mẫu
-`nhiem-vu-sieu-biet-ban-chia-se.html`, đã tách thành dự án tĩnh chuẩn để deploy Vercel.
+Web dành riêng cho Bảo Nhi: phụ huynh giao nhiệm vụ, con tích điểm và đổi quà.
+Dựng từ bản mẫu `nhiem-vu-sieu-biet-ban-chia-se.html`, đã tách thành dự án tĩnh
+chuẩn để deploy Vercel.
 
 - Demo local: mở trực tiếp `index.html` bằng trình duyệt
 - Nền tảng: web tĩnh, không cần build, deploy trực tiếp lên Vercel
