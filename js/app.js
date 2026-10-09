@@ -28,11 +28,7 @@ function seedBaoNhi(){
         {id:uid('r'),name:'Đi chơi',cost:500,rule:'Dịp cuối tuần hoặc ngày lễ'},
         {id:uid('r'),name:'Quà sinh nhật',cost:1000,rule:'Tích lũy cả năm'}
       ],
-      achievements:[
-        {id:uid('a'),points:100,title:'Ngôi sao chăm chỉ'},
-        {id:uid('a'),points:300,title:'Siêu sao học tập'},
-        {id:uid('a'),points:500,title:'Nhà vô địch nhí'}
-      ],
+      achievements:[], // Mốc tự động (101 danh hiệu 100 ⭐ → 100.000 ⭐) được sinh bởi autoAchievements()
       earnedAchievements:[]
     }],
     subjects:['Toán','Tiếng Việt','Tiếng Anh','Kỹ năng sống'],
@@ -72,6 +68,8 @@ function loadData(){
 
       c.rewards=c.rewards.map(r=>({id:r.id||uid('r'),name:String(r.name||''),cost:Number(r.cost||0),rule:String(r.rule||'')}));
       c.achievements=c.achievements.map(a=>({id:a.id||uid('a'),points:Number(a.points||0),title:String(a.title||'')}));
+      // Moc tu dong (100 sao, roi moi 1.000 sao toi 100.000 sao) do app tu sinh: bo moc tay trung diem.
+      c.achievements=c.achievements.filter(a=>{const p=Number(a.points||0);return !(p===100||(p>=1000&&p<=100000&&p%1000===0));});
 
       c.tasks.forEach((t,i)=>{
         if(!t.id)t.id=uid('t');
@@ -110,6 +108,28 @@ function logPoint(c,type,amount,reason=''){
   if(!Array.isArray(c.pointHistory))c.pointHistory=[];
   c.pointHistory.push({id:uid('p'),type,amount:Number(amount||0),reason,at:new Date().toISOString()});
 }
+// 🏅 Thang danh hiệu tự động: 100 ⭐ → 100.000 ⭐, mỗi 1.000 ⭐ một danh hiệu (101 mốc).
+const AUTO_RANKS=['Ngôi sao chăm chỉ','Chiến binh nhí','Kiện tướng nhí','Dũng sĩ nhí','Kim cương nhí','Siêu sao nhí','Nhà vô địch nhí','Anh hùng nhí','Bậc thầy nhí','Huyền thoại nhí'];
+const AUTO_RANK_ICONS=['⭐','🚀','🏅','🛡️','💎','🌟','🏆','🦸','🌈','👑'];
+function autoAchievements(){
+  const list=[{id:'auto_100',points:100,title:'🌱 Hạt mầm chăm chỉ'}];
+  for(let s=1000;s<=100000;s+=1000){
+    const lv=s/1000,rank=Math.min(10,Math.ceil(lv/10));
+    list.push({id:'auto_'+s,points:s,title:AUTO_RANK_ICONS[rank-1]+' '+AUTO_RANKS[rank-1]+' '+lv});
+  }
+  return list;
+}
+const _autoAch=autoAchievements();
+function effectiveAchievements(c){
+  const autoPts=new Set(_autoAch.map(a=>a.points));
+  const customs=(c.achievements||[]).filter(a=>!autoPts.has(Number(a.points||0))&&String(a.id||'').indexOf('auto_')!==0);
+  return _autoAch.concat(customs);
+}
+function currentTitle(c){
+  if(!c) return null;
+  const earned=effectiveAchievements(c).filter(a=>(c.earnedAchievements||[]).indexOf(a.id)>=0).sort((a,b)=>b.points-a.points);
+  return earned[0]||null;
+}
 function updateEarnedAchievements(c){
   if(!c)return;
   if(!Array.isArray(c.earnedAchievements))c.earnedAchievements=[];
@@ -118,7 +138,7 @@ function updateEarnedAchievements(c){
 
   // Thành tích xét theo mốc điểm cao nhất bé đã từng đạt.
   // Khi đổi quà / bị trừ điểm, danh hiệu đã nhận vẫn được giữ nguyên.
-  (c.achievements||[]).forEach(a=>{
+  effectiveAchievements(c).forEach(a=>{
     if(c.highestScore>=Number(a.points||0) && !c.earnedAchievements.includes(a.id)){
       c.earnedAchievements.push(a.id);
     }
@@ -202,7 +222,7 @@ function renderToday(){
     document.getElementById('heroText').textContent='Phụ huynh chưa tạo hồ sơ cho bé.';
     document.getElementById('score').textContent='0';document.getElementById('count').textContent='0/0';
     document.getElementById('bar').style.width='0%';document.getElementById('taskTitle').textContent='📚 Nhiệm vụ hôm nay';
-    document.getElementById('goalName').textContent='bé';document.getElementById('goalScore').textContent='0';document.getElementById('moneyEquiv').textContent='0 đ';
+    document.getElementById('goalName').textContent='bé';document.getElementById('goalScore').textContent='0';document.getElementById('moneyEquiv').textContent='0 đ';document.getElementById('heroTitle').style.display='none';
     list.innerHTML='<div class="empty">Chưa có hồ sơ bé.</div>';return;
   }
   const today=todayISO();
@@ -215,6 +235,9 @@ function renderToday(){
   document.getElementById('bar').style.width=(tasks.length?done/tasks.length*100:0)+'%';
   document.getElementById('taskTitle').textContent='📚 Nhiệm vụ hôm nay của '+childIcon(c)+' '+c.name;
   document.getElementById('goalName').textContent=childIcon(c)+' '+c.name;document.getElementById('goalScore').textContent=c.score;document.getElementById('moneyEquiv').textContent=fmtVND(starsToVND(c.score));
+  const ht=document.getElementById('heroTitle'),ct=currentTitle(c);
+  if(ct){ht.style.display='inline-block';ht.textContent='🏅 Danh hiệu: '+ct.title;}
+  else{ht.style.display='inline-block';ht.textContent='🌱 Chưa có danh hiệu — hoàn thành nhiệm vụ để nhận nhé!';}
   list.innerHTML='';
   if(!tasks.length){list.innerHTML='<div class="empty">Hôm nay chưa có nhiệm vụ nào.</div>';return}
   tasks.forEach(t=>list.appendChild(taskCard(c,t)));
@@ -247,7 +270,7 @@ function renderAchievements(){
   if(!c){box.innerHTML='<div class="empty">Chưa có hồ sơ bé.</div>'}
   else{
     updateEarnedAchievements(c);
-    const earned=(c.achievements||[]).filter(a=>c.earnedAchievements.includes(a.id)).sort((a,b)=>a.points-b.points);
+    const earned=effectiveAchievements(c).filter(a=>c.earnedAchievements.includes(a.id)).sort((a,b)=>a.points-b.points);
     if(!earned.length)box.innerHTML='<div class="empty">Chưa đạt mốc thành tích nào.</div>';
     else earned.forEach((a,i)=>{
       const row=document.createElement('div');row.className='day-task';
@@ -602,7 +625,10 @@ function renderAchievementManager(){
     return;
   }
   const c=selectedAchievementChild();if(!c){am.innerHTML='<div class="empty">Chưa có bé.</div>';return}
-  if(!c.achievements.length)am.innerHTML='<div class="empty">Bé này chưa có mốc thành tích nào.</div>';
+  const autoNote=document.createElement('div');autoNote.className='empty';
+  autoNote.textContent='Tự động: 101 danh hiệu từ 100 ⭐ tới 100.000 ⭐ (mỗi 1.000 ⭐ một danh hiệu). Dưới đây là mốc phụ huynh tự thêm.';
+  am.appendChild(autoNote);
+  if(!c.achievements.length){const e=document.createElement('div');e.className='empty';e.textContent='Chưa có mốc tự thêm nào.';am.appendChild(e);return}
   c.achievements.map((a,idx)=>({a,idx})).sort((x,y)=>x.a.points-y.a.points).forEach(({a,idx})=>{
     const item=document.createElement('div');item.className='compact-item';
     const head=document.createElement('div');head.className='compact-head';head.innerHTML=`<div class="compact-title">🏅 ${safe(a.title)}</div><div class="compact-points">${a.points} ⭐</div>`;head.onclick=()=>item.classList.toggle('open');
