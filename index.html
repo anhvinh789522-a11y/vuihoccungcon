@@ -292,6 +292,24 @@
         </div>
         <button class="secondary" style="margin-top:10px" onclick="changePassword()">Đổi mật khẩu</button>
       </div>
+
+      <div class="parent-section">
+        <h3>☁️ Đồng bộ đa thiết bị</h3>
+        <div class="formgrid">
+          <div style="grid-column:1/-1"><div class="note">Supabase URL</div><input id="syncUrl" placeholder="https://xyzcompany.supabase.co"></div>
+          <div style="grid-column:1/-1"><div class="note">Anon key</div><input id="syncKey" placeholder="Dán anon key trong Supabase → Project Settings → API"></div>
+          <div><div class="note">Mã gia đình (nhập giống nhau trên mọi máy)</div><input id="syncCode" placeholder="VD: baonhi-2026"></div>
+          <div style="display:flex;align-items:end"><label class="note" style="display:flex;gap:6px;align-items:center"><input id="syncAuto" type="checkbox" checked style="width:auto"> Tự động đồng bộ</label></div>
+        </div>
+        <div class="actions" style="margin-top:10px">
+          <button class="primary" onclick="connectSync()">Kết nối & đồng bộ</button>
+          <button class="secondary" onclick="syncPush(false)">⬆ Đẩy lên</button>
+          <button class="secondary" onclick="confirmPull()">⬇ Tải về</button>
+          <button class="btn delete" onclick="disconnectSync()">Ngắt</button>
+        </div>
+        <div class="note" style="margin-top:8px" id="syncStatus">Chưa cấu hình đồng bộ.</div>
+        <div class="note">Thiết bị nào lưu sau cùng sẽ thắng. Mã gia đình càng dài càng khó đoán — đừng chia sẻ cho người ngoài.</div>
+      </div>
     </div>
   </div>
 </div>
@@ -338,5 +356,6 @@
 </div>
 
 <script src="js/app.js" defer></script>
+<script src="js/sync.js" defer></script>
 </body>
 </html>
