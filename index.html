@@ -46,6 +46,7 @@
           <div class="card">
             <h2>⭐ Điểm của <span id="goalName">bé</span></h2>
             <div class="big" id="goalScore">0</div>
+            <p class="note">💱 Quy đổi: <b id="moneyEquiv">0 đ</b></p>
             <p class="note">Điểm tăng khi hoàn thành nhiệm vụ hoặc được phụ huynh thưởng thêm.</p>
           </div>
           <div class="card" style="margin-top:22px">
@@ -180,6 +181,17 @@
         </div>
         <button class="primary" style="margin-top:10px" onclick="addReward()">+ Thêm quà</button>
         <div id="rewardManager" class="compact-scroll" style="margin-top:10px"></div>
+      </div>
+
+      <div class="parent-section">
+        <h3>💱 Tỷ giá sao → tiền thưởng</h3>
+        <div class="formgrid">
+          <div><div class="note">Số sao</div><input id="rateStars" type="number" min="1" placeholder="VD: 100"></div>
+          <div><div class="note">Đổi được (đồng)</div><input id="rateVnd" type="number" min="1" placeholder="VD: 10000"></div>
+        </div>
+        <button class="primary" style="margin-top:10px" onclick="saveExchangeRate()">Lưu tỷ giá</button>
+        <div class="note" style="margin-top:8px" id="rateCurrent"></div>
+        <div class="note">Cửa hàng tự sinh các mốc đổi tiền từ mốc nhỏ tới <b>10.000.000 sao</b> để khích lệ con.</div>
       </div>
 
       <div class="parent-section">

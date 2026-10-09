@@ -17,6 +17,8 @@ chuẩn để deploy Vercel.
 - Thưởng điểm xuất sắc, phạt điểm có lý do (lưu vào Nhắc nhở / Điểm phạt)
 - Quà đổi điểm theo từng bé, mốc thành tích giữ nguyên khi đổi quà
 - Khu vực phụ huynh khóa mật khẩu (mặc định `1234`, nhập `****` để reset)
+- 💱 Đổi sao ra tiền mặt: tỷ giá mặc định 100 ⭐ = 10.000đ (phụ huynh đổi được),
+  cửa hàng tự sinh 16 mốc từ 100 ⭐ tới 10.000.000 ⭐ để khích lệ con
 - Lưu trình duyệt (`localStorage` key `nhiemvu_sieubiet_public_v2`)
 
 ## Cấu trúc

@@ -34,7 +34,8 @@ function seedBaoNhi(){
       earnedAchievements:[]
     }],
     subjects:['Toán','Tiếng Việt','Tiếng Anh','Kỹ năng sống'],
-    parentPassword:'1234'
+    parentPassword:'1234',
+    exchangeRate:{stars:100,vnd:10000}
   };
 }
 const defaultData=seedBaoNhi();
@@ -48,6 +49,7 @@ function loadData(){
     if(!Array.isArray(d.children)) d.children=[];
     if(!Array.isArray(d.subjects)) d.subjects=[];
     if(!d.parentPassword) d.parentPassword='1234';
+    if(!d.exchangeRate||!(Number(d.exchangeRate.stars)>0)||!(Number(d.exchangeRate.vnd)>0)) d.exchangeRate={stars:100,vnd:10000};
 
     const oldRewards=Array.isArray(d.rewards)?d.rewards:[];
     const oldAchievements=Array.isArray(d.achievements)?d.achievements:[];
@@ -198,7 +200,7 @@ function renderToday(){
     document.getElementById('heroText').textContent='Phụ huynh chưa tạo hồ sơ cho bé.';
     document.getElementById('score').textContent='0';document.getElementById('count').textContent='0/0';
     document.getElementById('bar').style.width='0%';document.getElementById('taskTitle').textContent='📚 Nhiệm vụ hôm nay';
-    document.getElementById('goalName').textContent='bé';document.getElementById('goalScore').textContent='0';
+    document.getElementById('goalName').textContent='bé';document.getElementById('goalScore').textContent='0';document.getElementById('moneyEquiv').textContent='0 đ';
     list.innerHTML='<div class="empty">Chưa có hồ sơ bé.</div>';return;
   }
   const today=todayISO();
@@ -210,7 +212,7 @@ function renderToday(){
   document.getElementById('count').textContent=done+'/'+tasks.length;
   document.getElementById('bar').style.width=(tasks.length?done/tasks.length*100:0)+'%';
   document.getElementById('taskTitle').textContent='📚 Nhiệm vụ hôm nay của '+childIcon(c)+' '+c.name;
-  document.getElementById('goalName').textContent=childIcon(c)+' '+c.name;document.getElementById('goalScore').textContent=c.score;
+  document.getElementById('goalName').textContent=childIcon(c)+' '+c.name;document.getElementById('goalScore').textContent=c.score;document.getElementById('moneyEquiv').textContent=fmtVND(starsToVND(c.score));
   list.innerHTML='';
   if(!tasks.length){list.innerHTML='<div class="empty">Hôm nay chưa có nhiệm vụ nào.</div>';return}
   tasks.forEach(t=>list.appendChild(taskCard(c,t)));
@@ -317,18 +319,79 @@ function renderAchievements(){
 }
 
 function currentRewards(){return child()?.rewards||[]}
+
+// 💱 Quy đổi sao ra tiền mặt: tỷ giá mặc định 100 ⭐ = 10.000đ, thang tự sinh tới 10.000.000 ⭐.
+const MAX_MONEY_STARS=10000000;
+function exchangeRate(){
+  const r=data.exchangeRate;
+  if(r&&Number(r.stars)>0&&Number(r.vnd)>0) return r;
+  return {stars:100,vnd:10000};
+}
+function fmtVND(n){return Math.floor(Number(n||0)).toLocaleString('vi-VN')+' đ'}
+function starsToVND(stars){const r=exchangeRate();return Number(stars||0)*Number(r.vnd)/Number(r.stars)}
+function moneyTiers(){
+  const steps=[100,200,500,1000,2000,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000];
+  return steps.filter(s=>s<=MAX_MONEY_STARS).map(s=>({stars:s,vnd:starsToVND(s),name:'Tiền thưởng '+fmtVND(starsToVND(s))}));
+}
+function renderMoneyBlock(box){
+  const tiers=moneyTiers(),r=exchangeRate();
+  const head=document.createElement('div');head.className='note';head.style.margin='14px 0 6px';
+  head.innerHTML='<b>💱 Đổi sao ra tiền mặt</b> (tỷ giá '+r.stars+' ⭐ = '+fmtVND(r.vnd)+')';
+  box.appendChild(head);
+  tiers.forEach(t=>{
+    const row=document.createElement('div');row.className='gift';
+    row.innerHTML='<div class="emoji">💰</div><div class="grow"><b>'+safe(t.name)+'</b><div class="pts">'+t.stars.toLocaleString('vi-VN')+' ⭐</div></div>';
+    const b=document.createElement('button');b.textContent='Đổi';b.onclick=()=>redeemMoney(t);
+    row.appendChild(b);box.appendChild(row);
+  });
+}
+function redeemMoney(t){
+  const c=child();if(!c)return;
+  if(c.score<t.stars){
+    document.getElementById('missingPoints').textContent=(t.stars-c.score).toLocaleString('vi-VN');
+    document.getElementById('encourageModal').classList.add('show');return;
+  }
+  askConfirm('Xác nhận đổi tiền','Con chắc chắn muốn đổi '+t.stars.toLocaleString('vi-VN')+' sao ra '+t.name+' không?',()=>{
+    if(!Array.isArray(c.giftHistory))c.giftHistory=[];
+    if(!Array.isArray(c.pointHistory))c.pointHistory=[];
+    c.giftHistory.push({id:uid('g'),rewardId:'money_'+t.stars,name:t.name,cost:t.stars,receivedAt:new Date().toISOString()});
+    c.score-=t.stars;logPoint(c,'reward',-t.stars,'Đổi sao ra tiền: '+t.name);
+    save();render();
+    document.getElementById('successGiftName').textContent=t.name;
+    document.getElementById('successGiftPoints').textContent=t.stars.toLocaleString('vi-VN');
+    document.getElementById('rewardSuccessModal').classList.add('show');
+  },{yesText:'Có, con muốn đổi',icon:'💰'});
+}
+function saveExchangeRate(){
+  const s=Number(document.getElementById('rateStars').value||0),v=Number(document.getElementById('rateVnd').value||0);
+  if(!(s>0)||!(v>0))return alert('Hãy nhập tỷ giá hợp lệ (số dương).');
+  askConfirm('Lưu tỷ giá','Đặt tỷ giá '+s+' sao = '+fmtVND(v)+' nhé? Cửa hàng đổi tiền sẽ tự cập nhật.',()=>{
+    data.exchangeRate={stars:s,vnd:v};save();render();
+  },{yesText:'Có, lưu tỷ giá',icon:'💱'});
+}
+function renderRateManager(){
+  const rs=document.getElementById('rateStars'),rv=document.getElementById('rateVnd'),rc=document.getElementById('rateCurrent');
+  if(!rs||!rv||!rc)return;
+  const r=exchangeRate();
+  if(document.activeElement!==rs)rs.value=r.stars;
+  if(document.activeElement!==rv)rv.value=r.vnd;
+  rc.textContent='Tỷ giá hiện tại: '+r.stars+' ⭐ = '+fmtVND(r.vnd)+' • Thang tự động tới '+MAX_MONEY_STARS.toLocaleString('vi-VN')+' ⭐.';
+}
 function renderRewards(){
   const c=child();document.getElementById('rewardNameChild').textContent=c?(childIcon(c)+' '+c.name):'bé';
   ['rewardShopToday','rewardShopStandalone'].forEach(id=>{
     const box=document.getElementById(id);box.innerHTML='';
     const rewards=currentRewards();
-    if(!rewards.length){box.innerHTML='<div class="empty">Chưa có phần quà nào được thiết lập cho bé này.</div>';return}
-    rewards.forEach(r=>{
+    if(!rewards.length){
+      const e=document.createElement('div');e.className='empty';e.textContent='Chưa có phần quà nào được thiết lập cho bé này.';
+      box.appendChild(e);
+    }else rewards.forEach(r=>{
       const row=document.createElement('div');row.className='gift';
       row.innerHTML=`<div class="emoji">🎁</div><div class="grow"><b>${safe(r.name)}</b><div class="pts">${r.cost} ⭐</div>${r.rule?'<div class="note">'+safe(r.rule)+'</div>':''}</div>`;
       const b=document.createElement('button');b.textContent='Đổi';b.onclick=()=>redeem(r);
       row.appendChild(b);box.appendChild(row);
     });
+    if(c) renderMoneyBlock(box);
   });
 }
 function redeem(r){
@@ -480,6 +543,7 @@ function renderManagers(){
 
   renderRewardManager();
   renderAchievementManager();
+  renderRateManager();
 }
 
 function selectedRewardChild(){
