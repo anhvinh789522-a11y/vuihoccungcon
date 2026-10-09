@@ -328,7 +328,15 @@ function exchangeRate(){
   return {stars:100,vnd:10000};
 }
 function fmtVND(n){return Math.floor(Number(n||0)).toLocaleString('vi-VN')+' đ'}
-function starsToVND(stars){const r=exchangeRate();return Number(stars||0)*Number(r.vnd)/Number(r.stars)}
+// Đường cong giảm dần: giữ chuẩn (100 ⭐ = 10.000đ), mốc càng cao giá mỗi sao càng giảm.
+// Khích lệ con tích lũy lên mốc lớn mà tổng tiền vẫn hợp lý (10.000.000 ⭐ ≈ 10.000.000đ).
+const DIMINISH_POWER=0.6, VND_ROUND=1000;
+function starsToVND(stars){
+  const r=exchangeRate(),s=Number(stars||0);
+  if(!(s>0)) return 0;
+  const base=Number(r.vnd)*Math.pow(s/Number(r.stars),DIMINISH_POWER);
+  return Math.floor((base*(1+1e-9))/VND_ROUND)*VND_ROUND;
+}
 function moneyTiers(){
   const steps=[100,200,500,1000,2000,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000];
   return steps.filter(s=>s<=MAX_MONEY_STARS).map(s=>({stars:s,vnd:starsToVND(s),name:'Tiền thưởng '+fmtVND(starsToVND(s))}));
@@ -336,11 +344,12 @@ function moneyTiers(){
 function renderMoneyBlock(box){
   const tiers=moneyTiers(),r=exchangeRate();
   const head=document.createElement('div');head.className='note';head.style.margin='14px 0 6px';
-  head.innerHTML='<b>💱 Đổi sao ra tiền mặt</b> (tỷ giá '+r.stars+' ⭐ = '+fmtVND(r.vnd)+')';
+  head.innerHTML='<b>💱 Đổi sao ra tiền mặt</b> (chuẩn '+r.stars+' ⭐ = '+fmtVND(r.vnd)+' • mốc cao giá mỗi sao giảm dần để khích lệ tích lũy)';
   box.appendChild(head);
   tiers.forEach(t=>{
+    const eff=Math.round(t.vnd/t.stars);
     const row=document.createElement('div');row.className='gift';
-    row.innerHTML='<div class="emoji">💰</div><div class="grow"><b>'+safe(t.name)+'</b><div class="pts">'+t.stars.toLocaleString('vi-VN')+' ⭐</div></div>';
+    row.innerHTML='<div class="emoji">💰</div><div class="grow"><b>'+safe(t.name)+'</b><div class="pts">'+t.stars.toLocaleString('vi-VN')+' ⭐</div><div class="note">≈ '+eff.toLocaleString('vi-VN')+'đ/sao</div></div>';
     const b=document.createElement('button');b.textContent='Đổi';b.onclick=()=>redeemMoney(t);
     row.appendChild(b);box.appendChild(row);
   });
@@ -375,7 +384,7 @@ function renderRateManager(){
   const r=exchangeRate();
   if(document.activeElement!==rs)rs.value=r.stars;
   if(document.activeElement!==rv)rv.value=r.vnd;
-  rc.textContent='Tỷ giá hiện tại: '+r.stars+' ⭐ = '+fmtVND(r.vnd)+' • Thang tự động tới '+MAX_MONEY_STARS.toLocaleString('vi-VN')+' ⭐.';
+  rc.textContent='Tỷ giá chuẩn: '+r.stars+' ⭐ = '+fmtVND(r.vnd)+' • Mốc cao giảm dần: 10.000.000 ⭐ ≈ '+fmtVND(starsToVND(MAX_MONEY_STARS))+'.';
 }
 function renderRewards(){
   const c=child();document.getElementById('rewardNameChild').textContent=c?(childIcon(c)+' '+c.name):'bé';
