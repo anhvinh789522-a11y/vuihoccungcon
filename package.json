@@ -1,0 +1,10 @@
+{
+  "name": "vuihoccungcon",
+  "version": "1.0.0",
+  "description": "Vui hoc cung con - giao nhiem vu, tich diem, doi qua cho be (static site)",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve .",
+    "preview": "npx serve ."
+  }
+}

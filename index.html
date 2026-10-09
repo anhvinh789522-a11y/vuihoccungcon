@@ -1,0 +1,321 @@
+﻿<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vui Học Cùng Con — Nhiệm Vụ Siêu Biệt</title><meta name="description" content="Vui học cùng con: giao nhiệm vụ, tích điểm, đổi quà cho bé.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="logo">NHIỆM VỤ <span>SIÊU BIỆT</span> ✨</div>
+    <nav>
+      <a class="active" href="#today" data-section="today">🏠 Hôm nay</a>
+      <a href="#schedule" data-section="schedule">📅 Lịch học</a>
+      <a href="#achievements" data-section="achievements">🏆 Thành tích</a>
+      <a href="#rewards" data-section="rewards">🎁 Đổi quà</a>
+    </nav>
+    <button class="parent-open" onclick="openParentModal()">🔒 Phụ huynh</button>
+  </aside>
+
+  <main>
+    <div class="child-switch" id="childSwitch"></div>
+
+    <section id="todaySection" class="app-section active">
+      <section class="top">
+        <div class="hero">
+          <div style="font-size:13px;opacity:.9">Học mỗi ngày một chút</div>
+          <h1 id="hello">Chào con 👋</h1>
+          <p id="heroText">Phụ huynh chưa tạo hồ sơ cho bé.</p>
+        </div>
+        <div class="score">
+          <div class="note">⭐ Điểm hiện có</div>
+          <div class="big" id="score">0</div>
+          <div class="note">Tiến độ hôm nay: <b id="count">0/0</b></div>
+          <div class="progress"><i id="bar" style="width:0%"></i></div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <h2 id="taskTitle">📚 Nhiệm vụ hôm nay</h2>
+          <div id="taskList" class="empty">Chưa có nhiệm vụ nào.</div>
+        </div>
+        <div>
+          <div class="card">
+            <h2>⭐ Điểm của <span id="goalName">bé</span></h2>
+            <div class="big" id="goalScore">0</div>
+            <p class="note">Điểm tăng khi hoàn thành nhiệm vụ hoặc được phụ huynh thưởng thêm.</p>
+          </div>
+          <div class="card" style="margin-top:22px">
+            <h2>🎁 Quà có thể đổi</h2>
+            <div id="rewardShopToday"></div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section id="scheduleSection" class="app-section">
+      <div class="card">
+        <h2>📅 Lịch học của <span id="scheduleName">bé</span></h2>
+        <div class="calendar-head">
+          <button onclick="changeMonth(-1)">‹ Tháng trước</button>
+          <b id="calendarTitle"></b>
+          <button onclick="changeMonth(1)">Tháng sau ›</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div id="dayTasks" style="margin-top:18px"></div>
+      </div>
+    </section>
+
+    <section id="achievementsSection" class="app-section">
+      <div class="card">
+        <h2>🏆 Thành tích của <span id="achievementName">bé</span></h2>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="note">Nhiệm vụ đã hoàn thành</div>
+            <div class="num" id="completedCount">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="note">Điểm hiện có</div>
+            <div class="num" id="achievementScore">0</div>
+          </div>
+        </div>
+        <div class="note" style="margin-top:10px">🏅 Danh hiệu được trao khi bé đạt mốc điểm quy định và sẽ được giữ lại, kể cả sau khi dùng điểm để đổi quà.</div>
+        <div style="margin-top:18px">
+          <h3>🎖 Danh hiệu đã đạt</h3>
+          <div id="earnedAchievements"></div>
+        </div>
+        <div style="margin-top:22px">
+          <h3>🎁 Quà con đã đạt được</h3>
+          <div class="stat-box" style="margin-bottom:12px">
+            <div class="note">Tổng số quà đã đổi</div>
+            <div class="num" id="totalGiftsReceived">0</div>
+          </div>
+          <div id="giftAchievementStats"></div>
+        </div>
+        <div style="margin-top:22px">
+          <h3>⚠️ Nhắc nhở / Điểm phạt</h3>
+          <div class="stat-grid" style="margin-bottom:12px">
+            <div class="stat-box">
+              <div class="note">Số lần bị nhắc nhở</div>
+              <div class="num" id="penaltyCount">0</div>
+            </div>
+            <div class="stat-box">
+              <div class="note">Tổng điểm đã bị trừ</div>
+              <div class="num" id="penaltyTotal">0</div>
+            </div>
+          </div>
+          <div class="note" style="margin-bottom:10px">Phần này giúp con nhớ những điều cần chú ý và cố gắng tốt hơn ở lần sau.</div>
+          <div id="penaltyAchievementStats"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rewardsSection" class="app-section">
+      <div class="card">
+        <h2>🎁 Phần quà dành cho <span id="rewardNameChild">bé</span></h2>
+        <div id="rewardShopStandalone"></div>
+      </div>
+    </section>
+
+    <div class="site-footer">THIẾT KẾ BỞI TỔ ẤM CỦA OANH</div>
+  </main>
+</div>
+
+<!-- Parent modal -->
+<div id="parentModal" class="modal-backdrop" onclick="if(event.target===this) closeParentModal()">
+  <div class="modal-card">
+    <div class="modal-top">
+      <h2>👨‍👩‍👧‍👦 Khu vực phụ huynh</h2>
+      <button class="close" onclick="closeParentModal()">✕</button>
+    </div>
+
+    <div id="parentLogin">
+      <div class="formgrid">
+        <div>
+          <div class="note">Mật khẩu phụ huynh</div>
+          <input id="parentPasswordInput" type="password" placeholder="Nhập mật khẩu">
+        </div>
+        <div style="display:flex;align-items:end">
+          <button class="secondary" style="width:100%" onclick="unlockParent()">Mở khu vực phụ huynh</button>
+        </div>
+      </div>
+      <div class="note" style="margin-top:8px">Mật khẩu mặc định ban đầu: 1234. Nếu quên mật khẩu, nhập <b>****</b> để cài lại mật khẩu mới.</div>
+    </div>
+
+    <div id="parentArea" style="display:none">
+      <div class="parent-section">
+        <h3>👶 Quản lý hồ sơ các con</h3>
+        <div class="formgrid">
+          <div><div class="note">Tên bé mới</div><input id="newChildName" placeholder="VD: Bảo Anh"></div>
+          <div><div class="note">Giới tính</div>
+            <select id="newChildGender">
+              <option value="female">Nữ 👧</option>
+              <option value="male">Nam 👦</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:end"><button class="primary" style="width:100%" onclick="addChild()">+ Thêm bé</button></div>
+        </div>
+        <div id="childManager" style="margin-top:10px"></div>
+      </div>
+
+      <div class="parent-section">
+        <h3>📚 Quản lý môn học</h3>
+        <div class="formgrid">
+          <div><div class="note">Tên môn mới</div><input id="newSubjectName" placeholder="VD: Tiếng Trung"></div>
+          <div style="display:flex;align-items:end"><button class="primary" style="width:100%" onclick="addSubject()">+ Thêm môn</button></div>
+        </div>
+        <div id="subjectManager" style="margin-top:10px"></div>
+      </div>
+
+      <div class="parent-section">
+        <h3>🎁 Quản lý quà tặng & quy định đổi điểm</h3>
+        <div class="formgrid">
+          <div style="grid-column:1/-1"><div class="note">Thiết lập quà cho</div><select id="rewardTarget" onchange="renderManagers()"></select><div class="note" style="margin-top:6px">Có thể chọn từng bé hoặc Tất cả các con.</div></div>
+          <div><div class="note">Tên quà</div><input id="rewardName" placeholder="VD: 1 cây kem"></div>
+          <div><div class="note">Điểm cần đổi</div><input id="rewardCost" type="number" min="1" placeholder="VD: 100"></div>
+          <div style="grid-column:1/-1"><div class="note">Quy định / ghi chú</div><input id="rewardRule" placeholder="VD: Chỉ đổi vào cuối tuần"></div>
+        </div>
+        <button class="primary" style="margin-top:10px" onclick="addReward()">+ Thêm quà</button>
+        <div id="rewardManager" class="compact-scroll" style="margin-top:10px"></div>
+      </div>
+
+      <div class="parent-section">
+        <h3>🎖 Thiết lập mốc thành tích</h3>
+        <div class="formgrid">
+          <div style="grid-column:1/-1"><div class="note">Thiết lập thành tích cho</div><select id="achievementTarget" onchange="renderManagers()"></select><div class="note" style="margin-top:6px">Có thể chọn từng bé hoặc Tất cả các con.</div></div>
+          <div>
+            <div class="note">Số điểm cần đạt</div>
+            <input id="achievementPoints" type="number" min="1" placeholder="VD: 1000">
+          </div>
+          <div>
+            <div class="note">Tên thành tích</div>
+            <input id="achievementTitle" placeholder="VD: Siêu sao chăm chỉ">
+          </div>
+        </div>
+        <button class="primary" style="margin-top:10px" onclick="addAchievement()">+ Thêm mốc thành tích</button>
+        <div id="achievementManager" class="compact-scroll" style="margin-top:10px"></div>
+      </div>
+
+      <div class="parent-section">
+        <h3>🌟 Thưởng điểm hoàn thành xuất sắc</h3>
+        <div class="formgrid">
+          <div><div class="note">Thưởng cho bé</div><select id="bonusTarget"></select></div>
+          <div><div class="note">Số điểm thưởng</div><input id="bonusPoints" type="number" min="1" placeholder="VD: 20"></div>
+          <div style="grid-column:1/-1"><div class="note">Lý do thưởng</div><input id="bonusReason" placeholder="VD: Tự giác và hoàn thành rất tốt"></div>
+        </div>
+        <button class="primary" style="margin-top:10px" onclick="bonusScore()">+ Cộng điểm thưởng</button>
+      </div>
+
+      <div class="parent-section penalty">
+        <h3>⚠️ Điểm phạt</h3>
+        <div class="formgrid">
+          <div><div class="note">Trừ điểm của bé</div><select id="penaltyTarget"></select></div>
+          <div><div class="note">Số điểm phạt</div><input id="penaltyPoints" type="number" min="1" placeholder="VD: 10"></div>
+          <div style="grid-column:1/-1"><div class="note">Lý do</div><input id="penaltyReason" placeholder="VD: Không hoàn thành việc đã thống nhất"></div>
+        </div>
+        <button class="btn delete" style="margin-top:10px" onclick="penaltyScore()">- Trừ điểm</button>
+        <div class="note" style="margin-top:8px">Mỗi lần trừ điểm sẽ được lưu vào Thành tích → Nhắc nhở / Điểm phạt của đúng bé.</div>
+      </div>
+
+      <div class="parent-section">
+        <h3>📝 Giao nhiệm vụ</h3>
+        <div class="formgrid">
+          <div><div class="note">Giao cho</div><select id="assignTo"></select><div class="note" style="margin-top:6px">Có thể chọn từng bé hoặc giao cùng một nhiệm vụ cho tất cả các con.</div></div>
+          <div><div class="note">Tên nhiệm vụ</div><input id="taskName" placeholder="VD: Đọc 2 truyện"></div>
+          <div><div class="note">Môn học</div><select id="subject"></select></div>
+          <div><div class="note">Điểm khi hoàn thành</div><input id="taskPoints" type="number" min="0" placeholder="VD: 10"></div>
+          <div><div class="note">Ngày bắt đầu</div><input id="taskDate" type="date"></div>
+          <div><div class="note">Kiểu nhiệm vụ</div>
+            <select id="taskRepeat">
+              <option value="once">Chỉ ngày đã chọn</option>
+              <option value="daily">Lặp hàng ngày</option>
+              <option value="weekdays">Lặp Thứ 2 - Thứ 6</option>
+            </select>
+          </div>
+          <div><div class="note">Ngày kết thúc nếu lặp</div><input id="taskEndDate" type="date"></div>
+          <div><div class="note">Thời lượng</div><select id="duration"><option value="5 phút">5 phút</option><option value="10 phút">10 phút</option><option value="15 phút">15 phút</option><option value="20 phút">20 phút</option><option value="25 phút">25 phút</option><option value="30 phút">30 phút</option><option value="35 phút">35 phút</option><option value="40 phút">40 phút</option><option value="45 phút">45 phút</option><option value="50 phút">50 phút</option><option value="55 phút">55 phút</option><option value="60 phút">60 phút</option></select></div>
+          <div style="grid-column:1/-1"><div class="note">Link tài liệu</div><input id="taskLink" placeholder="https://..."></div>
+          <div style="grid-column:1/-1"><div class="note">Hướng dẫn</div><textarea id="instruction" placeholder="VD: Xem video 2 lần và đọc lại từ mới"></textarea></div>
+        </div>
+        <div class="repeat-note note">Có thể giao một lần cho cả khoảng ngày. Chọn “Lặp Thứ 2 - Thứ 6” cho các nhiệm vụ cố định trong tuần.</div>
+        <button class="primary" style="margin-top:10px" onclick="addTask()">+ Giao nhiệm vụ</button>
+      </div>
+
+      <div class="parent-section">
+        <h3>✏️ Chỉnh sửa nhiệm vụ đã giao</h3>
+
+        <div class="formgrid">
+          <div>
+            <div class="note">Chọn bé</div>
+            <select id="editParentChild" onchange="selectedParentTaskDate='';renderParentTaskDates()"></select>
+          </div>
+        </div>
+
+        <div class="note" style="margin-top:12px">Chọn ngày có nhiệm vụ</div>
+        <div id="parentTaskDateBar" class="parent-task-datebar"></div>
+
+        <div class="note" style="margin-top:6px">Nhiệm vụ đã giao trong ngày</div>
+        <div id="parentTaskList" class="parent-task-list"></div>
+
+        <div class="note" style="margin-top:8px">Chỉ nhiệm vụ <b>chưa hoàn thành</b> mới được sửa hoặc xóa. Nhiệm vụ đã hoàn thành sẽ được khóa để giữ nguyên điểm. Với nhiệm vụ lặp, thao tác hàng loạt chỉ áp dụng cho các ngày chưa hoàn thành.</div>
+      </div>
+
+      <div class="parent-section">
+        <h3>🔑 Đổi mật khẩu phụ huynh</h3>
+        <div class="formgrid">
+          <div><div class="note">Mật khẩu hiện tại</div><input id="oldPassword" type="password"></div>
+          <div><div class="note">Mật khẩu mới</div><input id="newPassword" type="password" placeholder="Tối thiểu 4 ký tự"></div>
+        </div>
+        <button class="secondary" style="margin-top:10px" onclick="changePassword()">Đổi mật khẩu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- generic confirmation modal -->
+<div id="confirmModal" class="modal-backdrop">
+  <div class="modal-card modal-small">
+    <div class="confirm-icon" id="confirmIcon">❓</div>
+    <h2 id="confirmTitle">Xác nhận</h2>
+    <div class="confirm-message" id="confirmMessage"></div>
+    <div class="confirm-actions">
+      <button class="confirm-no" onclick="closeConfirm(false)">Không</button>
+      <button class="confirm-yes" id="confirmYesButton" onclick="closeConfirm(true)">Có, xác nhận</button>
+    </div>
+  </div>
+</div>
+
+<!-- reward success modal -->
+<div id="rewardSuccessModal" class="modal-backdrop" onclick="if(event.target===this) closeRewardSuccess()">
+  <div class="modal-card modal-small">
+    <div class="success-reward">🎉🎁</div>
+    <h2>Chúc mừng con đã luôn chăm chỉ!</h2>
+    <p>Con đã đạt được phần quà:</p>
+    <div class="success-gift-name" id="successGiftName"></div>
+    <div class="success-points">Đã trừ <span id="successGiftPoints">0</span> điểm tích lũy</div>
+    <p class="note">Tiếp tục cố gắng để chinh phục những phần quà tiếp theo nhé!</p>
+    <button class="primary" onclick="closeRewardSuccess()">Tuyệt vời! 🌟</button>
+  </div>
+</div>
+
+<!-- encouragement modal -->
+<div id="encourageModal" class="modal-backdrop" onclick="if(event.target===this) closeEncourage()">
+  <div class="modal-card modal-small">
+    <div class="encourage">🌟</div>
+    <h2>Con hãy cố gắng hơn nữa nhé!</h2>
+    <p class="note">Con chưa đủ điểm để đổi món quà này.</p>
+    <div class="missing"><span id="missingPoints">0</span> điểm</div>
+    <p class="note">nữa là con có thể đổi quà 🎁</p>
+    <button class="primary" onclick="closeEncourage()">Con sẽ cố gắng 💪</button>
+  </div>
+</div>
+
+<script src="js/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "$schema": "https://schemas.vercel.com/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "github": {
+    "silent": true
+  }
+}
