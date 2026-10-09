@@ -18,8 +18,8 @@ chuẩn để deploy Vercel.
 - Quà đổi điểm theo từng bé, mốc thành tích giữ nguyên khi đổi quà
 - Khu vực phụ huynh khóa mật khẩu (mặc định `1234`, nhập `****` để reset)
 - 💱 Đổi sao ra tiền mặt: chuẩn 100 ⭐ = 10.000đ (phụ huynh đổi được),
-  mốc càng cao giá mỗi sao giảm dần theo đường cong — 16 mốc từ 100 ⭐
-  tới 10.000.000 ⭐ (≈ 10.000.000đ) để khích lệ tích lũy mà vẫn hợp lý
+  mốc càng cao giá mỗi sao giảm dần theo đường cong — 21 mốc nhỏ từ 100 ⭐
+  tới trần 10.000 ⭐ để con thấy động lực tích lũy
 - Lưu trình duyệt (`localStorage` key `nhiemvu_sieubiet_public_v2`)
 
 ## Cấu trúc

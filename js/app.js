@@ -22,9 +22,11 @@ function seedBaoNhi(){
       ],
       giftHistory:[],pointHistory:[],
       rewards:[
-        {id:uid('r'),name:'1 cây kem',cost:50,rule:'Đổi vào cuối tuần'},
-        {id:uid('r'),name:'30 phút xem phim hoạt hình',cost:80,rule:''},
-        {id:uid('r'),name:'Đi công viên cùng ba mẹ',cost:200,rule:'Cuối tuần'}
+        {id:uid('r'),name:'Xem tivi 15 phút',cost:20,rule:'Mỗi ngày tối đa 1 lần'},
+        {id:uid('r'),name:'Đi công viên',cost:50,rule:'Cuối tuần'},
+        {id:uid('r'),name:'Đi siêu thị GO',cost:300,rule:'Cuối tuần'},
+        {id:uid('r'),name:'Đi chơi',cost:500,rule:'Dịp cuối tuần hoặc ngày lễ'},
+        {id:uid('r'),name:'Quà sinh nhật',cost:1000,rule:'Tích lũy cả năm'}
       ],
       achievements:[
         {id:uid('a'),points:100,title:'Ngôi sao chăm chỉ'},
@@ -320,8 +322,8 @@ function renderAchievements(){
 
 function currentRewards(){return child()?.rewards||[]}
 
-// 💱 Quy đổi sao ra tiền mặt: tỷ giá mặc định 100 ⭐ = 10.000đ, thang tự sinh tới 10.000.000 ⭐.
-const MAX_MONEY_STARS=10000000;
+// 💱 Quy đổi sao ra tiền mặt: tỷ giá mặc định 100 ⭐ = 10.000đ, thang tự sinh tới 10.000 ⭐.
+const MAX_MONEY_STARS=10000;
 function exchangeRate(){
   const r=data.exchangeRate;
   if(r&&Number(r.stars)>0&&Number(r.vnd)>0) return r;
@@ -329,7 +331,7 @@ function exchangeRate(){
 }
 function fmtVND(n){return Math.floor(Number(n||0)).toLocaleString('vi-VN')+' đ'}
 // Đường cong giảm dần: giữ chuẩn (100 ⭐ = 10.000đ), mốc càng cao giá mỗi sao càng giảm.
-// Khích lệ con tích lũy lên mốc lớn mà tổng tiền vẫn hợp lý (10.000.000 ⭐ ≈ 10.000.000đ).
+// Khích lệ con tích lũy lên mốc lớn mà tổng tiền vẫn hợp lý (10.000 ⭐ ≈ 158.000đ).
 const DIMINISH_POWER=0.6, VND_ROUND=1000;
 function starsToVND(stars){
   const r=exchangeRate(),s=Number(stars||0);
@@ -338,7 +340,10 @@ function starsToVND(stars){
   return Math.floor((base*(1+1e-9))/VND_ROUND)*VND_ROUND;
 }
 function moneyTiers(){
-  const steps=[100,200,500,1000,2000,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000];
+  // Nhiều mốc nhỏ để con thấy động lực: 100→1000 mỗi 100 sao, sau đó tới 10.000 sao.
+  const steps=[];
+  for(let s=100;s<=1000;s+=100) steps.push(s);
+  [1500,2000,2500,3000,4000,5000,6000,7000,8000,9000,10000].forEach(s=>steps.push(s));
   return steps.filter(s=>s<=MAX_MONEY_STARS).map(s=>({stars:s,vnd:starsToVND(s),name:'Tiền thưởng '+fmtVND(starsToVND(s))}));
 }
 function renderMoneyBlock(box){
@@ -384,7 +389,7 @@ function renderRateManager(){
   const r=exchangeRate();
   if(document.activeElement!==rs)rs.value=r.stars;
   if(document.activeElement!==rv)rv.value=r.vnd;
-  rc.textContent='Tỷ giá chuẩn: '+r.stars+' ⭐ = '+fmtVND(r.vnd)+' • Mốc cao giảm dần: 10.000.000 ⭐ ≈ '+fmtVND(starsToVND(MAX_MONEY_STARS))+'.';
+  rc.textContent='Tỷ giá chuẩn: '+r.stars+' ⭐ = '+fmtVND(r.vnd)+' • Mốc cao nhất '+MAX_MONEY_STARS.toLocaleString('vi-VN')+' ⭐ ≈ '+fmtVND(starsToVND(MAX_MONEY_STARS))+'.';
 }
 function renderRewards(){
   const c=child();document.getElementById('rewardNameChild').textContent=c?(childIcon(c)+' '+c.name):'bé';
