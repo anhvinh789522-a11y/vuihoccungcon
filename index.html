@@ -235,11 +235,19 @@
 
       <div class="parent-section">
         <h3>📝 Giao nhiệm vụ</h3>
+        <div class="note" style="margin-bottom:8px">⭐ Mẫu có sẵn của Bảo Nhi — bấm để điền nhanh, rồi chọn ngày và bấm “Giao nhiệm vụ”:</div>
+        <div id="presetList" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
         <div class="formgrid">
           <div><div class="note">Giao cho</div><select id="assignTo"></select><div class="note" style="margin-top:6px">Có thể chọn từng bé hoặc giao cùng một nhiệm vụ cho tất cả các con.</div></div>
-          <div><div class="note">Tên nhiệm vụ</div><input id="taskName" placeholder="VD: Đọc 2 truyện"></div>
+          <div><div class="note">Tên nhiệm vụ (tự điền)</div><input id="taskName" placeholder="VD: Đọc 2 truyện"></div>
           <div><div class="note">Môn học</div><select id="subject"></select></div>
-          <div><div class="note">Điểm khi hoàn thành</div><input id="taskPoints" type="number" min="0" placeholder="VD: 10"></div>
+          <div><div class="note">Điểm khi hoàn thành</div><input id="taskPoints" type="number" placeholder="VD: 10">
+            <div style="display:flex;gap:6px;margin-top:6px">
+              <button class="btn open" onclick="setQuickPoints(5)">5 ⭐</button>
+              <button class="btn open" onclick="setQuickPoints(10)">10 ⭐</button>
+              <button class="btn open" onclick="setQuickPoints(20)">20 ⭐</button>
+            </div>
+          </div>
           <div><div class="note">Ngày bắt đầu</div><input id="taskDate" type="date"></div>
           <div><div class="note">Kiểu nhiệm vụ</div>
             <select id="taskRepeat">

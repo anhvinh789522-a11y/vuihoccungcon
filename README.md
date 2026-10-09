@@ -12,6 +12,7 @@ chuẩn để deploy Vercel.
 - Đa hồ sơ bé (tên + giới tính), chuyển nhanh giữa các con
 - Quản lý môn học
 - Giao nhiệm vụ: 1 ngày / lặp hàng ngày / lặp Thứ 2–Thứ 6, điểm, thời lượng, link, hướng dẫn
+- ⭐ 7 mẫu nhiệm vụ của Bảo Nhi (cô khen +10, phụ bố mẹ +5, bị cô chê −10, bài tập +10, tiếng Anh +20, tiếng Trung +20, giúp bà +5); ô tự điền + nút điểm nhanh 5/10/20
 - Lịch học theo tháng, chấm ngày có nhiệm vụ
 - Tích điểm khi hoàn thành (xác nhận 2 bước), bỏ hoàn thành trừ điểm lại
 - Thưởng điểm xuất sắc, phạt điểm có lý do (lưu vào Nhắc nhở / Điểm phạt)

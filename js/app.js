@@ -11,15 +11,22 @@ function fmtDate(iso){ return parseISO(iso).toLocaleDateString('vi-VN'); }
 function uid(prefix='id'){ return prefix+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8); }
 function safe(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
+// ⭐ Bộ mẫu nhiệm vụ của Bảo Nhi (kể cả điểm âm khi bị cô chê).
+const TASK_PRESETS=[
+  {name:'Được cô khen học tốt',subject:'Kỹ năng sống',points:10,duration:'15 phút',instruction:'Cô khen học tốt ở trường'},
+  {name:'Phụ bố mẹ 1 việc',subject:'Kỹ năng sống',points:5,duration:'15 phút',instruction:'Phụ bố mẹ một việc nhà'},
+  {name:'Bị cô chê',subject:'Kỹ năng sống',points:-10,duration:'5 phút',instruction:'Bị cô chê ở trường — rút kinh nghiệm nhé'},
+  {name:'Làm bài tập 1 môn',subject:'Toán',points:10,duration:'30 phút',instruction:'Hoàn thành bài tập của một môn'},
+  {name:'Học tiếng Anh',subject:'Tiếng Anh',points:20,duration:'20 phút',instruction:'Học từ mới và luyện đọc'},
+  {name:'Học tiếng Trung',subject:'Tiếng Trung',points:20,duration:'20 phút',instruction:'Học từ mới và luyện viết'},
+  {name:'Chủ động giúp bà làm việc nhà',subject:'Kỹ năng sống',points:5,duration:'15 phút',instruction:'Tự giác giúp bà mà không cần nhắc'}
+];
+
 function seedBaoNhi(){
   return {
     children:[{
       id:uid('c'),name:'Bảo Nhi',gender:'female',score:0,highestScore:0,
-      tasks:[
-        {id:uid('t'),seriesId:null,name:'Đọc 1 câu chuyện',subject:'Tiếng Việt',date:todayISO(),points:10,duration:'15 phút',link:'',instruction:'Đọc to, rõ ràng rồi kể lại cho ba mẹ nghe nhé',done:false,awardedPoints:0,completedAt:null},
-        {id:uid('t'),seriesId:null,name:'Ôn bảng cửu chương',subject:'Toán',date:todayISO(),points:10,duration:'10 phút',link:'',instruction:'Đọc thuộc rồi đố nhanh cùng ba mẹ',done:false,awardedPoints:0,completedAt:null},
-        {id:uid('t'),seriesId:null,name:'Học 5 từ mới',subject:'Tiếng Anh',date:todayISO(),points:10,duration:'10 phút',link:'',instruction:'Đọc - viết - đặt câu với mỗi từ',done:false,awardedPoints:0,completedAt:null}
-      ],
+      tasks:TASK_PRESETS.map(p=>({id:uid('t'),seriesId:null,name:p.name,subject:p.subject,date:todayISO(),points:p.points,duration:p.duration,link:'',instruction:p.instruction,done:false,awardedPoints:0,completedAt:null})),
       giftHistory:[],pointHistory:[],
       rewards:[
         {id:uid('r'),name:'Xem tivi 15 phút',cost:20,rule:'Mỗi ngày tối đa 1 lần'},
@@ -31,7 +38,7 @@ function seedBaoNhi(){
       achievements:[], // Mốc tự động (101 danh hiệu 100 ⭐ → 100.000 ⭐) được sinh bởi autoAchievements()
       earnedAchievements:[]
     }],
-    subjects:['Toán','Tiếng Việt','Tiếng Anh','Kỹ năng sống'],
+    subjects:['Toán','Tiếng Việt','Tiếng Anh','Tiếng Trung','Kỹ năng sống'],
     parentPassword:'1234',
     exchangeRate:{stars:100,vnd:5000}
   };
@@ -208,7 +215,7 @@ function taskCard(c,t,allowPast=true){
 
   const finish=document.createElement('button');
   finish.className='btn finish'+(t.done?' done':'');
-  finish.textContent=t.done?'↩ Bỏ hoàn thành':('+'+t.points+' ⭐ Hoàn thành');
+  finish.textContent=t.done?'↩ Bỏ hoàn thành':((t.points<0?t.points:'+'+t.points)+' ⭐ Hoàn thành');
   finish.onclick=()=>toggleTaskCompletion(c.id,t.id);
 
   el.append(left,finish);
@@ -573,6 +580,32 @@ function renderManagers(){
   renderRewardManager();
   renderAchievementManager();
   renderRateManager();
+  renderPresets();
+}
+
+function renderPresets(){
+  const box=document.getElementById('presetList');if(!box)return;box.innerHTML='';
+  TASK_PRESETS.forEach((p,i)=>{
+    const b=document.createElement('button');b.className='btn open';
+    b.textContent=(p.points<0?p.points:'+'+p.points)+' ⭐ '+p.name;
+    b.onclick=()=>fillPreset(i);
+    box.appendChild(b);
+  });
+  const q=document.createElement('span');q.className='note';q.style.alignSelf='center';
+  q.textContent='…hoặc tự điền tên nhiệm vụ bên dưới + chọn nhanh 5 / 10 / 20 ⭐.';
+  box.appendChild(q);
+}
+function setQuickPoints(p){document.getElementById('taskPoints').value=p;}
+function fillPreset(i){
+  const p=TASK_PRESETS[i];if(!p)return;
+  if(!data.subjects.includes(p.subject)){data.subjects.push(p.subject);save();}
+  renderParentSelectors();
+  document.getElementById('taskName').value=p.name;
+  document.getElementById('subject').value=p.subject;
+  document.getElementById('taskPoints').value=p.points;
+  document.getElementById('duration').value=p.duration;
+  document.getElementById('instruction').value=p.instruction||'';
+  document.getElementById('taskName').focus();
 }
 
 function selectedRewardChild(){
