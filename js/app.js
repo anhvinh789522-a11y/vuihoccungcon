@@ -33,7 +33,7 @@ function seedBaoNhi(){
     }],
     subjects:['Toán','Tiếng Việt','Tiếng Anh','Kỹ năng sống'],
     parentPassword:'1234',
-    exchangeRate:{stars:100,vnd:10000}
+    exchangeRate:{stars:100,vnd:5000}
   };
 }
 const defaultData=seedBaoNhi();
@@ -47,7 +47,7 @@ function loadData(){
     if(!Array.isArray(d.children)) d.children=[];
     if(!Array.isArray(d.subjects)) d.subjects=[];
     if(!d.parentPassword) d.parentPassword='1234';
-    if(!d.exchangeRate||!(Number(d.exchangeRate.stars)>0)||!(Number(d.exchangeRate.vnd)>0)) d.exchangeRate={stars:100,vnd:10000};
+    if(!d.exchangeRate||!(Number(d.exchangeRate.stars)>0)||!(Number(d.exchangeRate.vnd)>0)) d.exchangeRate={stars:100,vnd:5000};
 
     const oldRewards=Array.isArray(d.rewards)?d.rewards:[];
     const oldAchievements=Array.isArray(d.achievements)?d.achievements:[];
@@ -345,39 +345,31 @@ function renderAchievements(){
 
 function currentRewards(){return child()?.rewards||[]}
 
-// 💱 Quy đổi sao ra tiền mặt: tỷ giá mặc định 100 ⭐ = 10.000đ, thang tự sinh tới 10.000 ⭐.
-const MAX_MONEY_STARS=10000;
+// 💱 Quy đổi sao ra tiền mặt: một mốc duy nhất theo tỷ giá chuẩn (mặc định 100 ⭐ = 5.000đ).
 function exchangeRate(){
   const r=data.exchangeRate;
   if(r&&Number(r.stars)>0&&Number(r.vnd)>0) return r;
-  return {stars:100,vnd:10000};
+  return {stars:100,vnd:5000};
 }
 function fmtVND(n){return Math.floor(Number(n||0)).toLocaleString('vi-VN')+' đ'}
-// Đường cong giảm dần: giữ chuẩn (100 ⭐ = 10.000đ), mốc càng cao giá mỗi sao càng giảm.
-// Khích lệ con tích lũy lên mốc lớn mà tổng tiền vẫn hợp lý (10.000 ⭐ ≈ 158.000đ).
-const DIMINISH_POWER=0.6, VND_ROUND=1000;
 function starsToVND(stars){
   const r=exchangeRate(),s=Number(stars||0);
   if(!(s>0)) return 0;
-  const base=Number(r.vnd)*Math.pow(s/Number(r.stars),DIMINISH_POWER);
-  return Math.floor((base*(1+1e-9))/VND_ROUND)*VND_ROUND;
+  return s*Number(r.vnd)/Number(r.stars);
 }
 function moneyTiers(){
-  // Nhiều mốc nhỏ để con thấy động lực: 100→1000 mỗi 100 sao, sau đó tới 10.000 sao.
-  const steps=[];
-  for(let s=100;s<=1000;s+=100) steps.push(s);
-  [1500,2000,2500,3000,4000,5000,6000,7000,8000,9000,10000].forEach(s=>steps.push(s));
-  return steps.filter(s=>s<=MAX_MONEY_STARS).map(s=>({stars:s,vnd:starsToVND(s),name:'Tiền thưởng '+fmtVND(starsToVND(s))}));
+  // Chỉ một mốc duy nhất theo tỷ giá chuẩn.
+  const r=exchangeRate();
+  return [{stars:Number(r.stars),vnd:Number(r.vnd),name:'Tiền thưởng '+fmtVND(r.vnd)}];
 }
 function renderMoneyBlock(box){
   const tiers=moneyTiers(),r=exchangeRate();
   const head=document.createElement('div');head.className='note';head.style.margin='14px 0 6px';
-  head.innerHTML='<b>💱 Đổi sao ra tiền mặt</b> (chuẩn '+r.stars+' ⭐ = '+fmtVND(r.vnd)+' • mốc cao giá mỗi sao giảm dần để khích lệ tích lũy)';
+  head.innerHTML='<b>💱 Đổi sao ra tiền mặt</b> ('+r.stars+' ⭐ = '+fmtVND(r.vnd)+')';
   box.appendChild(head);
   tiers.forEach(t=>{
-    const eff=Math.round(t.vnd/t.stars);
     const row=document.createElement('div');row.className='gift';
-    row.innerHTML='<div class="emoji">💰</div><div class="grow"><b>'+safe(t.name)+'</b><div class="pts">'+t.stars.toLocaleString('vi-VN')+' ⭐</div><div class="note">≈ '+eff.toLocaleString('vi-VN')+'đ/sao</div></div>';
+    row.innerHTML='<div class="emoji">💰</div><div class="grow"><b>'+safe(t.name)+'</b><div class="pts">'+t.stars.toLocaleString('vi-VN')+' ⭐</div></div>';
     const b=document.createElement('button');b.textContent='Đổi';b.onclick=()=>redeemMoney(t);
     row.appendChild(b);box.appendChild(row);
   });
@@ -412,7 +404,7 @@ function renderRateManager(){
   const r=exchangeRate();
   if(document.activeElement!==rs)rs.value=r.stars;
   if(document.activeElement!==rv)rv.value=r.vnd;
-  rc.textContent='Tỷ giá chuẩn: '+r.stars+' ⭐ = '+fmtVND(r.vnd)+' • Mốc cao nhất '+MAX_MONEY_STARS.toLocaleString('vi-VN')+' ⭐ ≈ '+fmtVND(starsToVND(MAX_MONEY_STARS))+'.';
+  rc.textContent='Mốc đổi tiền duy nhất: '+r.stars+' ⭐ = '+fmtVND(r.vnd)+'.';
 }
 function renderRewards(){
   const c=child();document.getElementById('rewardNameChild').textContent=c?(childIcon(c)+' '+c.name):'bé';
