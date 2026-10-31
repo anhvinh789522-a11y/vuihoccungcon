@@ -761,3 +761,787 @@ textarea{min-height:80px;resize:vertical}
   .gift-actions{width:100%;justify-content:space-between;margin-top:8px}
   .gift button.btn-redeem{flex:1}
 }
+
+/* ==========================================================================
+   🇬🇧 LẬT THẺ 3D & ĐỌC TIẾNG ANH THEO CHỦ ĐỀ (ENGLISH FLASHCARDS)
+   ========================================================================== */
+
+/* Banner quảng bá mở nhanh trên màn hình Hôm nay */
+.fc-promo-banner{
+  background:linear-gradient(135deg,#0284c7 0%,#4f46e5 55%,#7c3aed 100%);
+  color:#fff;border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  box-shadow:0 8px 22px rgba(79,70,229,0.22);cursor:pointer;
+  transition:transform .15s ease,box-shadow .15s ease;
+  position:relative;overflow:hidden;
+}
+.fc-promo-banner:hover{
+  transform:translateY(-2px);box-shadow:0 12px 28px rgba(79,70,229,0.3);
+}
+.fc-promo-left{display:flex;align-items:center;gap:14px;flex:1;min-width:240px}
+.fc-promo-icon{
+  font-size:38px;background:rgba(255,255,255,0.18);width:62px;height:62px;
+  border-radius:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  backdrop-filter:blur(4px);
+}
+.fc-promo-badge{
+  display:inline-block;background:rgba(255,255,255,0.22);border:1px solid rgba(255,255,255,0.45);
+  font-size:10px;font-weight:900;padding:2px 8px;border-radius:var(--radius-full);
+  letter-spacing:.05em;margin-bottom:4px;
+}
+.fc-promo-title{font-size:17px;font-weight:900;line-height:1.3}
+.fc-promo-sub{font-size:13px;opacity:.92;margin-top:3px;line-height:1.35}
+.fc-promo-btn{
+  background:#fff;color:#4338ca;font-weight:900;font-size:13px;
+  padding:10px 18px;border-radius:var(--radius-full);white-space:nowrap;
+  box-shadow:0 4px 12px rgba(0,0,0,0.12);
+}
+
+/* Header khu vực Lật thẻ */
+.fc-header{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  flex-wrap:wrap;margin-bottom:16px;padding-bottom:14px;border-bottom:1.5px solid var(--line);
+}
+.fc-stats-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fc-stat-pill{
+  background:#f8fafc;border:1.5px solid var(--line);border-radius:var(--radius-md);
+  padding:7px 13px;display:flex;flex-direction:column;align-items:center;min-width:95px;
+}
+.fc-stat-pill.fc-stat-star{background:#fffbeb;border-color:#fde68a}
+.fc-stat-label{font-size:11px;font-weight:700;color:var(--muted)}
+.fc-stat-pill b{font-size:16px;font-weight:900;color:var(--brand);margin-top:1px}
+.fc-stat-pill.fc-stat-star b{color:#b45309}
+
+/* Thanh chế độ & giọng đọc */
+.fc-toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;margin-bottom:14px;
+}
+.fc-mode-tabs{
+  display:flex;gap:6px;background:#f1f5f9;padding:5px;border-radius:var(--radius-md);flex-wrap:wrap;
+}
+.fc-mode-btn{
+  background:transparent;color:var(--muted);padding:8px 14px;
+  border-radius:var(--radius-sm);font-size:13px;font-weight:800;
+  transition:all .15s ease;
+}
+.fc-mode-btn.active{
+  background:#fff;color:var(--brand);box-shadow:var(--shadow-sm);
+}
+.fc-voice-controls{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.fc-accent-switch{
+  display:inline-flex;background:#f1f5f9;padding:4px;border-radius:var(--radius-full);
+}
+.fc-accent-btn{
+  background:transparent;color:var(--muted);padding:5px 11px;
+  border-radius:var(--radius-full);font-size:12px;font-weight:800;
+}
+.fc-accent-btn.active{
+  background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,0.08);
+}
+.fc-autospeak-toggle{
+  display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;
+  color:var(--ink);cursor:pointer;user-select:none;
+}
+
+/* Thanh chủ đề (Topics) */
+.fc-topic-bar{
+  display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;
+  scrollbar-width:thin;
+}
+.fc-topic-btn{
+  background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-md);
+  padding:9px 13px;display:inline-flex;align-items:center;gap:8px;
+  white-space:nowrap;font-weight:800;font-size:13px;color:var(--ink);
+  transition:all .15s ease;flex-shrink:0;
+}
+.fc-topic-btn:hover{border-color:#818cf8;background:#f5f3ff}
+.fc-topic-btn.active{
+  background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;
+  border-color:transparent;box-shadow:0 4px 12px rgba(79,70,229,0.28);
+}
+.fc-topic-count{
+  font-size:11px;font-weight:800;padding:2px 7px;border-radius:var(--radius-full);
+  background:#f1f5f9;color:var(--muted);
+}
+.fc-topic-btn.active .fc-topic-count{
+  background:rgba(255,255,255,0.24);color:#fff;
+}
+
+/* Bộ lọc phụ (Tất cả / Đang học / Đã thuộc) */
+.fc-filter-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  flex-wrap:wrap;margin-bottom:18px;background:#f8fafc;padding:10px 14px;
+  border-radius:var(--radius-md);border:1px solid var(--line);
+}
+.fc-subfilter-btn{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-full);
+  padding:5px 12px;font-size:12px;font-weight:800;color:var(--muted);
+}
+.fc-subfilter-btn.active{
+  background:var(--dark);color:#fff;border-color:var(--dark);
+}
+.fc-tool-action-btn{
+  background:#fff;border:1.5px solid #c7d2fe;color:#4338ca;
+  padding:6px 12px;border-radius:var(--radius-full);font-size:12px;font-weight:800;
+}
+.fc-tool-action-btn:hover{background:#ede9fe}
+.fc-tool-action-btn.playing{
+  background:#ef4444;color:#fff;border-color:#ef4444;
+}
+
+/* Sân khấu lật thẻ 3D */
+.fc-stage{
+  display:flex;align-items:center;justify-content:center;gap:18px;
+  margin:10px 0 18px;
+}
+.fc-nav-arrow{
+  width:48px;height:48px;border-radius:50%;background:#fff;
+  border:1.5px solid var(--line);font-size:28px;font-weight:900;
+  color:var(--ink);display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-sm);flex-shrink:0;
+}
+.fc-nav-arrow:hover{background:#f5f3ff;border-color:var(--brand);color:var(--brand)}
+
+.fc-card-scene{
+  width:100%;max-width:520px;height:390px;perspective:1200px;
+  cursor:pointer;user-select:none;
+}
+.fc-card-3d{
+  width:100%;height:100%;position:relative;
+  transform-style:preserve-3d;
+  transition:transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fc-card-3d.is-flipped{
+  transform:rotateY(180deg);
+}
+.fc-card-face{
+  position:absolute;inset:0;width:100%;height:100%;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:24px;padding:24px;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  box-shadow:0 14px 34px rgba(15,23,42,0.1);
+}
+.fc-card-front{
+  background:linear-gradient(160deg,#ffffff 0%,#f5f3ff 65%,#ede9fe 100%);
+  border:2px solid #c4b5fd;
+}
+.fc-card-back{
+  background:linear-gradient(160deg,#fffbeb 0%,#fef3c7 55%,#fde68a 100%);
+  border:2px solid #fbbf24;
+  transform:rotateY(180deg);
+}
+
+.fc-card-top-meta{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.fc-topic-chip{
+  background:rgba(79,70,229,0.1);color:#4338ca;
+  padding:5px 12px;border-radius:var(--radius-full);font-size:12px;font-weight:800;
+}
+.fc-mastered-pill{
+  background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;
+  padding:4px 10px;border-radius:var(--radius-full);font-size:12px;font-weight:800;
+}
+.fc-back-word-mini{
+  font-size:13px;font-weight:800;color:#92400e;
+}
+
+.fc-card-emoji{
+  font-size:90px;line-height:1;filter:drop-shadow(0 8px 14px rgba(0,0,0,0.08));
+  transition:transform .25s ease;
+}
+.fc-card-scene:hover .fc-card-emoji{transform:scale(1.06)}
+.fc-card-word{
+  font-size:38px;font-weight:900;color:#1e1b4b;letter-spacing:-0.01em;
+  text-align:center;line-height:1.15;
+}
+.fc-card-ipa{
+  font-size:17px;font-weight:700;color:#6366f1;background:rgba(255,255,255,0.8);
+  padding:4px 14px;border-radius:var(--radius-full);border:1px solid #e0e7ff;
+}
+
+/* Thanh nút bấm phát âm trên thẻ */
+.fc-audio-bar{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%;
+}
+.fc-speak-btn{
+  border-radius:var(--radius-full);padding:9px 15px;font-size:13px;font-weight:800;
+  display:inline-flex;align-items:center;gap:6px;box-shadow:0 3px 10px rgba(0,0,0,0.08);
+  transition:transform .12s ease,box-shadow .15s ease;
+}
+.fc-speak-btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(0,0,0,0.12)}
+.fc-speak-normal{
+  background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;
+}
+.fc-speak-slow{
+  background:#fff;color:#0369a1;border:1.5px solid #bae6fd;
+}
+.fc-speak-sentence{
+  background:#fff;color:#4338ca;border:1.5px solid #c7d2fe;
+}
+.fc-speak-vi{
+  background:#059669;color:#fff;
+}
+
+.fc-flip-hint{
+  font-size:12px;font-weight:700;color:#64748b;opacity:.85;text-align:center;
+}
+
+/* Mặt sau của thẻ */
+.fc-back-emoji-small{font-size:48px;line-height:1}
+.fc-back-label{font-size:12px;font-weight:800;color:#b45309;text-transform:uppercase;letter-spacing:.05em}
+.fc-back-meaning{
+  font-size:32px;font-weight:900;color:#78350f;text-align:center;line-height:1.2;
+}
+.fc-example-box{
+  width:100%;background:rgba(255,255,255,0.82);border:1.5px solid #fcd34d;
+  border-radius:16px;padding:12px 14px;text-align:center;
+}
+.fc-example-label{font-size:11px;font-weight:800;color:#b45309;margin-bottom:4px}
+.fc-example-en{font-size:15px;font-weight:800;color:#1e293b;line-height:1.35}
+.fc-example-vi{font-size:13px;color:#475569;margin-top:3px;font-style:italic}
+
+/* Thanh điều khiển dưới thẻ */
+.fc-bottom-controls{
+  max-width:520px;margin:0 auto;text-align:center;
+}
+.fc-progress-text{font-size:13px;color:var(--muted);margin-bottom:6px}
+.fc-progress-bar{
+  height:8px;background:#e2e8f0;border-radius:var(--radius-full);overflow:hidden;margin-bottom:14px;
+}
+.fc-progress-bar i{
+  display:block;height:100%;background:linear-gradient(90deg,#4f46e5,#06b6d4);
+  border-radius:var(--radius-full);transition:width .3s ease;
+}
+.fc-action-buttons{
+  display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+}
+.fc-ctrl-btn{
+  background:#f1f5f9;color:var(--ink);border:1.5px solid var(--line);
+  padding:10px 16px;border-radius:var(--radius-md);font-weight:800;font-size:13px;
+}
+.fc-ctrl-btn:hover{background:#e2e8f0}
+.fc-ctrl-flip{background:#ede9fe;color:#4338ca;border-color:#c4b5fd}
+.fc-ctrl-master{background:#fff;color:#047857;border-color:#6ee7b7}
+.fc-ctrl-master.mastered{
+  background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:transparent;
+}
+
+/* Chế độ 2: Bảng lưới từ vựng (Grid View) */
+.fc-grid-container{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:14px;
+}
+.fc-mini-card{
+  background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-md);
+  padding:16px;display:flex;flex-direction:column;justify-content:space-between;
+  gap:10px;box-shadow:var(--shadow-sm);transition:all .15s ease;position:relative;
+}
+.fc-mini-card:hover{border-color:#818cf8;transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.fc-mini-card.mastered{background:#f0fdf4;border-color:#86efac}
+.fc-mini-top{display:flex;align-items:center;justify-content:space-between}
+.fc-mini-emoji{font-size:38px}
+.fc-mini-word{font-size:19px;font-weight:900;color:#1e1b4b;margin-top:4px}
+.fc-mini-ipa{font-size:12px;color:#6366f1;font-weight:700}
+.fc-mini-meaning{
+  font-size:15px;font-weight:800;color:#0f766e;margin-top:4px;
+  padding-top:6px;border-top:1px dashed var(--line);
+}
+.fc-mini-example{font-size:12px;color:var(--muted);font-style:italic;line-height:1.35}
+.fc-mini-actions{display:flex;gap:6px;margin-top:4px}
+.fc-mini-btn{
+  flex:1;padding:7px 8px;border-radius:var(--radius-sm);font-size:12px;font-weight:800;
+  background:#f1f5f9;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:4px;
+}
+.fc-mini-btn.speak{background:#ede9fe;color:#4338ca}
+.fc-mini-btn.master{background:#ecfdf5;color:#047857}
+.fc-mini-btn.master.active{background:#10b981;color:#fff}
+
+/* Chế độ 3: Đố vui Nghe & Chọn từ (Quiz View) */
+.fc-quiz-box{
+  background:linear-gradient(160deg,#f8fafc 0%,#eff6ff 100%);
+  border:1.5px solid #bfdbfe;border-radius:var(--radius-lg);padding:20px;
+  max-width:640px;margin:0 auto;
+}
+.fc-quiz-header{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;margin-bottom:16px;
+}
+.fc-quiz-score-pill{
+  background:#fff;border:1.5px solid #fde68a;padding:8px 14px;
+  border-radius:var(--radius-full);font-size:14px;font-weight:800;color:#b45309;
+}
+.fc-quiz-prompt-card{
+  background:#fff;border:2px solid #c7d2fe;border-radius:var(--radius-lg);
+  padding:22px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow-sm);
+}
+.fc-quiz-emoji{font-size:68px;line-height:1.1}
+.fc-quiz-vi{font-size:24px;font-weight:900;color:#1e293b;margin-top:6px}
+.fc-quiz-ipa{font-size:14px;color:#6366f1;font-weight:700;margin-top:2px}
+.fc-quiz-options{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+}
+.fc-quiz-opt{
+  background:#fff;border:2px solid var(--line);border-radius:var(--radius-md);
+  padding:16px 14px;font-size:18px;font-weight:900;color:var(--ink);
+  text-align:center;box-shadow:var(--shadow-sm);transition:all .15s ease;
+}
+.fc-quiz-opt:hover{border-color:#6366f1;background:#f5f3ff}
+.fc-quiz-opt.correct{
+  background:#d1fae5;border-color:#10b981;color:#065f46;
+}
+.fc-quiz-opt.wrong{
+  background:#fee2e2;border-color:#ef4444;color:#991b1b;
+}
+.fc-quiz-feedback{
+  margin-top:14px;text-align:center;font-weight:800;font-size:15px;min-height:24px;
+}
+.fc-quiz-sentence-hint{
+  margin-top:8px;font-size:14px;font-weight:800;color:#047857;
+  background:#ecfdf5;display:inline-block;padding:4px 12px;border-radius:var(--radius-full);
+}
+
+/* ==========================================================================
+   🦊 LITTLE FOX LEVELS & BẬC THANG LUYỆN NÓI CÂU (3-STEP SENTENCE LADDER)
+   ========================================================================== */
+
+.lf-level-bar{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:8px;
+  margin-bottom:10px;
+}
+.lf-level-btn{
+  background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-md);
+  padding:10px 12px;text-align:left;display:flex;flex-direction:column;gap:3px;
+  transition:all .15s ease;box-shadow:var(--shadow-sm);
+}
+.lf-level-btn:hover{border-color:#f59e0b;background:#fffbeb;transform:translateY(-1px)}
+.lf-level-btn.active{
+  background:linear-gradient(135deg,#fff7ed 0%,#ffedd5 100%);
+  border:2px solid #ea580c;box-shadow:0 4px 14px rgba(234,88,12,0.16);
+}
+.lf-level-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.lf-level-title{font-weight:900;font-size:14px;color:#1e293b}
+.lf-level-btn.active .lf-level-title{color:#c2410c}
+.lf-level-badge{
+  font-size:11px;font-weight:800;padding:2px 7px;border-radius:var(--radius-full);
+  background:#f1f5f9;color:var(--muted);
+}
+.lf-level-btn.active .lf-level-badge{background:#ea580c;color:#fff}
+.lf-level-desc{font-size:11.5px;color:var(--muted);line-height:1.3}
+
+.lf-level-banner{
+  background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+  border:1.5px solid #fde68a;border-radius:var(--radius-md);
+  padding:11px 14px;margin-bottom:14px;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;flex-wrap:wrap;
+}
+.lf-level-pill{
+  background:#ffedd5;color:#c2410c;border:1px solid #fdba74;
+  padding:4px 10px;border-radius:var(--radius-full);font-size:11px;font-weight:900;
+}
+.fc-front-starter-sentence{
+  background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;
+  padding:5px 14px;border-radius:var(--radius-full);font-size:14px;font-weight:800;
+  text-align:center;max-width:95%;
+}
+.fc-back-ladder-preview{
+  text-align:left;font-size:13px;line-height:1.45;display:flex;flex-direction:column;gap:4px;
+}
+
+/* Khung Bậc Thang 3 Bậc Nâng Cấp Câu (Sentence Ladder) */
+.lf-ladder-card{
+  background:linear-gradient(160deg,#f0fdf4 0%,#ecfdf5 60%,#e0f2fe 100%);
+  border:1.5px solid #86efac;border-radius:var(--radius-lg);
+  padding:18px;margin-top:20px;box-shadow:var(--shadow-sm);
+}
+.lf-ladder-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  flex-wrap:wrap;margin-bottom:12px;
+}
+.lf-ladder-steps{
+  display:flex;flex-direction:column;gap:10px;
+}
+.lf-step-row{
+  background:#fff;border:1.5px solid #bbf7d0;border-radius:var(--radius-md);
+  padding:12px 14px;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;transition:all .15s ease;
+}
+.lf-step-row:hover{border-color:#10b981;box-shadow:var(--shadow-sm)}
+.lf-step-row.step-2{border-color:#bae6fd}
+.lf-step-row.step-3{border-color:#ddd6fe}
+.lf-step-left{flex:1;min-width:220px}
+.lf-step-tag{
+  display:inline-block;font-size:11px;font-weight:900;padding:2px 8px;
+  border-radius:var(--radius-full);margin-bottom:4px;
+}
+.lf-step-tag.t1{background:#d1fae5;color:#065f46}
+.lf-step-tag.t2{background:#e0f2fe;color:#0369a1}
+.lf-step-tag.t3{background:#ede9fe;color:#5b21b6}
+.lf-step-en{font-size:16px;font-weight:900;color:#0f172a;line-height:1.35}
+.lf-step-vi{font-size:13px;color:#475569;margin-top:2px}
+.lf-step-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.lf-step-btn{
+  padding:7px 12px;border-radius:var(--radius-full);font-size:12px;font-weight:800;
+  background:#f1f5f9;color:var(--ink);display:inline-flex;align-items:center;gap:4px;
+}
+.lf-step-btn.primary-speak{background:#4f46e5;color:#fff}
+.lf-step-btn.slow-speak{background:#e0f2fe;color:#0369a1}
+.lf-step-btn.mic-speak{background:#fef3c7;color:#b45309;border:1px solid #fde68a}
+
+/* Thanh thu âm luyện nói */
+.lf-speak-practice-bar{
+  margin-top:12px;background:rgba(255,255,255,0.9);border:1.5px dashed #34d399;
+  border-radius:var(--radius-md);padding:12px 14px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.lf-speak-status{flex:1;min-width:220px;font-size:13px;line-height:1.45;color:#064e3b}
+.lf-mic-btn{
+  background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;
+  padding:9px 15px;border-radius:var(--radius-full);font-size:13px;font-weight:800;
+  display:inline-flex;align-items:center;gap:6px;box-shadow:0 3px 10px rgba(239,68,68,0.25);
+}
+.lf-mic-btn.listening{
+  animation:pulseMic 1s infinite alternate;background:#b91c1c;
+}
+@keyframes pulseMic{from{transform:scale(1)}to{transform:scale(1.06)}}
+.lf-praise-speak-btn{
+  background:linear-gradient(135deg,#10b981,#059669);color:#fff;
+  padding:9px 15px;border-radius:var(--radius-full);font-size:13px;font-weight:800;
+  display:inline-flex;align-items:center;gap:6px;
+}
+
+/* Chế độ 4: Hướng dẫn học & Truyện Little Fox theo Level */
+.lf-guide-container{display:flex;flex-direction:column;gap:18px}
+.lf-method-box{
+  background:linear-gradient(135deg,#fff7ed 0%,#ffedd5 100%);
+  border:1.5px solid #fed7aa;border-radius:var(--radius-lg);padding:18px;
+}
+.lf-method-steps{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:12px;
+}
+.lf-method-step-card{
+  background:#fff;border:1px solid #fdba74;border-radius:var(--radius-md);padding:14px;
+}
+.lf-level-guide-card{
+  background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-lg);
+  padding:18px;box-shadow:var(--shadow-sm);
+}
+.lf-series-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:12px;
+}
+.lf-series-item{
+  background:#f8fafc;border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:12px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;
+}
+
+@media(max-width:768px){
+  .fc-promo-banner{padding:14px}
+  .fc-promo-btn{width:100%;text-align:center}
+  .fc-nav-arrow{display:none}
+  .fc-card-scene{height:400px}
+  .fc-card-emoji{font-size:66px}
+  .fc-card-word{font-size:28px}
+  .fc-back-meaning{font-size:22px}
+  .fc-quiz-options{grid-template-columns:1fr}
+  .fc-grid-container{grid-template-columns:repeat(2,1fr);gap:10px}
+  .fc-mini-card{padding:12px}
+  .fc-mini-word{font-size:16px}
+  .lf-level-bar{grid-template-columns:repeat(2,1fr)}
+  .lf-step-row{flex-direction:column;align-items:flex-start}
+  .lf-step-actions{width:100%}
+}
+@media(max-width:420px){
+  .fc-grid-container{grid-template-columns:1fr}
+  .lf-level-bar{grid-template-columns:1fr}
+}
+
+/* ============================================================
+   🎒 THỜI KHÓA BIỂU & NHẮC BÁO CHỞ ĐI HỌC (LỚP 1)
+   ============================================================ */
+
+/* 🛵 Banner Nhắc Báo Giờ Chở Đi Học */
+.ride-card{
+  background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 40%,#fed7aa 100%);
+  border:2px solid #f59e0b;border-radius:var(--radius-lg);padding:16px 18px;
+  box-shadow:0 4px 18px rgba(245,158,11,0.18);position:relative;overflow:hidden;
+  transition:all .25s ease;
+}
+.ride-card.urgent{
+  background:linear-gradient(135deg,#fef2f2 0%,#fee2e2 50%,#fecdd3 100%);
+  border-color:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,0.25), 0 8px 24px rgba(239,68,68,0.2);
+  animation:ridePulse 1.4s infinite alternate;
+}
+@keyframes ridePulse{
+  from{transform:scale(1)}
+  to{transform:scale(1.012);box-shadow:0 0 0 6px rgba(239,68,68,0.35), 0 10px 28px rgba(239,68,68,0.25)}
+}
+.ride-card-inner{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+}
+.ride-card-left{
+  display:flex;align-items:center;gap:12px;flex:1;min-width:240px;
+}
+.ride-icon-bubble{
+  width:54px;height:54px;border-radius:18px;background:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:30px;
+  box-shadow:var(--shadow-sm);flex-shrink:0;border:1.5px solid #fde68a;
+  animation:scooterBounce 2.5s infinite ease-in-out;
+}
+@keyframes scooterBounce{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-4px) rotate(-3deg)}
+}
+.ride-info-title{
+  font-size:16px;font-weight:900;color:#92400e;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.ride-badge{
+  font-size:11px;font-weight:900;padding:2px 8px;border-radius:var(--radius-full);
+  background:#f59e0b;color:#fff;text-transform:uppercase;letter-spacing:.04em;
+}
+.ride-card.urgent .ride-info-title{color:#991b1b}
+.ride-card.urgent .ride-badge{background:#dc2626}
+.ride-countdown{
+  font-size:22px;font-weight:900;color:#b45309;margin-top:2px;letter-spacing:-.02em;
+}
+.ride-card.urgent .ride-countdown{color:#dc2626}
+.ride-card-actions{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.ride-btn{
+  padding:8px 13px;border-radius:var(--radius-full);font-size:12.5px;font-weight:800;
+  display:inline-flex;align-items:center;gap:6px;transition:all .15s ease;cursor:pointer;border:none;
+}
+.ride-btn-test{background:#fff;border:1.5px solid #f59e0b;color:#b45309}
+.ride-btn-test:hover{background:#fef3c7}
+.ride-btn-cfg{background:#92400e;color:#fff}
+.ride-btn-cfg:hover{background:#78350f}
+.ride-switch-label{
+  display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;color:#78350f;
+  background:rgba(255,255,255,0.7);padding:6px 10px;border-radius:var(--radius-full);cursor:pointer;
+}
+
+/* 🎒 Thẻ Soạn Cặp Sách Đến Trường */
+.bag-card{
+  background:linear-gradient(135deg,#f0fdf4 0%,#f0fdfa 50%,#e0f2fe 100%);
+  border:2px solid #86efac;border-radius:var(--radius-lg);padding:18px;
+  box-shadow:0 4px 18px rgba(16,185,129,0.12);
+}
+.bag-card-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;
+}
+.bag-title{
+  font-size:16px;font-weight:900;color:#065f46;display:flex;align-items:center;gap:8px;
+}
+.bag-progress-wrap{
+  display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:#047857;
+}
+.bag-progress-bar{
+  width:120px;height:10px;background:#e2e8f0;border-radius:var(--radius-full);overflow:hidden;
+}
+.bag-progress-bar i{
+  display:block;height:100%;background:linear-gradient(90deg,#10b981,#059669);
+  border-radius:var(--radius-full);transition:width .3s ease;
+}
+.bag-checklist{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px;margin-top:10px;
+}
+.bag-item{
+  background:#fff;border:1.5px solid #bbf7d0;border-radius:var(--radius-md);
+  padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;
+  transition:all .15s ease;user-select:none;
+}
+.bag-item:hover{border-color:#10b981;transform:translateY(-1px)}
+.bag-item.checked{
+  background:#ecfdf5;border-color:#34d399;opacity:.88;
+}
+.bag-check-circle{
+  width:24px;height:24px;border-radius:50%;border:2px solid #a7f3d0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+  color:transparent;transition:all .2s ease;flex-shrink:0;background:#fff;
+}
+.bag-item.checked .bag-check-circle{
+  background:#10b981;border-color:#10b981;color:#fff;
+}
+.bag-item-text{
+  flex:1;font-size:13.5px;font-weight:700;color:#0f172a;line-height:1.35;
+}
+.bag-item.checked .bag-item-text{
+  text-decoration:line-through;color:#475569;
+}
+.bag-reward-pill{
+  background:#d1fae5;color:#065f46;border-radius:var(--radius-full);
+  padding:3px 9px;font-size:11.5px;font-weight:900;white-space:nowrap;
+}
+
+/* 🐝 Đồng hồ Con Ong 15 Phút Tập Trung */
+.bee-card{
+  background:linear-gradient(135deg,#fefce8 0%,#fef08a 60%,#fde047 100%);
+  border:2px solid #eab308;border-radius:var(--radius-lg);padding:18px;
+  text-align:center;box-shadow:0 4px 18px rgba(234,179,8,0.2);
+}
+.bee-timer-display{
+  font-size:48px;font-weight:900;color:#854d0e;font-variant-numeric:tabular-nums;
+  margin:10px 0;letter-spacing:-.03em;
+}
+.bee-timer-actions{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px;
+}
+.bee-btn{
+  padding:10px 18px;border-radius:var(--radius-full);font-size:13.5px;font-weight:900;
+  display:inline-flex;align-items:center;gap:6px;transition:all .15s ease;cursor:pointer;border:none;
+}
+.bee-btn.primary{background:#ca8a04;color:#fff}
+.bee-btn.secondary{background:#fff;border:1.5px solid #ca8a04;color:#854d0e}
+
+/* Thanh chuyển Tab Thời Khóa Biểu */
+.tt-view-switch{
+  display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;
+}
+.tt-view-switch::-webkit-scrollbar{display:none}
+.tt-switch-btn{
+  background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-full);
+  padding:8px 15px;font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap;
+  cursor:pointer;transition:all .15s ease;
+}
+.tt-switch-btn.active{
+  background:var(--dark);color:#fff;border-color:var(--dark);
+  box-shadow:0 3px 10px rgba(15,23,42,0.15);
+}
+
+/* Khay Môn Học Lớp 1 (Palette) */
+.tt-palette-card{
+  background:#f8fafc;border:1.5px solid var(--line);border-radius:var(--radius-md);
+  padding:14px;margin-bottom:14px;
+}
+.tt-palette-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap;
+}
+.tt-palette-hint{
+  font-size:12px;color:var(--muted);font-weight:700;
+}
+.tt-palette-chips{
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+}
+.tt-subject-pill{
+  display:inline-flex;align-items:center;gap:6px;padding:7px 12px;
+  border-radius:var(--radius-full);font-size:13px;font-weight:800;cursor:grab;
+  user-select:none;border:1.5px solid transparent;transition:transform .15s ease, box-shadow .15s ease;
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+}
+.tt-subject-pill:active{cursor:grabbing;transform:scale(0.96)}
+.tt-subject-pill.selected{
+  transform:scale(1.08);border-color:#7c3aed !important;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.35);animation:pillPulse 1.2s infinite alternate;
+}
+@keyframes pillPulse{
+  from{transform:scale(1.05)}
+  to{transform:scale(1.1)}
+}
+.tt-selected-notice{
+  margin-top:10px;background:#ede9fe;border:1.5px dashed #8b5cf6;
+  border-radius:var(--radius-sm);padding:8px 12px;font-size:12.5px;
+  font-weight:800;color:#5b21b6;display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.tt-cancel-select-btn{
+  background:#fff;border:1px solid #c4b5fd;color:#6d28d9;border-radius:var(--radius-full);
+  padding:4px 10px;font-size:11.5px;font-weight:900;cursor:pointer;
+}
+
+/* Bộ lọc ngày trên điện thoại */
+.tt-day-filter-bar{
+  display:none;gap:6px;overflow-x:auto;padding-bottom:10px;margin-bottom:10px;scrollbar-width:none;
+}
+.tt-day-filter-bar::-webkit-scrollbar{display:none}
+.tt-day-pill{
+  background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-full);
+  padding:6px 12px;font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;cursor:pointer;
+}
+.tt-day-pill.active{
+  background:#7c3aed;color:#fff;border-color:#7c3aed;
+}
+
+/* Bảng Thời Khóa Biểu */
+.tt-table-container{
+  overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--line);
+  border-radius:var(--radius-md);background:#fff;box-shadow:var(--shadow-sm);
+}
+.tt-table{
+  width:100%;border-collapse:separate;border-spacing:0;min-width:680px;text-align:center;
+}
+.tt-table th, .tt-table td{
+  border-right:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;
+  padding:6px;vertical-align:middle;
+}
+.tt-table th:last-child, .tt-table td:last-child{border-right:none}
+.tt-table tr:last-child td{border-bottom:none}
+.tt-col-period{
+  width:95px;min-width:95px;background:#f8fafc;font-weight:800;font-size:12px;color:#475569;
+  position:sticky;left:0;z-index:2;box-shadow:2px 0 6px rgba(0,0,0,0.03);
+}
+.tt-col-period .p-num{font-size:13px;font-weight:900;color:#0f172a}
+.tt-col-period .p-time{font-size:10.5px;color:#64748b;margin-top:2px}
+.tt-table th{
+  background:#f8fafc;font-size:13px;font-weight:900;color:#1e293b;padding:12px 8px;
+}
+.tt-table th.today-col{
+  background:#eff6ff;color:#1d4ed8;border-bottom:2px solid #3b82f6;
+}
+.tt-break-row td{
+  background:#fffbeb;color:#b45309;font-size:12px;font-weight:800;padding:6px;
+  letter-spacing:.02em;text-align:center;
+}
+
+/* Từng ô tiết học (Cell) */
+.tt-cell{
+  min-height:64px;height:64px;border-radius:var(--radius-sm);background:#fafafa;
+  display:flex;align-items:center;justify-content:center;position:relative;
+  transition:all .15s ease;border:1.5px dashed transparent;cursor:pointer;
+  padding:4px;
+}
+.tt-cell:hover{
+  background:#f1f5f9;border-color:#cbd5e1;
+}
+.tt-cell.drag-over{
+  background:#d1fae5 !important;border-color:#10b981 !important;
+  transform:scale(1.02);box-shadow:0 0 0 3px rgba(16,185,129,0.3);
+}
+.tt-cell.empty{
+  color:#cbd5e1;font-size:18px;font-weight:300;
+}
+.tt-cell.empty:hover{
+  color:#94a3b8;
+}
+.tt-cell-filled{
+  width:100%;height:100%;border-radius:8px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:4px;position:relative;
+  transition:all .15s ease;box-shadow:0 1px 4px rgba(0,0,0,0.04);
+}
+.tt-cell-filled:hover{
+  transform:translateY(-1px);box-shadow:var(--shadow-sm);
+}
+.tt-cell-icon{font-size:18px;line-height:1}
+.tt-cell-name{
+  font-size:12px;font-weight:900;margin-top:2px;line-height:1.2;text-align:center;
+}
+.tt-cell-note{
+  font-size:10px;opacity:.85;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90px;
+}
+.tt-cell-del{
+  position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;
+  background:rgba(239,68,68,0.85);color:#fff;border:none;font-size:10px;font-weight:900;
+  display:none;align-items:center;justify-content:center;cursor:pointer;line-height:1;
+}
+.tt-cell-filled:hover .tt-cell-del{display:flex}
+
+@media(max-width:768px){
+  .tt-day-filter-bar{display:flex}
+  .tt-table{min-width:580px}
+  .ride-card{padding:14px}
+  .ride-card-inner{flex-direction:column;align-items:flex-start;gap:10px}
+  .ride-card-actions{width:100%;justify-content:space-between}
+  .bag-card-head{flex-direction:column;align-items:flex-start;gap:8px}
+  .bag-checklist{grid-template-columns:1fr}
+}
+

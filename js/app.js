@@ -77,6 +77,70 @@ const DEFAULT_REWARDS=[
   {id:uid('r'),name:'Món quà lớn theo nguyện vọng',cost:1000,category:'Sách & Đồ chơi',icon:'🎁',rule:'Tích lũy dài hạn'}
 ];
 
+// 🎒 DANH MỤC MÔN HỌC CHUẨN TIỂU HỌC (LỚP 1)
+const GRADE1_SUBJECTS = [
+  { name: 'Tiếng Việt', icon: '📖', color: '#8b5cf6', bg: '#f5f3ff', border: '#ddd6fe', textColor: '#6d28d9' },
+  { name: 'Toán', icon: '📐', color: '#3b82f6', bg: '#eff6ff', border: '#bfdbfe', textColor: '#1d4ed8' },
+  { name: 'Tiếng Anh', icon: '🇬🇧', color: '#f59e0b', bg: '#fffbeb', border: '#fde68a', textColor: '#b45309' },
+  { name: 'Đạo đức', icon: '💖', color: '#ec4899', bg: '#fdf2f8', border: '#fbcfe8', textColor: '#be185d' },
+  { name: 'TN & Xã hội', icon: '🔬', color: '#10b981', bg: '#ecfdf5', border: '#a7f3d0', textColor: '#047857' },
+  { name: 'Âm nhạc', icon: '🎵', color: '#06b6d4', bg: '#ecfeff', border: '#a5f3fc', textColor: '#0e7490' },
+  { name: 'Mỹ thuật', icon: '🎨', color: '#f97316', bg: '#fff7ed', border: '#fed7aa', textColor: '#c2410c' },
+  { name: 'GD Thể chất', icon: '⚽', color: '#14b8a6', bg: '#f0fdfa', border: '#99f6e4', textColor: '#0f766e' },
+  { name: 'HĐ Trải nghiệm', icon: '🌟', color: '#eab308', bg: '#fefce8', border: '#fef08a', textColor: '#a16207' },
+  { name: 'Tin học', icon: '💻', color: '#6366f1', bg: '#eef2ff', border: '#c7d2fe', textColor: '#4338ca' },
+  { name: 'Toán tư duy', icon: '🧮', color: '#a855f7', bg: '#faf5ff', border: '#e9d5ff', textColor: '#7e22ce' },
+  { name: 'Bán trú / Nghỉ', icon: '😴', color: '#64748b', bg: '#f8fafc', border: '#e2e8f0', textColor: '#475569' }
+];
+
+// 🎒 MẪU THỜI KHÓA BIỂU LỚP 1 TIÊU CHUẨN (BỘ GD&ĐT)
+const DEFAULT_GRADE1_TIMETABLE = {
+  // Thứ 2
+  "2_1": { subject: "HĐ Trải nghiệm", note: "Chào cờ đầu tuần" },
+  "2_2": { subject: "Tiếng Việt", note: "Học vần" },
+  "2_3": { subject: "Tiếng Việt", note: "Tập viết" },
+  "2_4": { subject: "Toán", note: "Số & phép đếm" },
+  "2_5": { subject: "Âm nhạc", note: "Hát múa vui nhộn" },
+  "2_6": { subject: "GD Thể chất", note: "Vận động cơ bản" },
+  "2_7": { subject: "Tiếng Việt", note: "Đọc mở rộng" },
+
+  // Thứ 3
+  "3_1": { subject: "Toán", note: "Phép cộng trừ" },
+  "3_2": { subject: "Tiếng Việt", note: "Tập đọc" },
+  "3_3": { subject: "Tiếng Việt", note: "Chính tả" },
+  "3_4": { subject: "Tiếng Anh", note: "Từ vựng Unit" },
+  "3_5": { subject: "Mỹ thuật", note: "Vẽ tranh & xé dán" },
+  "3_6": { subject: "Toán tư duy", note: "Ghép que tính" },
+  "3_7": { subject: "Tiếng Việt", note: "Kể chuyện" },
+
+  // Thứ 4
+  "4_1": { subject: "Tiếng Việt", note: "Học vần mới" },
+  "4_2": { subject: "Tiếng Việt", note: "Luyện đọc câu" },
+  "4_3": { subject: "Toán", note: "Hình học phẳng" },
+  "4_4": { subject: "Đạo đức", note: "Gọn gàng ngăn nắp" },
+  "4_5": { subject: "TN & Xã hội", note: "Gia đình em" },
+  "4_6": { subject: "GD Thể chất", note: "Trò chơi vận động" },
+  "4_7": { subject: "Tiếng Việt", note: "Đọc sách tranh" },
+
+  // Thứ 5
+  "5_1": { subject: "Toán", note: "Giải toán có lời văn" },
+  "5_2": { subject: "Tiếng Việt", note: "Tập viết ô ly" },
+  "5_3": { subject: "Tiếng Việt", note: "Luyện từ & câu" },
+  "5_4": { subject: "Tiếng Anh", note: "Bài hát tiếng Anh" },
+  "5_5": { subject: "TN & Xã hội", note: "Trường học thân yêu" },
+  "5_6": { subject: "Tin học", note: "Làm quen chuột máy tính" },
+  "5_7": { subject: "Kỹ năng sống", note: "Tự phục vụ bản thân" },
+
+  // Thứ 6
+  "6_1": { subject: "Tiếng Việt", note: "Ôn tập cuối tuần" },
+  "6_2": { subject: "Tiếng Việt", note: "Kiểm tra đánh giá" },
+  "6_3": { subject: "Toán", note: "Luyện tập chung" },
+  "6_4": { subject: "Tiếng Anh", note: "Trò chơi đố chữ" },
+  "6_5": { subject: "Mỹ thuật", note: "Tô màu sáng tạo" },
+  "6_6": { subject: "HĐ Trải nghiệm", note: "Sinh hoạt lớp & Sao chăm ngoan" },
+  "6_7": { subject: "Tổng kết tuần", note: "Khen thưởng cuối tuần" }
+};
+
 function seedBaoNhi(){
   return {
     children:[{
@@ -106,6 +170,8 @@ function loadData(){
     const d=JSON.parse(raw);
     if(!Array.isArray(d.children)) d.children=[];
     if(!Array.isArray(d.subjects)) d.subjects=[];
+    if(!Array.isArray(d.customSubjects)) d.customSubjects=[];
+    if(!d.rideReminder) d.rideReminder={enabled:true,leadMinutes:10,morningTime:'07:15',afternoonTime:'13:30',pickupTime:'16:30',enableSound:true,enableSpeech:true,enableNotification:true};
     if(!Array.isArray(d.studyTools)) d.studyTools=structuredClone(DEFAULT_STUDY_TOOLS);
     if(!d.parentPassword) d.parentPassword='1234';
     if(!d.exchangeRate||!(Number(d.exchangeRate.stars)>0)||!(Number(d.exchangeRate.vnd)>0)) d.exchangeRate={stars:100,vnd:5000};
@@ -126,6 +192,8 @@ function loadData(){
       if(!Array.isArray(c.rewards))c.rewards=oldRewards.length?oldRewards.map(r=>({...r,id:r.id||uid('r')})):structuredClone(DEFAULT_REWARDS);
       if(!Array.isArray(c.achievements))c.achievements=oldAchievements.map(a=>({...a,id:a.id||uid('a')}));
       if(!Array.isArray(c.earnedAchievements))c.earnedAchievements=[];
+      if(!c.timetable || typeof c.timetable !== 'object' || !Object.keys(c.timetable).length) c.timetable=structuredClone(DEFAULT_GRADE1_TIMETABLE);
+      if(!c.schoolBagPackedDate) c.schoolBagPackedDate='';
 
       c.rewards=c.rewards.map(r=>({
         id:r.id||uid('r'),
@@ -344,6 +412,10 @@ function render(){
   renderStudyTools();
   renderAchievements();
   renderRewards();
+  renderRideReminder();
+  renderTimetable();
+  renderSchoolBagChecklist();
+  renderBeeTimer();
   renderCalendar();
   renderManagers();
   updateCloudStatusPill();
@@ -1880,3 +1952,970 @@ document.getElementById('taskDate').value=todayISO();
 document.getElementById('taskEndDate').value=todayISO();
 document.getElementById('duration').value='15 phút';
 render();
+
+
+/* ============================================================
+   🎒 THỜI KHÓA BIỂU & NHẮC BÁO CHỞ ĐI HỌC (LỚP 1)
+   ============================================================ */
+
+// 1. ÂM THANH & GIỌNG NÓI TIẾNG VIỆT
+function playSchoolBell(){
+  try{
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx) return;
+    const ctx=new AudioCtx();
+    const times=[0, 0.35, 0.8, 1.15];
+    const freqs=[880, 659.25, 880, 659.25];
+    times.forEach((t,i)=>{
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(freqs[i],ctx.currentTime+t);
+      gain.gain.setValueAtTime(0.28,ctx.currentTime+t);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+0.34);
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.start(ctx.currentTime+t);
+      osc.stop(ctx.currentTime+t+0.36);
+    });
+  }catch(e){}
+}
+
+function playPopSound(){
+  try{
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx) return;
+    const ctx=new AudioCtx();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(320,ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(750,ctx.currentTime+0.1);
+    gain.gain.setValueAtTime(0.25,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.12);
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime+0.12);
+  }catch(e){}
+}
+
+function speakVietnamese(text){
+  try{
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='vi-VN';
+    u.rate=0.95;
+    u.pitch=1.05;
+    const voices=window.speechSynthesis.getVoices();
+    const viVoice=voices.find(v=>v.lang.startsWith('vi')||v.lang.includes('VIE'));
+    if(viVoice) u.voice=viVoice;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function sendBrowserNotification(title,body){
+  try{
+    if(!('Notification' in window)) return;
+    if(Notification.permission==='granted'){
+      new Notification(title,{body:body,icon:'icon.svg',tag:'school-ride-alert'});
+    }else if(Notification.permission!=='denied'){
+      Notification.requestPermission();
+    }
+  }catch(e){}
+}
+
+// 2. NHẮC BÁO GIỜ CHỞ BÉ ĐI HỌC (TRƯỚC 10 PHÚT)
+let rideAlertHistory={}; // chống lặp chuông trong cùng 1 cữ giờ
+
+function getRideReminderConfig(){
+  if(!data.rideReminder){
+    data.rideReminder={
+      enabled:true,
+      leadMinutes:10,
+      morningTime:'07:15',
+      afternoonTime:'13:30',
+      pickupTime:'16:30',
+      enableSound:true,
+      enableSpeech:true,
+      enableNotification:true
+    };
+  }
+  return data.rideReminder;
+}
+
+function formatMinutesToHHMM(totalMins){
+  let m=((totalMins%1440)+1440)%1440;
+  const h=Math.floor(m/60);
+  const min=m%60;
+  return String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0');
+}
+
+function getNextRideEvent(){
+  const cfg=getRideReminderConfig();
+  if(!cfg.enabled) return null;
+  const now=new Date();
+  const currentMinutes=now.getHours()*60+now.getMinutes();
+  const currentSeconds=currentMinutes*60+now.getSeconds();
+
+  function parseMins(str){
+    if(!str) return 0;
+    const parts=str.split(':').map(Number);
+    return (parts[0]||0)*60+(parts[1]||0);
+  }
+
+  const lead=Number(cfg.leadMinutes||10);
+  const events=[
+    { type:'morning', label:'Chở con đi học Buổi Sáng', schoolTime:cfg.morningTime||'07:15', icon:'🛵🌅', role:'đi học' },
+    { type:'afternoon', label:'Chở con đi học Buổi Chiều', schoolTime:cfg.afternoonTime||'13:30', icon:'🛵☀️', role:'đi học' },
+    { type:'pickup', label:'Đón con tan trường về', schoolTime:cfg.pickupTime||'16:30', icon:'🛵🎒', role:'đón con' }
+  ].map(ev=>{
+    const schoolMins=parseMins(ev.schoolTime);
+    const departMins=schoolMins-lead;
+    const departSecs=departMins*60;
+    const schoolSecs=schoolMins*60;
+    return {
+      ...ev,
+      schoolMins,
+      departMins,
+      departTimeStr:formatMinutesToHHMM(departMins),
+      diffDepartSecs:departSecs-currentSeconds,
+      diffSchoolSecs:schoolSecs-currentSeconds
+    };
+  });
+
+  const upcoming=events.find(ev=>ev.diffSchoolSecs>-10*60);
+  return upcoming||events[0];
+}
+
+function triggerSchoolRideAlert(ev){
+  const cfg=getRideReminderConfig();
+  if(!cfg.enabled) return;
+  const c=child();
+  const childName=c?c.name:'con';
+
+  if(cfg.enableSound) playSchoolBell();
+  if(cfg.enableSpeech){
+    const msg=(ev.type==='pickup')
+      ? 'Bố mẹ ơi! Còn ' + cfg.leadMinutes + ' phút nữa là đến giờ tan trường lúc ' + ev.schoolTime + ', chuẩn bị đi đón bé ' + childName + ' về nhé!'
+      : 'Bố mẹ ơi! Còn ' + cfg.leadMinutes + ' phút nữa là vào học lúc ' + ev.schoolTime + ', cùng bé ' + childName + ' chuẩn bị cặp sách và xuất phát đến trường thôi nào!';
+    setTimeout(()=>speakVietnamese(msg), 400);
+  }
+  if(cfg.enableNotification){
+    sendBrowserNotification('🛵 Đến giờ ' + ev.role + '!', 'Còn ' + cfg.leadMinutes + ' phút nữa là đến giờ lúc ' + ev.schoolTime + '. Cùng bé ' + childName + ' xuất phát nhé!');
+  }
+  showToast('🚨 ĐẾN GIỜ XUẤT PHÁT! Còn ' + cfg.leadMinutes + ' phút nữa vào học lúc ' + ev.schoolTime + '!');
+}
+
+function updateRideReminderTick(){
+  const cfg=getRideReminderConfig();
+  if(!cfg.enabled) return;
+
+  const ev=getNextRideEvent();
+  if(!ev) return;
+
+  const todayKey=todayISO() + '_' + ev.type;
+  if(ev.diffDepartSecs<=3 && ev.diffDepartSecs>=-10 && !rideAlertHistory[todayKey]){
+    rideAlertHistory[todayKey]=true;
+    triggerSchoolRideAlert(ev);
+  }
+
+  const isUrgent=(ev.diffDepartSecs<=0 && ev.diffSchoolSecs>=0);
+  const cdText=formatCountdownRide(ev.diffDepartSecs, ev.diffSchoolSecs);
+
+  ['todayRideReminderCard','scheduleRideReminderCard'].forEach(cardId=>{
+    const card=document.getElementById(cardId);
+    if(!card) return;
+    const cdEl=card.querySelector('.ride-countdown');
+    if(cdEl) cdEl.innerHTML=cdText;
+    card.classList.toggle('urgent', isUrgent);
+  });
+}
+
+function formatCountdownRide(diffDepartSecs, diffSchoolSecs){
+  if(diffDepartSecs<=0 && diffSchoolSecs>=0){
+    const sRemain=diffSchoolSecs;
+    const m=Math.floor(sRemain/60), s=sRemain%60;
+    return '🚨 ĐẾN GIỜ XUẤT PHÁT! Vào học sau: <b>' + m + 'p ' + String(s).padStart(2,'0') + 's</b>';
+  }
+  if(diffSchoolSecs<0){
+    return '✅ Đã qua giờ học';
+  }
+  const sRemain=diffDepartSecs;
+  const h=Math.floor(sRemain/3600);
+  const m=Math.floor((sRemain%3600)/60);
+  const s=sRemain%60;
+  if(h>0) return '⏳ Xuất phát sau: <b>' + h + 'h ' + m + 'p ' + String(s).padStart(2,'0') + 's</b>';
+  return '⏳ Xuất phát sau: <b>' + m + ' phút ' + String(s).padStart(2,'0') + ' giây</b>';
+}
+
+function renderRideReminder(){
+  const cfg=getRideReminderConfig();
+  const c=child();
+  const childName=c?(childIcon(c)+' '+c.name):'bé';
+  const ev=getNextRideEvent();
+
+  const isUrgent=(ev && ev.diffDepartSecs<=0 && ev.diffSchoolSecs>=0);
+  const cdText=ev?formatCountdownRide(ev.diffDepartSecs, ev.diffSchoolSecs):'--:--';
+
+  const html=`
+    <div class="ride-card-inner">
+      <div class="ride-card-left">
+        <div class="ride-icon-bubble">🛵</div>
+        <div>
+          <div class="ride-info-title">
+            <span>Giờ chở ${childName} đi học</span>
+            <span class="ride-badge">${ev?ev.label:'Hôm nay'}</span>
+            <span class="note" style="color:#b45309">Nhắc trước <b>${cfg.leadMinutes} phút</b></span>
+          </div>
+          <div style="font-size:13.5px;color:#78350f;margin-top:2px">
+            Vào lớp: <b>${ev?ev.schoolTime:'07:15'}</b> ➔ Xuất phát: <b style="color:#dc2626">${ev?ev.departTimeStr:'07:05'}</b>
+          </div>
+          <div class="ride-countdown">${cdText}</div>
+        </div>
+      </div>
+      <div class="ride-card-actions">
+        <label class="ride-switch-label" title="Bật/Tắt nhắc nhở">
+          <input type="checkbox" ${cfg.enabled?'checked':''} onchange="toggleRideReminderEnabled(this.checked)" style="width:16px;height:16px">
+          <span>${cfg.enabled?'🔔 Đang bật':'🔕 Đang tắt'}</span>
+        </label>
+        <button type="button" class="ride-btn ride-btn-test" onclick="testSchoolRideAlert()">🔊 Thử chuông</button>
+        <button type="button" class="ride-btn ride-btn-cfg" onclick="openRideReminderModal()">⚙️ Đổi giờ học</button>
+      </div>
+    </div>
+  `;
+
+  ['todayRideReminderCard','scheduleRideReminderCard'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){
+      el.innerHTML=html;
+      el.classList.toggle('urgent', !!isUrgent);
+    }
+  });
+}
+
+function toggleRideReminderEnabled(val){
+  const cfg=getRideReminderConfig();
+  cfg.enabled=val;
+  save();
+  renderRideReminder();
+  showToast(val?'🔔 Đã bật nhắc báo giờ chở con đi học!':'🔕 Đã tắt nhắc nhở.');
+}
+
+function testSchoolRideAlert(){
+  const cfg=getRideReminderConfig();
+  const ev=getNextRideEvent()||{schoolTime:'07:15',role:'đi học',type:'morning'};
+  triggerSchoolRideAlert(ev);
+}
+
+function openRideReminderModal(){
+  const cfg=getRideReminderConfig();
+  document.getElementById('rideCfgEnabled').checked=cfg.enabled!==false;
+  document.getElementById('rideCfgMorningTime').value=cfg.morningTime||'07:15';
+  document.getElementById('rideCfgAfternoonTime').value=cfg.afternoonTime||'13:30';
+  document.getElementById('rideCfgPickupTime').value=cfg.pickupTime||'16:30';
+  document.getElementById('rideCfgLeadMinutes').value=String(cfg.leadMinutes||10);
+  document.getElementById('rideCfgEnableSound').checked=cfg.enableSound!==false;
+  document.getElementById('rideCfgEnableSpeech').checked=cfg.enableSpeech!==false;
+  document.getElementById('rideCfgEnableNotification').checked=cfg.enableNotification!==false;
+  document.getElementById('rideReminderModal').classList.add('show');
+}
+
+function closeRideReminderModal(){
+  document.getElementById('rideReminderModal').classList.remove('show');
+}
+
+function saveRideReminderConfig(){
+  const cfg=getRideReminderConfig();
+  cfg.enabled=document.getElementById('rideCfgEnabled').checked;
+  cfg.morningTime=document.getElementById('rideCfgMorningTime').value||'07:15';
+  cfg.afternoonTime=document.getElementById('rideCfgAfternoonTime').value||'13:30';
+  cfg.pickupTime=document.getElementById('rideCfgPickupTime').value||'16:30';
+  cfg.leadMinutes=Number(document.getElementById('rideCfgLeadMinutes').value||10);
+  cfg.enableSound=document.getElementById('rideCfgEnableSound').checked;
+  cfg.enableSpeech=document.getElementById('rideCfgEnableSpeech').checked;
+  cfg.enableNotification=document.getElementById('rideCfgEnableNotification').checked;
+
+  if(cfg.enableNotification && 'Notification' in window && Notification.permission==='default'){
+    Notification.requestPermission();
+  }
+
+  save();
+  closeRideReminderModal();
+  renderRideReminder();
+  showToast('💾 Đã lưu cài đặt giờ chở bé đi học!');
+}
+
+// 3. THỜI KHÓA BIỂU KÉO THẢ (WEEKLY TIMETABLE)
+let selectedPaletteSubject=null;
+let draggedSubject=null;
+let draggedCellCoord=null;
+let currentTtDayFilter='all';
+let editingCellCoord=null;
+
+function getAllSubjects(){
+  const custom=Array.isArray(data.customSubjects)?data.customSubjects:[];
+  return [...GRADE1_SUBJECTS,...custom];
+}
+
+function getSubjectMeta(name){
+  if(!name) return null;
+  return getAllSubjects().find(s=>s.name.toLowerCase()===String(name).toLowerCase())||{
+    name:name,
+    icon:'📘',
+    color:'#3b82f6',
+    bg:'#eff6ff',
+    border:'#bfdbfe',
+    textColor:'#1d4ed8'
+  };
+}
+
+function switchTimetableTab(tabName){
+  const tabs=['timetable','bag','bee','calendar'];
+  tabs.forEach(t=>{
+    const btn=document.getElementById('ttView' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
+    const wrap=document.getElementById('tt' + t.charAt(0).toUpperCase() + t.slice(1) + 'TabWrap');
+    if(btn) btn.classList.toggle('active', t===tabName);
+    if(wrap) wrap.style.display=(t===tabName)?'block':'none';
+  });
+}
+
+function setTimetableDayFilter(day, btnEl){
+  currentTtDayFilter=day;
+  document.querySelectorAll('.tt-day-pill').forEach(b=>b.classList.remove('active'));
+  if(btnEl) btnEl.classList.add('active');
+  renderTimetableTable();
+}
+
+function renderTimetablePalette(){
+  const box=document.getElementById('ttPaletteChips');
+  if(!box) return;
+  box.innerHTML='';
+
+  const subjects=getAllSubjects();
+  subjects.forEach(sub=>{
+    const pill=document.createElement('div');
+    pill.className='tt-subject-pill';
+    pill.draggable=true;
+    pill.style.background=sub.bg;
+    pill.style.borderColor=sub.border;
+    pill.style.color=sub.textColor;
+    pill.innerHTML='<span>' + sub.icon + '</span> <span>' + sub.name + '</span>';
+
+    if(selectedPaletteSubject===sub.name){
+      pill.classList.add('selected');
+    }
+
+    pill.addEventListener('dragstart', (e)=>onTtDragStart(e, sub.name));
+    pill.addEventListener('click', ()=>{ onTtPaletteClick(sub.name); });
+    box.appendChild(pill);
+  });
+
+  const notice=document.getElementById('ttSelectedNotice');
+  const nameEl=document.getElementById('ttSelectedSubjectName');
+  if(notice && nameEl){
+    if(selectedPaletteSubject){
+      notice.style.display='flex';
+      nameEl.textContent=selectedPaletteSubject;
+    }else{
+      notice.style.display='none';
+    }
+  }
+}
+
+function onTtPaletteClick(subName){
+  if(selectedPaletteSubject===subName){
+    selectedPaletteSubject=null;
+    playPopSound();
+  }else{
+    selectedPaletteSubject=subName;
+    playPopSound();
+    showToast('👉 Đang chọn môn "' + subName + '". Chạm vào ô tiết học trong bảng để dán!');
+  }
+  renderTimetablePalette();
+}
+
+function clearSelectedPaletteSubject(){
+  selectedPaletteSubject=null;
+  renderTimetablePalette();
+}
+
+function onTtDragStart(e, subName){
+  draggedSubject=subName;
+  draggedCellCoord=null;
+  e.dataTransfer.setData('text/plain', JSON.stringify({ type:'subject', name:subName }));
+  e.dataTransfer.effectAllowed='copyMove';
+}
+
+function onTtCellDragStart(e, coord){
+  const c=child();
+  if(!c||!c.timetable||!c.timetable[coord]) return;
+  draggedCellCoord=coord;
+  draggedSubject=c.timetable[coord].subject;
+  e.dataTransfer.setData('text/plain', JSON.stringify({ type:'cell', coord:coord, data:c.timetable[coord] }));
+  e.dataTransfer.effectAllowed='move';
+}
+
+function onTtDragOver(e){
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+
+function onTtDragLeave(e){
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function onTtDrop(e, day, period){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const c=child();
+  if(!c) return alert('Chưa có hồ sơ bé.');
+  if(!c.timetable) c.timetable={};
+
+  const targetCoord=day + '_' + period;
+
+  try{
+    const raw=e.dataTransfer.getData('text/plain');
+    if(!raw) return;
+    const payload=JSON.parse(raw);
+
+    if(payload.type==='subject'){
+      c.timetable[targetCoord]={ subject:payload.name, note:'' };
+      playPopSound();
+      save();
+      renderTimetableTable();
+      renderSchoolBagChecklist();
+      showToast('✅ Đã xếp môn ' + payload.name + ' vào Thứ ' + day + ' Tiết ' + period + '!');
+    }else if(payload.type==='cell'){
+      const sourceCoord=payload.coord;
+      if(sourceCoord!==targetCoord){
+        const temp=c.timetable[targetCoord];
+        c.timetable[targetCoord]=c.timetable[sourceCoord];
+        if(temp) c.timetable[sourceCoord]=temp;
+        else delete c.timetable[sourceCoord];
+        playPopSound();
+        save();
+        renderTimetableTable();
+        renderSchoolBagChecklist();
+        showToast('🔄 Đã chuyển vị trí tiết học!');
+      }
+    }
+  }catch(err){}
+}
+
+function onTtCellClick(day, period){
+  const c=child();
+  if(!c) return;
+  if(!c.timetable) c.timetable={};
+  const coord=day + '_' + period;
+
+  if(selectedPaletteSubject){
+    c.timetable[coord]={ subject:selectedPaletteSubject, note:'' };
+    playPopSound();
+    save();
+    renderTimetableTable();
+    renderSchoolBagChecklist();
+    showToast('✅ Đã dán môn "' + selectedPaletteSubject + '" vào Thứ ' + day + ' Tiết ' + period + '!');
+    return;
+  }
+
+  openTimetableCellModal(coord);
+}
+
+function openTimetableCellModal(coord){
+  editingCellCoord=coord;
+  const parts=coord.split('_');
+  const day=parts[0], period=parts[1];
+  const c=child();
+  const entry=c?.timetable?.[coord];
+
+  document.getElementById('ttCellModalTitle').textContent='Chỉnh sửa Tiết ' + period;
+  document.getElementById('ttCellModalSubtitle').textContent='Thứ ' + (day==='7'?'7':(day==='CN'?'Chủ Nhật':'Thứ '+day)) + ' • ' + (period<=4?'Buổi Sáng':'Buổi Chiều');
+
+  const sel=document.getElementById('ttCellSubjectSelect');
+  sel.innerHTML='<option value="">-- Chọn môn học có sẵn --</option>';
+  getAllSubjects().forEach(sub=>{
+    sel.add(new Option(sub.icon + ' ' + sub.name, sub.name));
+  });
+
+  if(entry && entry.subject){
+    sel.value=entry.subject;
+    document.getElementById('ttCellCustomSubject').value=entry.subject;
+    document.getElementById('ttCellNote').value=entry.note||'';
+  }else{
+    sel.value='';
+    document.getElementById('ttCellCustomSubject').value='';
+    document.getElementById('ttCellNote').value='';
+  }
+
+  document.getElementById('timetableCellModal').classList.add('show');
+}
+
+function closeTimetableCellModal(){
+  document.getElementById('timetableCellModal').classList.remove('show');
+  editingCellCoord=null;
+}
+
+function onTtCellSelectChange(){
+  const val=document.getElementById('ttCellSubjectSelect').value;
+  if(val){
+    document.getElementById('ttCellCustomSubject').value=val;
+  }
+}
+
+function saveCurrentTimetableCell(){
+  if(!editingCellCoord) return;
+  const c=child();
+  if(!c) return;
+  if(!c.timetable) c.timetable={};
+
+  const subj=document.getElementById('ttCellCustomSubject').value.trim();
+  const note=document.getElementById('ttCellNote').value.trim();
+
+  if(!subj){
+    delete c.timetable[editingCellCoord];
+  }else{
+    c.timetable[editingCellCoord]={ subject:subj, note:note };
+  }
+
+  save();
+  closeTimetableCellModal();
+  renderTimetableTable();
+  renderSchoolBagChecklist();
+  showToast('💾 Đã lưu tiết học!');
+}
+
+function deleteCurrentTimetableCell(){
+  if(!editingCellCoord) return;
+  const c=child();
+  if(c && c.timetable){
+    delete c.timetable[editingCellCoord];
+    save();
+  }
+  closeTimetableCellModal();
+  renderTimetableTable();
+  renderSchoolBagChecklist();
+  showToast('🗑 Đã xóa tiết học.');
+}
+
+function deleteTimetableCell(coord, e){
+  if(e) e.stopPropagation();
+  const c=child();
+  if(!c||!c.timetable) return;
+  delete c.timetable[coord];
+  playPopSound();
+  save();
+  renderTimetableTable();
+  renderSchoolBagChecklist();
+}
+
+function renderTimetableTable(){
+  const table=document.getElementById('timetableTable');
+  if(!table) return;
+  const c=child();
+  const tt=c?.timetable||{};
+
+  const now=new Date();
+  const currentDayOfWeek=now.getDay()===0?8:(now.getDay()+1);
+
+  let daysToShow=['2','3','4','5','6','7'];
+  if(currentTtDayFilter!=='all'){
+    daysToShow=[currentTtDayFilter];
+  }
+
+  const dayHeaders={
+    '2':'Thứ 2', '3':'Thứ 3', '4':'Thứ 4',
+    '5':'Thứ 5', '6':'Thứ 6', '7':'Thứ 7'
+  };
+
+  let theadHtml='<thead><tr><th class="tt-col-period">Tiết / Giờ</th>';
+  daysToShow.forEach(d=>{
+    const isToday=Number(d)===currentDayOfWeek;
+    theadHtml+='<th class="' + (isToday?'today-col':'') + '">' + dayHeaders[d] + (isToday?' <span style="font-size:11px;background:#3b82f6;color:#fff;padding:1px 6px;border-radius:10px;margin-left:4px">Hôm nay</span>':'') + '</th>';
+  });
+  theadHtml+='</tr></thead>';
+
+  const periodRows=[
+    { id:1, name:'Tiết 1', time:'07:45 - 08:20', session:'morning' },
+    { id:2, name:'Tiết 2', time:'08:25 - 09:00', session:'morning' },
+    { id:'break_morning', name:'Ra chơi sáng', time:'09:00 - 09:20', isBreak:true, label:'🧃 Ra chơi & Uống sữa, tập thể dục giữa giờ (20 phút)' },
+    { id:3, name:'Tiết 3', time:'09:20 - 09:55', session:'morning' },
+    { id:4, name:'Tiết 4', time:'10:00 - 10:35', session:'morning' },
+    { id:'break_noon', name:'Nghỉ trưa', time:'10:45 - 13:45', isBreak:true, label:'🍚 Ăn trưa bán trú & Ngủ trưa tại trường' },
+    { id:5, name:'Tiết 1 (Chiều)', time:'14:00 - 14:35', session:'afternoon' },
+    { id:6, name:'Tiết 2 (Chiều)', time:'14:45 - 15:20', session:'afternoon' },
+    { id:7, name:'Tiết 3 (Chiều)', time:'15:30 - 16:05', session:'afternoon' }
+  ];
+
+  let tbodyHtml='<tbody>';
+
+  periodRows.forEach(row=>{
+    if(row.isBreak){
+      tbodyHtml+='<tr class="tt-break-row"><td class="tt-col-period"><div class="p-num" style="color:#b45309">⏰ ' + row.time + '</div></td><td colspan="' + daysToShow.length + '">' + row.label + '</td></tr>';
+      return;
+    }
+
+    const p=row.id;
+    tbodyHtml+='<tr><td class="tt-col-period"><div class="p-num">' + row.name + '</div><div class="p-time">' + row.time + '</div></td>';
+
+    daysToShow.forEach(d=>{
+      const coord=d + '_' + p;
+      const entry=tt[coord];
+      const meta=entry?getSubjectMeta(entry.subject):null;
+
+      if(entry && meta){
+        tbodyHtml+='<td><div class="tt-cell" ondragover="onTtDragOver(event)" ondragleave="onTtDragLeave(event)" ondrop="onTtDrop(event,\'' + d + '\',' + p + ')" onclick="onTtCellClick(\'' + d + '\',' + p + ')"><div class="tt-cell-filled" draggable="true" ondragstart="onTtCellDragStart(event,\'' + coord + '\')" style="background:' + meta.bg + ';border:1.5px solid ' + meta.border + ';color:' + meta.textColor + '"><button type="button" class="tt-cell-del" title="Xóa môn này" onclick="deleteTimetableCell(\'' + coord + '\',event)">✕</button><div class="tt-cell-icon">' + meta.icon + '</div><div class="tt-cell-name">' + safe(entry.subject) + '</div>' + (entry.note?('<div class="tt-cell-note" title="' + safe(entry.note) + '">' + safe(entry.note) + '</div>'):'') + '</div></div></td>';
+      }else{
+        tbodyHtml+='<td><div class="tt-cell empty" ondragover="onTtDragOver(event)" ondragleave="onTtDragLeave(event)" ondrop="onTtDrop(event,\'' + d + '\',' + p + ')" onclick="onTtCellClick(\'' + d + '\',' + p + ')" title="Bấm để chọn môn hoặc kéo môn vào đây"><span>+</span></div></td>';
+      }
+    });
+
+    tbodyHtml+='</tr>';
+  });
+
+  tbodyHtml+='</tbody>';
+  table.innerHTML=theadHtml+tbodyHtml;
+}
+
+function renderTimetable(){
+  const c=child();
+  const nameEl=document.getElementById('scheduleName');
+  if(nameEl) nameEl.textContent=c?(childIcon(c)+' '+c.name):'bé';
+
+  renderTimetablePalette();
+  renderTimetableTable();
+}
+
+function loadGrade1DefaultTimetable(){
+  const c=child();
+  if(!c) return alert('Chưa có hồ sơ bé.');
+  askConfirm('Nạp Thời khóa biểu Lớp 1 chuẩn', 'Bạn muốn nạp Mẫu Thời khóa biểu Lớp 1 chuẩn của Bộ Giáo dục & Đào tạo cho bé? (Các tiết học hiện tại sẽ được cập nhật)', ()=>{
+    c.timetable=structuredClone(DEFAULT_GRADE1_TIMETABLE);
+    save();
+    renderTimetable();
+    renderSchoolBagChecklist();
+    playChime('success');
+    showToast('🎉 Đã nạp thành công Thời khóa biểu Lớp 1 chuẩn!');
+  },{yesText:'Nạp mẫu chuẩn'});
+}
+
+function confirmClearTimetable(){
+  const c=child();
+  if(!c) return;
+  askConfirm('Xóa trắng Thời khóa biểu', 'Bạn có chắc chắn muốn xóa toàn bộ môn học trong Thời khóa biểu tuần của bé?', ()=>{
+    c.timetable={};
+    save();
+    renderTimetable();
+    renderSchoolBagChecklist();
+    showToast('🧹 Đã xóa trắng thời khóa biểu.');
+  },{yesText:'Có, xóa trắng',icon:'🧹'});
+}
+
+// ➕ THÊM MÔN HỌC TÙY CHỈNH
+function openCustomSubjectModal(){
+  document.getElementById('newSubjName').value='';
+  document.getElementById('newSubjIcon').value='🌟';
+  document.getElementById('customSubjectModal').classList.add('show');
+}
+
+function closeCustomSubjectModal(){
+  document.getElementById('customSubjectModal').classList.remove('show');
+}
+
+function submitCustomSubject(){
+  const name=document.getElementById('newSubjName').value.trim();
+  const icon=document.getElementById('newSubjIcon').value.trim()||'🌟';
+  const color=document.getElementById('newSubjColor').value||'#3b82f6';
+
+  if(!name) return alert('Vui lòng nhập tên môn học.');
+  if(!Array.isArray(data.customSubjects)) data.customSubjects=[];
+
+  data.customSubjects.push({
+    name,icon,color,
+    bg:'#f8fafc',
+    border:color,
+    textColor:color
+  });
+
+  save();
+  closeCustomSubjectModal();
+  renderTimetablePalette();
+  showToast('🎉 Đã thêm môn "' + name + '" vào khay môn học!');
+}
+
+// 4. 🎒 SOẠN CẶP SÁCH ĐẾN TRƯỜNG THEO THỜI KHÓA BIỂU
+let bagCheckedItems={};
+
+function getTomorrowDayNumber(){
+  const now=new Date();
+  const currentHour=now.getHours();
+  let targetDate=new Date();
+  if(currentHour>=15){
+    targetDate.setDate(targetDate.getDate()+1);
+  }
+  const day=targetDate.getDay();
+  if(day===0) return '2';
+  if(day===6) return '7';
+  return String(day+1);
+}
+
+function renderSchoolBagChecklist(){
+  const c=child();
+  const targetDay=getTomorrowDayNumber();
+  const dayLabels={'2':'Thứ 2','3':'Thứ 3','4':'Thứ 4','5':'Thứ 5','6':'Thứ 6','7':'Thứ 7'};
+  const dayName=dayLabels[targetDay]||'Ngày mai';
+
+  const tt=c?.timetable||{};
+  const subjectsInDay=new Set();
+  [1,2,3,4,5,6,7].forEach(p=>{
+    const entry=tt[targetDay + '_' + p];
+    if(entry && entry.subject && entry.subject!=='Bán trú / Nghỉ'){
+      subjectsInDay.add(entry.subject);
+    }
+  });
+
+  const subjectArr=Array.from(subjectsInDay);
+
+  const items=[
+    { id:'pencil_case', text:'Hộp bút chì 2B (đã gọt nhọn 3 cây, gôm tẩy sạch, thước kẻ 20cm)' },
+    { id:'water_bottle', text:'Bình nước uống cá nhân & Khăn tay nhỏ' },
+    { id:'hat_badge', text:'Mũ che nắng & Thẻ học sinh đeo cổ' }
+  ];
+
+  subjectArr.forEach(sub=>{
+    const lower=sub.toLowerCase();
+    if(lower.includes('toán')){
+      items.push({ id:'book_math', text:'Sách Toán Lớp 1, Vở bài tập Toán & Bảng con, phấn trắng, que tính' });
+    }else if(lower.includes('tiếng việt')){
+      items.push({ id:'book_viet', text:'Sách Tiếng Việt Tập 1 & Vở ô ly tập viết chữ nắn nót' });
+    }else if(lower.includes('tiếng anh')){
+      items.push({ id:'book_english', text:'Sách Tiếng Anh & Thẻ học từ vựng' });
+    }else if(lower.includes('mỹ thuật')||lower.includes('vẽ')){
+      items.push({ id:'art_kit', text:'Hộp bút sáp màu 12 màu, Giấy vẽ A4 & Kéo thủ công an toàn' });
+    }else if(lower.includes('thể chất')||lower.includes('thể dục')){
+      items.push({ id:'pe_kit', text:'Đi giày thể thao êm chân & Mặc trang phục thể dục thoáng mát' });
+    }else if(lower.includes('âm nhạc')){
+      items.push({ id:'music_kit', text:'Thanh phách âm nhạc / Trống gõ' });
+    }else if(lower.includes('tự nhiên')||lower.includes('tn & xh')){
+      items.push({ id:'science_kit', text:'Sách Tự nhiên và Xã hội Lớp 1' });
+    }else{
+      items.push({ id:'sub_' + sub, text:'Sách vở & Đồ dùng môn ' + sub });
+    }
+  });
+
+  const storageKey='bag_' + (c?.id||'c') + '_' + todayISO();
+  if(!bagCheckedItems[storageKey]) bagCheckedItems[storageKey]={};
+  const checkedMap=bagCheckedItems[storageKey];
+
+  let checkedCount=0;
+  items.forEach(it=>{ if(checkedMap[it.id]) checkedCount++; });
+  const pct=items.length?Math.round((checkedCount/items.length)*100):0;
+  const isAllDone=(items.length>0 && checkedCount===items.length);
+
+  const subjectBadges=subjectArr.length
+    ? subjectArr.map(s=>'<span style="background:#e0f2fe;color:#0369a1;padding:2px 8px;border-radius:12px;font-size:11.5px;font-weight:800;margin-right:4px">' + s + '</span>').join('')
+    : '<span style="color:#64748b;font-size:12px">Chưa có môn trong TKB</span>';
+
+  let checklistHtml=items.map(it=>{
+    const checked=!!checkedMap[it.id];
+    return '<div class="bag-item ' + (checked?'checked':'') + '" onclick="toggleBagItem(\'' + storageKey + '\',\'' + it.id + '\')"><div class="bag-check-circle">' + (checked?'✓':'') + '</div><div class="bag-item-text">' + it.text + '</div></div>';
+  }).join('');
+
+  const html=`
+    <div class="bag-card-head">
+      <div>
+        <div class="bag-title">
+          <span>🎒</span>
+          <span>Soạn cặp sách đến trường (${dayName})</span>
+          <span class="bag-reward-pill">+5 ⭐ Thưởng tự giác</span>
+        </div>
+        <div style="font-size:12.5px;color:#047857;margin-top:2px">
+          Các môn học trong TKB: ${subjectBadges}
+        </div>
+      </div>
+      <div class="bag-progress-wrap">
+        <span>Tiến độ: <b>${checkedCount}/${items.length}</b> (${pct}%)</span>
+        <div class="bag-progress-bar"><i style="width:${pct}%"></i></div>
+      </div>
+    </div>
+    <div class="bag-checklist">${checklistHtml}</div>
+    ${isAllDone ? '<div style="margin-top:12px;background:#d1fae5;border:1.5px dashed #10b981;border-radius:var(--radius-sm);padding:10px 14px;text-align:center;font-weight:800;color:#065f46">🎉 Hoan hô bé đã soạn cặp sách đầy đủ và ngăn nắp! Cặp sách đã sẵn sàng cho ngày mai rồi!</div>' : ''}
+  `;
+
+  ['todaySchoolBagCard','scheduleSchoolBagCard'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.innerHTML=html;
+  });
+}
+
+function toggleBagItem(storageKey, itemId){
+  if(!bagCheckedItems[storageKey]) bagCheckedItems[storageKey]={};
+  const current=!!bagCheckedItems[storageKey][itemId];
+  bagCheckedItems[storageKey][itemId]=!current;
+  playPopSound();
+
+  const c=child();
+  const allChecked=document.querySelectorAll('.bag-item:not(.checked)').length<=1 && !current;
+  if(allChecked && c && c.schoolBagPackedDate!==todayISO()){
+    c.schoolBagPackedDate=todayISO();
+    c.score+=5;
+    if(!Array.isArray(c.pointHistory)) c.pointHistory=[];
+    c.pointHistory.push({
+      id:uid('bag'),
+      type:'study',
+      subject:'Kỹ năng sống',
+      topic:'Tự giác soạn cặp sách ngăn nắp theo TKB',
+      amount:5,
+      note:'Đã kiểm tra đầy đủ sách vở, bút thước và bình nước!',
+      reason:'[Kỹ năng sống] Tự giác soạn cặp sách ngăn nắp (+5 ⭐)',
+      at:new Date().toISOString()
+    });
+    updateEarnedAchievements(c);
+    save();
+    playChime('success');
+    triggerConfetti();
+    setTimeout(()=>{
+      speakVietnamese('Hoan hô bé ' + c.name + ' đã tự giác soạn cặp sách rất gọn gàng! Thưởng con năm điểm sao nhé!');
+    },300);
+    showToast('🎉 Hoàn thành soạn cặp sách! +5 ⭐');
+  }
+
+  renderSchoolBagChecklist();
+}
+
+// 5. 🐝 ĐỒNG HỒ CON ONG 15 PHÚT TẬP TRUNG (KIDS FOCUS TIMER)
+let beeTimerSeconds=15*60;
+let beeTimerTotalSeconds=15*60;
+let beeTimerInterval=null;
+let beeTimerRunning=false;
+
+function openBeeTimerModal(){
+  updateBeeTimerDisplay();
+  document.getElementById('beeTimerModal').classList.add('show');
+}
+
+function closeBeeTimerModal(){
+  document.getElementById('beeTimerModal').classList.remove('show');
+}
+
+function setBeeTimerMinutes(mins){
+  if(beeTimerRunning) toggleBeeTimer();
+  beeTimerSeconds=mins*60;
+  beeTimerTotalSeconds=mins*60;
+  updateBeeTimerDisplay();
+  playPopSound();
+}
+
+function toggleBeeTimer(){
+  const btnModal=document.getElementById('beeStartBtnModal');
+  const btnInline=document.getElementById('beeStartBtnInline');
+
+  if(beeTimerRunning){
+    clearInterval(beeTimerInterval);
+    beeTimerRunning=false;
+    if(btnModal) btnModal.textContent='▶ Tiếp tục';
+    if(btnInline) btnInline.textContent='▶ Tiếp tục';
+    showToast('⏸ Đã tạm dừng đồng hồ.');
+  }else{
+    beeTimerRunning=true;
+    if(btnModal) btnModal.textContent='⏸ Tạm dừng';
+    if(btnInline) btnInline.textContent='⏸ Tạm dừng';
+    playPopSound();
+
+    beeTimerInterval=setInterval(()=>{
+      beeTimerSeconds--;
+      updateBeeTimerDisplay();
+
+      if(beeTimerSeconds<=0){
+        clearInterval(beeTimerInterval);
+        beeTimerRunning=false;
+        if(btnModal) btnModal.textContent='🚀 Bắt đầu ngay';
+        if(btnInline) btnInline.textContent='🚀 Bắt đầu ngay';
+        onBeeTimerFinished();
+      }
+    },1000);
+  }
+}
+
+function resetBeeTimer(){
+  if(beeTimerInterval) clearInterval(beeTimerInterval);
+  beeTimerRunning=false;
+  beeTimerSeconds=beeTimerTotalSeconds;
+  updateBeeTimerDisplay();
+  const btnModal=document.getElementById('beeStartBtnModal');
+  const btnInline=document.getElementById('beeStartBtnInline');
+  if(btnModal) btnModal.textContent='🚀 Bắt đầu ngay';
+  if(btnInline) btnInline.textContent='🚀 Bắt đầu ngay';
+}
+
+function updateBeeTimerDisplay(){
+  const m=Math.floor(beeTimerSeconds/60);
+  const s=beeTimerSeconds%60;
+  const str=String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+
+  const elModal=document.getElementById('beeTimerDisplayModal');
+  if(elModal) elModal.textContent=str;
+
+  const elInline=document.getElementById('beeTimerDisplayInline');
+  if(elInline) elInline.textContent=str;
+}
+
+function onBeeTimerFinished(){
+  playSchoolBell();
+  triggerConfetti();
+  const c=child();
+  if(c){
+    c.score+=5;
+    if(!Array.isArray(c.pointHistory)) c.pointHistory=[];
+    c.pointHistory.push({
+      id:uid('bee'),
+      type:'study',
+      subject:'Kỹ năng sống',
+      topic:'Hoàn thành 15 phút tập trung học tập (Đồng hồ Con Ong)',
+      amount:5,
+      note:'Tập trung ngồi học nghiêm túc, không phân tâm!',
+      reason:'[Kỹ năng sống] 15 phút tập trung học ngoan (+5 ⭐)',
+      at:new Date().toISOString()
+    });
+    updateEarnedAchievements(c);
+    save();
+    render();
+  }
+  speakVietnamese('Hoan hô bé ' + (c?c.name:'con') + '! Đã hết 15 phút tập trung làm bài rất ngoan! Con đứng dậy vươn vai và uống một cốc nước nhé!');
+  showToast('🎉 XUẤT SẮC! Hoàn thành 15 phút tập trung! +5 ⭐');
+}
+
+function renderBeeTimer(){
+  const wrap=document.getElementById('scheduleBeeTimerCard');
+  if(!wrap) return;
+
+  const m=Math.floor(beeTimerSeconds/60);
+  const s=beeTimerSeconds%60;
+  const str=String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+
+  wrap.innerHTML=`
+    <div style="font-size:18px;font-weight:900;color:#854d0e;display:flex;align-items:center;justify-content:center;gap:8px">
+      <span>🐝⏰</span>
+      <span>Đồng hồ Con Ong 15 Phút Tập Trung</span>
+    </div>
+    <div style="font-size:13px;color:#a16207;margin-top:4px">Dành riêng cho học sinh Lớp 1: Rèn luyện tính tự giác ngồi học tập trung từng đợt ngắn 15 phút!</div>
+    <div class="bee-timer-display" id="beeTimerDisplayInline">${str}</div>
+    <div style="display:flex;justify-content:center;gap:6px;margin-bottom:12px">
+      <button class="tt-day-pill ${beeTimerTotalSeconds===600?'active':''}" onclick="setBeeTimerMinutes(10)">10 phút</button>
+      <button class="tt-day-pill ${beeTimerTotalSeconds===900?'active':''}" onclick="setBeeTimerMinutes(15)">15 phút (Chuẩn)</button>
+      <button class="tt-day-pill ${beeTimerTotalSeconds===1200?'active':''}" onclick="setBeeTimerMinutes(20)">20 phút</button>
+    </div>
+    <div class="bee-timer-actions">
+      <button class="bee-btn primary" id="beeStartBtnInline" onclick="toggleBeeTimer()">${beeTimerRunning?'⏸ Tạm dừng':'🚀 Bắt đầu ngay'}</button>
+      <button class="bee-btn secondary" onclick="resetBeeTimer()">🔄 Cài lại</button>
+      <button class="bee-btn secondary" onclick="openBeeTimerModal()">🔍 Phóng to</button>
+    </div>
+  `;
+}
+
+// Bắt đầu nhịp tick đếm ngược cho Nhắc báo giờ chở con đi học (mỗi 1 giây)
+setInterval(updateRideReminderTick, 1000);
+
+window.addEventListener('hashchange', () => {
+  const h = (location.hash || '').replace('#', '');
+  if (h && typeof showSection === 'function') showSection(h);
+});

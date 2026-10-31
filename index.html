@@ -32,7 +32,7 @@
     <div class="logo">🌟 BẢO NHI <span>VUI HỌC</span></div>
     <nav>
       <a class="active" href="#today" data-section="today"><span class="nav-icon">🏠</span><span>Hôm nay</span></a>
-      <a href="#schedule" data-section="schedule"><span class="nav-icon">📅</span><span>Lịch học</span></a>
+      <a href="#schedule" data-section="schedule"><span class="nav-icon">🎒</span><span>Thời khóa biểu</span></a>
       <a href="#tools" data-section="tools"><span class="nav-icon">💡</span><span>Góc học tập</span></a>
       <a href="#achievements" data-section="achievements"><span class="nav-icon">🏆</span><span>Thành tích</span></a>
       <a href="#rewards" data-section="rewards"><span class="nav-icon">🎁</span><span>Đổi quà</span></a>
@@ -69,6 +69,12 @@
 
       <!-- 🎯 Mục tiêu quà đang phấn đấu (hiển thị trên màn hình chính) -->
       <div id="todayTargetGoalCard" style="display:none"></div>
+
+      <!-- 🛵 BANNER NHẮC BÁO GIỜ CHỞ CON ĐI HỌC (TRƯỚC 10 PHÚT) -->
+      <div id="todayRideReminderCard" class="ride-card" style="margin-bottom:16px"></div>
+
+      <!-- 🎒 SOẠN CẶP SÁCH ĐẾN TRƯỜNG THEO THỜI KHÓA BIỂU -->
+      <div id="todaySchoolBagCard" class="bag-card" style="margin-bottom:16px"></div>
 
       <!-- 📚 KHU VỰC CỘNG ĐIỂM HỌC TẬP CHO CON -->
       <div class="study-score-card">
@@ -120,17 +126,373 @@
       </section>
     </section>
 
-    <!-- 2. MÀN HÌNH LỊCH HỌC -->
-    <section id="scheduleSection" class="app-section">
+    <!-- 1B. MÀN HÌNH LẬT THẺ & ĐỌC TIẾNG ANH (Ẩn) -->
+    <section id="flashcardsSection" class="app-section" style="display:none !important">
       <div class="card">
-        <h2>📅 Lịch học của <span id="scheduleName">bé</span></h2>
-        <div class="calendar-head">
-          <button onclick="changeMonth(-1)">‹ Tháng trước</button>
-          <b id="calendarTitle"></b>
-          <button onclick="changeMonth(1)">Tháng sau ›</button>
+        <!-- Header & Tiến độ từ vựng -->
+        <div class="fc-header">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span class="study-badge" style="background:linear-gradient(135deg,#ea580c,#f59e0b)">🦊 LITTLE FOX ENGLISH</span>
+              <span class="study-badge" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">LEVEL 1 → LEVEL 4</span>
+              <span class="note">Phương pháp nâng cấp câu từng bước (Sentence Ladder)</span>
+            </div>
+            <h2 style="margin:6px 0 4px;font-size:22px">🦊 Bộ thẻ Little Fox &amp; Luyện nói câu cùng <span id="fcChildName">bé</span></h2>
+            <p class="note" style="margin:0">Học theo từng Level &amp; Chủ đề: Nghe từ đơn → Nói câu ngắn 3 từ (🌱 Bậc 1) → Mở rộng câu (🌿 Bậc 2) → Nói câu hoàn chỉnh (🌳 Bậc 3)!</p>
+          </div>
+          <div class="fc-stats-row">
+            <div class="fc-stat-pill">
+              <span class="fc-stat-label">Đã thuộc</span>
+              <b id="fcMasteredCount">0/0</b>
+            </div>
+            <div class="fc-stat-pill fc-stat-star">
+              <span class="fc-stat-label">Thưởng Tiếng Anh</span>
+              <b id="fcEarnedStars">+0 ⭐</b>
+            </div>
+            <button class="primary" style="padding:9px 14px;font-size:13px;display:inline-flex;align-items:center;gap:6px" onclick="openAddFlashcardModal()">
+              <span>➕</span>
+              <span>Thêm thẻ từ mới</span>
+            </button>
+          </div>
         </div>
-        <div class="calendar-grid" id="calendarGrid"></div>
-        <div id="dayTasks" style="margin-top:18px"></div>
+
+        <!-- 🦊 THANH CHỌN LEVEL LITTLE FOX (LEVEL 1 → LEVEL 4) -->
+        <div class="lf-level-bar" id="fcLevelBar"></div>
+        <!-- Dải mô tả Level đang chọn & Hướng dẫn mẫu câu trọng tâm -->
+        <div class="lf-level-banner" id="fcLevelBanner"></div>
+
+        <!-- Thanh cài đặt giọng đọc & chế độ hiển thị -->
+        <div class="fc-toolbar">
+          <div class="fc-mode-tabs">
+            <button class="fc-mode-btn active" id="fcModeCardBtn" onclick="setFlashcardMode('card')">🃏 Lật thẻ &amp; Bậc thang câu</button>
+            <button class="fc-mode-btn" id="fcModeGridBtn" onclick="setFlashcardMode('grid')">📋 Bảng từ &amp; Nghe liên tiếp</button>
+            <button class="fc-mode-btn" id="fcModeQuizBtn" onclick="setFlashcardMode('quiz')">🎮 Đố vui Nghe câu (+10 ⭐)</button>
+            <button class="fc-mode-btn" id="fcModeGuideBtn" onclick="setFlashcardMode('guide')">📖 Hướng dẫn &amp; Truyện Little Fox</button>
+          </div>
+
+          <div class="fc-voice-controls">
+            <div class="fc-accent-switch">
+              <button type="button" class="fc-accent-btn active" id="fcAccentUS" onclick="setFlashcardAccent('en-US')">🇺🇸 Mỹ (US)</button>
+              <button type="button" class="fc-accent-btn" id="fcAccentUK" onclick="setFlashcardAccent('en-GB')">🇬🇧 Anh (UK)</button>
+            </div>
+            <label class="fc-autospeak-toggle">
+              <input type="checkbox" id="fcAutoSpeak" checked onchange="toggleFlashcardAutoSpeak(this.checked)" style="width:auto">
+              <span>🔊 Tự đọc khi chuyển thẻ</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Thanh chọn Chủ đề (Topics) -->
+        <div class="fc-topic-bar" id="fcTopicBar"></div>
+
+        <!-- Bộ lọc trạng thái thuộc bài -->
+        <div class="fc-filter-row" id="fcFilterRow">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+            <span class="note" style="font-weight:700">Lọc thẻ:</span>
+            <button class="fc-subfilter-btn active" id="fcFilterAll" onclick="setFlashcardFilter('all')">Tất cả (<span id="fcCountAll">0</span>)</button>
+            <button class="fc-subfilter-btn" id="fcFilterLearning" onclick="setFlashcardFilter('learning')">⏳ Đang học (<span id="fcCountLearning">0</span>)</button>
+            <button class="fc-subfilter-btn" id="fcFilterMastered" onclick="setFlashcardFilter('mastered')">✅ Đã thuộc (<span id="fcCountMastered">0</span>)</button>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="fc-tool-action-btn" onclick="shuffleFlashcards()" title="Trộn ngẫu nhiên thứ tự thẻ">🔀 Trộn thẻ</button>
+            <button class="fc-tool-action-btn" id="fcAutoPlayBtn" onclick="toggleFlashcardAutoPlay()">▶️ Tự động đọc cả chủ đề</button>
+          </div>
+        </div>
+
+        <!-- CHẾ ĐỘ 1: LẬT THẺ 3D + BẬC THANG NÂNG CẤP CÂU (3-STEP SENTENCE LADDER) -->
+        <div id="fcCardView" class="fc-view-panel">
+          <div class="fc-stage">
+            <!-- Nút lùi thẻ trên màn hình lớn -->
+            <button class="fc-nav-arrow fc-nav-prev" onclick="prevFlashcard()" title="Thẻ trước (Phím ⬅)">‹</button>
+
+            <!-- Khung thẻ 3D Flip -->
+            <div class="fc-card-scene" id="fcCardScene" onclick="flipCurrentFlashcard()">
+              <div class="fc-card-3d" id="fcCard3D">
+                <!-- MẶT TRƯỚC: TIẾNG ANH + HÌNH ẢNH + PHÁT ÂM + CÂU BẬC 1 -->
+                <div class="fc-card-face fc-card-front">
+                  <div class="fc-card-top-meta">
+                    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+                      <span class="lf-level-pill" id="fcFrontLevel">🌱 Level 1</span>
+                      <span class="fc-topic-chip" id="fcFrontTopic">🐾 Động vật</span>
+                    </div>
+                    <span class="fc-mastered-pill" id="fcFrontMasteredBadge" style="display:none">✅ Đã thuộc</span>
+                  </div>
+
+                  <div class="fc-card-emoji" id="fcFrontEmoji">🐘</div>
+                  <div class="fc-card-word" id="fcFrontWord">Elephant</div>
+                  <div class="fc-card-ipa" id="fcFrontIpa">/ˈel.ɪ.fənt/</div>
+                  <div class="fc-front-starter-sentence" id="fcFrontStarterSentence">🌱 Câu ngắn: "It is an elephant."</div>
+
+                  <div class="fc-audio-bar" onclick="event.stopPropagation()">
+                    <button type="button" class="fc-speak-btn fc-speak-normal" onclick="speakCurrentWord(0.9)">
+                      <span>🔊</span>
+                      <span>Đọc từ</span>
+                    </button>
+                    <button type="button" class="fc-speak-btn fc-speak-slow" onclick="speakCurrentWord(0.52)">
+                      <span>🐢</span>
+                      <span>Đọc chậm</span>
+                    </button>
+                    <button type="button" class="fc-speak-btn fc-speak-sentence" onclick="speakCurrentLadderStep(1)">
+                      <span>🌱</span>
+                      <span>Đọc câu ngắn</span>
+                    </button>
+                    <button type="button" class="fc-speak-btn fc-speak-vi" onclick="speakAllLadderSteps()">
+                      <span>🎧</span>
+                      <span>Nghe 3 bậc câu</span>
+                    </button>
+                  </div>
+
+                  <div class="fc-flip-hint">👆 Chạm vào thẻ để lật xem Nghĩa Tiếng Việt &amp; 3 bậc câu nâng cấp 🔄</div>
+                </div>
+
+                <!-- MẶT SAU: NGHĨA TIẾNG VIỆT + TÓM TẮT 3 BẬC CÂU SONG NGỮ -->
+                <div class="fc-card-face fc-card-back">
+                  <div class="fc-card-top-meta">
+                    <span class="fc-topic-chip" id="fcBackTopic">🐾 Động vật</span>
+                    <span class="fc-back-word-mini" id="fcBackWordMini">Elephant • /ˈel.ɪ.fənt/</span>
+                  </div>
+
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span class="fc-back-emoji-small" id="fcBackEmoji">🐘</span>
+                    <div>
+                      <div class="fc-back-label">Nghĩa Tiếng Việt:</div>
+                      <div class="fc-back-meaning" id="fcBackMeaning">Con voi</div>
+                    </div>
+                  </div>
+
+                  <div class="fc-example-box">
+                    <div class="fc-example-label">📈 3 Bậc nói câu nâng cấp (Bấm từng câu ở khung dưới để nghe):</div>
+                    <div class="fc-back-ladder-preview" id="fcBackLadderPreview"></div>
+                  </div>
+
+                  <div class="fc-audio-bar" onclick="event.stopPropagation()">
+                    <button type="button" class="fc-speak-btn fc-speak-normal" onclick="speakCurrentWord(0.9)">
+                      <span>🔊</span>
+                      <span>Đọc từ</span>
+                    </button>
+                    <button type="button" class="fc-speak-btn fc-speak-sentence" onclick="speakCurrentExample()">
+                      <span>💬</span>
+                      <span>Đọc câu chính</span>
+                    </button>
+                    <button type="button" class="fc-speak-btn fc-speak-vi" onclick="speakAllLadderSteps()">
+                      <span>🎧</span>
+                      <span>Đọc liền 3 bậc</span>
+                    </button>
+                  </div>
+
+                  <div class="fc-flip-hint">👆 Chạm vào thẻ để lật lại mặt trước 🔄</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nút tiến thẻ trên màn hình lớn -->
+            <button class="fc-nav-arrow fc-nav-next" onclick="nextFlashcard()" title="Thẻ tiếp theo (Phím ➡)">›</button>
+          </div>
+
+          <!-- Thanh điều khiển dưới thẻ -->
+          <div class="fc-bottom-controls">
+            <div class="fc-progress-text">
+              Thẻ <b id="fcCurrentIndex">1</b> / <b id="fcTotalInDeck">10</b>
+            </div>
+            <div class="fc-progress-bar">
+              <i id="fcDeckProgressBar" style="width:10%"></i>
+            </div>
+            <div class="fc-action-buttons">
+              <button type="button" class="fc-ctrl-btn" onclick="prevFlashcard()">◀ Trước</button>
+              <button type="button" class="fc-ctrl-btn fc-ctrl-flip" onclick="flipCurrentFlashcard()">🔄 Lật thẻ</button>
+              <button type="button" class="fc-ctrl-btn fc-ctrl-master" id="fcMasterBtn" onclick="toggleCurrentCardMastered()">⭐ Đánh dấu Đã thuộc</button>
+              <button type="button" class="fc-ctrl-btn" onclick="nextFlashcard()">Tiếp ▶</button>
+            </div>
+          </div>
+
+          <!-- 📈 KHUNG BẬC THANG NÂNG CẤP CÂU (LITTLE FOX 3-STEP SENTENCE LADDER) & LUYỆN NÓI -->
+          <div class="lf-ladder-card" id="fcSentenceLadderCard">
+            <div class="lf-ladder-head">
+              <div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                  <span class="study-badge" style="background:linear-gradient(135deg,#059669,#10b981)">🗣️ BẬC THANG LUYỆN NÓI CÂU</span>
+                  <b style="font-size:15px;color:#064e3b">Từ câu ngắn 3 từ → Nâng cấp lên câu dài tự nhiên</b>
+                </div>
+                <div class="note" style="margin-top:2px">Bố mẹ cho con nghe &amp; nói thuộc <b>🌱 Bậc 1</b> trước, sau đó nâng dần lên <b>🌿 Bậc 2</b> và <b>🌳 Bậc 3</b>!</div>
+              </div>
+              <button type="button" class="fc-speak-btn fc-speak-vi" onclick="speakAllLadderSteps()">
+                <span>🎧</span>
+                <span>Nghe đọc cả 3 bậc</span>
+              </button>
+            </div>
+
+            <div class="lf-ladder-steps" id="fcLadderStepsBox"></div>
+
+            <!-- Khu vực thu âm / Luyện nói nhận sao -->
+            <div class="lf-speak-practice-bar">
+              <div class="lf-speak-status" id="fcSpeakStatus">
+                🎙️ <b>Thử thách con tập nói:</b> Bấm nút <b>“🎙️ Con tập nói”</b> ở bất kỳ bậc câu nào phía trên (hoặc bấm nút bên phải) để đọc to và nhận <b>+2 ⭐</b> khích lệ!
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button type="button" class="lf-mic-btn" id="fcMicPracticeBtn" onclick="startVoicePractice(0)">
+                  <span>🎙️</span>
+                  <span>Con đọc Từ &amp; Câu</span>
+                </button>
+                <button type="button" class="lf-praise-speak-btn" onclick="rewardChildSpeakingPractice()">
+                  <span>👏</span>
+                  <span>Con đã nói to rõ (+2 ⭐)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHẾ ĐỘ 2: XEM BẢNG TỪ (GRID VIEW) -->
+        <div id="fcGridView" class="fc-view-panel" style="display:none">
+          <div class="note" style="margin-bottom:12px">💡 Chạm nút <b>🔊 Đọc</b> hoặc <b>🌱 Câu 1 / 🌿 Câu 2 / 🌳 Câu 3</b> trên từng thẻ để nghe mẫu câu nâng cấp dần.</div>
+          <div class="fc-grid-container" id="fcGridContainer"></div>
+        </div>
+
+        <!-- CHẾ ĐỘ 3: ĐỐ VUI NGHE & CHỌN TỪ / CÂU (MINI QUIZ NHẬN SAO) -->
+        <div id="fcQuizView" class="fc-view-panel" style="display:none">
+          <div class="fc-quiz-box">
+            <div class="fc-quiz-header">
+              <div>
+                <span class="study-badge" style="background:linear-gradient(135deg,#f59e0b,#ea580c)">🎮 ĐỐ VUI PHẢN XẠ LITTLE FOX</span>
+                <h3 style="margin:6px 0 2px;font-size:18px">Nghe từ &amp; câu Tiếng Anh — Chọn đáp án đúng</h3>
+                <div class="note">Trả lời đúng 5 câu liên tiếp để nhận ngay <b>+10 ⭐ điểm học tập Tiếng Anh</b>!</div>
+              </div>
+              <div class="fc-quiz-score-pill">
+                Điểm vòng này: <b id="fcQuizProgressText">0 / 5</b> 🌟
+              </div>
+            </div>
+
+            <div class="fc-quiz-prompt-card" id="fcQuizPromptCard">
+              <div class="fc-quiz-emoji" id="fcQuizEmoji">🍎</div>
+              <div class="fc-quiz-vi" id="fcQuizVi">Quả táo</div>
+              <div class="fc-quiz-ipa" id="fcQuizIpa">/ˈæp.əl/</div>
+              <div class="fc-quiz-sentence-hint" id="fcQuizSentenceHint"></div>
+              <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+                <button type="button" class="fc-speak-btn fc-speak-normal" onclick="speakQuizTarget(0.9)">🔊 Nghe phát âm chuẩn</button>
+                <button type="button" class="fc-speak-btn fc-speak-slow" onclick="speakQuizTarget(0.52)">🐢 Nghe đọc chậm</button>
+                <button type="button" class="fc-speak-btn fc-speak-sentence" onclick="speakQuizSentence()">💬 Nghe câu ví dụ</button>
+              </div>
+            </div>
+
+            <div class="fc-quiz-options" id="fcQuizOptions"></div>
+            <div class="fc-quiz-feedback" id="fcQuizFeedback"></div>
+          </div>
+        </div>
+
+        <!-- CHẾ ĐỘ 4: HƯỚNG DẪN HỌC & LỘ TRÌNH TRUYỆN LITTLE FOX THEO LEVEL -->
+        <div id="fcGuideView" class="fc-view-panel" style="display:none">
+          <div class="lf-guide-container" id="fcGuideContainer"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. MÀN HÌNH THỜI KHÓA BIỂU & NHẮC BÁO CHỞ ĐI HỌC -->
+    <section id="scheduleSection" class="app-section">
+      <div class="card" style="padding:20px">
+        <!-- Header Thời khóa biểu -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span class="study-badge" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">🎒 THỜI KHÓA BIỂU</span>
+              <span class="study-badge" style="background:linear-gradient(135deg,#10b981,#0ea5e9)">HỌC SINH LỚP 1</span>
+              <span class="note">Kéo thả &amp; Chạm để gán môn học trực quan</span>
+            </div>
+            <h2 style="margin:6px 0 4px;font-size:22px">🎒 Thời khóa biểu của <span id="scheduleName">bé</span> 🌟</h2>
+            <p class="note" style="margin:0">Bố mẹ và con cùng sắp xếp lịch học từng ngày: Kéo môn từ khay thả vào ô, hoặc chạm chọn môn rồi chạm ô để dán!</p>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <button class="primary" style="padding:9px 13px;font-size:13px;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#7c3aed,#6366f1)" onclick="loadGrade1DefaultTimetable()">
+              <span>⚡</span>
+              <span>Nạp Mẫu Lớp 1 chuẩn</span>
+            </button>
+            <button class="secondary" style="padding:9px 11px;font-size:13px;display:inline-flex;align-items:center;gap:5px" onclick="openCustomSubjectModal()">
+              <span>➕</span>
+              <span>Thêm môn</span>
+            </button>
+            <button class="secondary" style="padding:9px 11px;font-size:13px;display:inline-flex;align-items:center;gap:5px;background:#ca8a04;border-color:#ca8a04" onclick="openBeeTimerModal()">
+              <span>🐝</span>
+              <span>Đồng hồ 15p</span>
+            </button>
+            <button class="btn" style="padding:9px 11px;font-size:13px;background:#f1f5f9;border:1px solid var(--line)" onclick="window.print()">
+              <span>🖨️</span>
+              <span>In TKB</span>
+            </button>
+            <button class="btn delete" style="padding:9px 11px;font-size:13px" onclick="confirmClearTimetable()">
+              <span>🧹</span>
+              <span>Xóa trắng</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 🛵 BỘ NHẮC BÁO GIỜ CHỞ BÉ ĐI HỌC (TRƯỚC 10 PHÚT) -->
+        <div id="scheduleRideReminderCard" class="ride-card" style="margin-bottom:14px"></div>
+
+        <!-- Thanh chuyển chế độ xem: Thời khóa biểu tuần vs Lịch tháng cũ -->
+        <div class="tt-view-switch" style="margin-bottom:14px">
+          <button class="tt-switch-btn active" id="ttViewTimetableBtn" onclick="switchTimetableTab('timetable')">🎒 Bảng Thời khóa biểu (Kéo thả)</button>
+          <button class="tt-switch-btn" id="ttViewBagBtn" onclick="switchTimetableTab('bag')">🎒 Soạn cặp sách ngày mai</button>
+          <button class="tt-switch-btn" id="ttViewBeeBtn" onclick="switchTimetableTab('bee')">🐝 Đồng hồ Con Ong 15p</button>
+          <button class="tt-switch-btn" id="ttViewCalendarBtn" onclick="switchTimetableTab('calendar')">📅 Lịch tháng &amp; Nhiệm vụ</button>
+        </div>
+
+        <!-- 1. VÙNG THỜI KHÓA BIỂU -->
+        <div id="ttTimetableTabWrap">
+          <!-- Khay môn học (Subject Palette) để kéo thả -->
+          <div class="tt-palette-card">
+            <div class="tt-palette-head">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:20px">🎨</span>
+                <b style="font-size:14px;color:#1e293b">Khay môn học Lớp 1 (Kéo &amp; Thả hoặc Chạm để dán):</b>
+              </div>
+              <div class="tt-palette-hint" id="ttPaletteHint">👉 Chạm vào 1 môn học rồi chạm vào ô tiết để dán</div>
+            </div>
+            <div class="tt-palette-chips" id="ttPaletteChips"></div>
+            <!-- Trạng thái môn đang chọn (nếu dùng chế độ chạm) -->
+            <div id="ttSelectedNotice" class="tt-selected-notice" style="display:none">
+              <span>Đang chọn: <b id="ttSelectedSubjectName">Toán</b></span>
+              <button class="tt-cancel-select-btn" onclick="clearSelectedPaletteSubject()">✕ Bỏ chọn</button>
+            </div>
+          </div>
+
+          <!-- Bộ lọc ngày trên điện thoại di động (iPhone / Mobile) để không bị chật -->
+          <div class="tt-day-filter-bar" id="ttDayFilterBar">
+            <button class="tt-day-pill active" onclick="setTimetableDayFilter('all', this)">🌈 Cả tuần</button>
+            <button class="tt-day-pill" onclick="setTimetableDayFilter('2', this)">Thứ 2</button>
+            <button class="tt-day-pill" onclick="setTimetableDayFilter('3', this)">Thứ 3</button>
+            <button class="tt-day-pill" onclick="setTimetableDayFilter('4', this)">Thứ 4</button>
+            <button class="tt-day-pill" onclick="setTimetableDayFilter('5', this)">Thứ 5</button>
+            <button class="tt-day-pill" onclick="setTimetableDayFilter('6', this)">Thứ 6</button>
+            <button class="tt-day-pill" onclick="setTimetableDayFilter('7', this)">Thứ 7</button>
+          </div>
+
+          <!-- Bảng Thời khóa biểu tuần -->
+          <div class="tt-table-container">
+            <table class="tt-table" id="timetableTable">
+              <!-- Render động bằng JavaScript -->
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. VÙNG SOẠN CẶP SÁCH ĐẾN TRƯỜNG -->
+        <div id="ttBagTabWrap" style="display:none">
+          <div id="scheduleSchoolBagCard" class="bag-card"></div>
+        </div>
+
+        <!-- 3. VÙNG ĐỒNG HỒ CON ONG 15 PHÚT TẬP TRUNG -->
+        <div id="ttBeeTabWrap" style="display:none">
+          <div id="scheduleBeeTimerCard" class="bee-card"></div>
+        </div>
+
+        <!-- 4. VÙNG LỊCH THÁNG & NHIỆM VỤ CŨ -->
+        <div id="ttCalendarTabWrap" style="display:none">
+          <div class="calendar-head">
+            <button onclick="changeMonth(-1)">‹ Tháng trước</button>
+            <b id="calendarTitle"></b>
+            <button onclick="changeMonth(1)">Tháng sau ›</button>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+          <div id="dayTasks" style="margin-top:18px"></div>
+        </div>
       </div>
     </section>
 
@@ -139,7 +501,11 @@
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
           <h2 style="margin:0">💡 Góc công cụ &amp; Web học tập chọn lọc</h2>
-          <div style="display:flex;gap:8px;align-items:center">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="primary" style="padding:8px 14px;font-size:13px;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#0ea5e9,#6366f1)" onclick="showSection('flashcards')">
+              <span>🇬🇧</span>
+              <span>Mở Lật thẻ &amp; Đọc Tiếng Anh</span>
+            </button>
             <button class="primary" style="padding:8px 14px;font-size:13px;display:inline-flex;align-items:center;gap:6px" onclick="openStudyScoreModal()">
               <span>⭐</span>
               <span>Cộng điểm học tập ngay</span>
@@ -302,12 +668,87 @@
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
     <a class="active" href="#today" data-section="today"><span class="b-icon">🏠</span><span>Hôm nay</span></a>
-    <a href="#schedule" data-section="schedule"><span class="b-icon">📅</span><span>Lịch học</span></a>
+    <a href="#schedule" data-section="schedule"><span class="b-icon">🎒</span><span>TKB</span></a>
     <a href="#tools" data-section="tools"><span class="b-icon">💡</span><span>Học tập</span></a>
     <a href="#achievements" data-section="achievements"><span class="b-icon">🏆</span><span>Thành tích</span></a>
     <a href="#rewards" data-section="rewards"><span class="b-icon">🎁</span><span>Đổi quà</span></a>
   </div>
 </nav>
+
+<!-- Modal Thêm Thẻ Từ Vựng Tiếng Anh Mới -->
+<div id="addFlashcardModal" class="modal-backdrop" onclick="if(event.target===this) closeAddFlashcardModal()">
+  <div class="modal-card modal-small" style="max-width:560px;text-align:left">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:32px">🦊🃏</span>
+        <div>
+          <h2 style="margin:0;font-size:18px">Thêm thẻ Little Fox &amp; Bậc thang câu</h2>
+          <div class="note" style="margin-top:2px">Bổ sung từ mới theo Level và câu luyện nói từ ngắn đến dài</div>
+        </div>
+      </div>
+      <button class="close" onclick="closeAddFlashcardModal()">✕</button>
+    </div>
+
+    <div class="formgrid" style="margin-bottom:12px">
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">Cấp độ (Level Little Fox):</div>
+        <select id="newFcLevel">
+          <option value="1">🌱 Level 1 — Khởi đầu (Câu 3-4 từ)</option>
+          <option value="2">🌿 Level 2 — Cơ bản (Câu 5-7 từ)</option>
+          <option value="3">🌳 Level 3 — Mở rộng (Câu ghép)</option>
+          <option value="4">👑 Level 4 — Tự tin thuyết trình</option>
+        </select>
+      </div>
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">Chủ đề:</div>
+        <select id="newFcTopic"></select>
+      </div>
+    </div>
+
+    <div class="formgrid" style="margin-bottom:12px">
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">Từ Tiếng Anh (*):</div>
+        <input id="newFcWord" placeholder="VD: Butterfly">
+      </div>
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">Nghĩa Tiếng Việt (*):</div>
+        <input id="newFcMeaning" placeholder="VD: Con bướm">
+      </div>
+    </div>
+
+    <div class="formgrid" style="margin-bottom:12px">
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">Biểu tượng (Emoji):</div>
+        <input id="newFcEmoji" placeholder="VD: 🦋, 🍓, 🚀" value="🌟">
+      </div>
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">Phiên âm (tùy chọn):</div>
+        <input id="newFcIpa" placeholder="VD: /ˈbʌt.ə.flaɪ/">
+      </div>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <div class="note" style="margin-bottom:4px;font-weight:700;color:#047857">🌱 Câu Bậc 1 (Câu ngắn 3-4 từ cho bé bắt đầu nói):</div>
+      <input id="newFcStep1En" placeholder="VD: It is a butterfly. (Để trống hệ thống sẽ tự tạo)">
+    </div>
+
+    <div style="margin-bottom:10px">
+      <div class="note" style="margin-bottom:4px;font-weight:700;color:#1d4ed8">🌿 Câu Bậc 2 (Câu mở rộng thêm tính từ / hành động):</div>
+      <input id="newFcExampleEn" placeholder="VD: The colorful butterfly is flying.">
+    </div>
+
+    <div style="margin-bottom:12px">
+      <div class="note" style="margin-bottom:4px;font-weight:700;color:#7c3aed">🌳 Câu Bậc 3 (Câu giao tiếp hoàn chỉnh) &amp; Nghĩa Tiếng Việt:</div>
+      <input id="newFcStep3En" placeholder="VD: I see a colorful butterfly flying in the garden." style="margin-bottom:6px">
+      <input id="newFcExampleVi" placeholder="Nghĩa câu ví dụ: Con thấy một chú bướm sặc sỡ đang bay trong vườn.">
+    </div>
+
+    <div class="confirm-actions">
+      <button class="confirm-no" onclick="closeAddFlashcardModal()">Hủy</button>
+      <button class="primary" onclick="submitNewFlashcard()" style="padding:11px 22px">➕ Lưu thẻ Little Fox</button>
+    </div>
+  </div>
+</div>
 
 <!-- Modal Đổi sao ra tiền mặt linh hoạt mọi mệnh giá -->
 <div id="flexibleMoneyModal" class="modal-backdrop" onclick="if(event.target===this) closeFlexibleMoneyModal()">
@@ -736,6 +1177,184 @@
         <div class="note" style="margin-top:8px" id="syncStatus">Chưa cấu hình đồng bộ.</div>
         <div class="note">Thiết bị nào lưu sau cùng sẽ thắng. Mã gia đình càng dài càng khó đoán — đừng chia sẻ cho người ngoài.</div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cài Đặt Nhắc Báo Giờ Chở Đi Học Trước 10 Phút -->
+<div id="rideReminderModal" class="modal-backdrop" onclick="if(event.target===this) closeRideReminderModal()">
+  <div class="modal-card modal-small" style="max-width:500px;text-align:left">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:32px">🛵🎒</span>
+        <div>
+          <h2 style="margin:0;font-size:18px">Nhắc báo giờ chở con đi học</h2>
+          <div class="note" style="margin-top:2px">Chuông báo &amp; Giọng nói nhắc phụ huynh đưa bé đến trường</div>
+        </div>
+      </div>
+      <button class="close" onclick="closeRideReminderModal()">✕</button>
+    </div>
+
+    <div style="margin-bottom:12px;background:#fef3c7;border:1.5px solid #fde68a;border-radius:var(--radius-md);padding:10px 14px">
+      <label style="display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:#92400e;cursor:pointer">
+        <input type="checkbox" id="rideCfgEnabled" style="width:18px;height:18px" checked>
+        <span>BẬT tính năng nhắc báo giờ chở con đi học</span>
+      </label>
+    </div>
+
+    <div class="formgrid" style="margin-bottom:12px">
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">⏰ Giờ vào học Buổi Sáng:</div>
+        <input id="rideCfgMorningTime" type="time" value="07:15">
+      </div>
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">⏰ Giờ vào học Buổi Chiều:</div>
+        <input id="rideCfgAfternoonTime" type="time" value="13:30">
+      </div>
+    </div>
+
+    <div class="formgrid" style="margin-bottom:12px">
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">🏠 Giờ tan trường đón về:</div>
+        <input id="rideCfgPickupTime" type="time" value="16:30">
+      </div>
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">🔔 Số phút nhắc trước:</div>
+        <select id="rideCfgLeadMinutes">
+          <option value="5">Trước 5 phút</option>
+          <option value="10" selected>Trước 10 phút (Khuyên dùng)</option>
+          <option value="15">Trước 15 phút</option>
+          <option value="20">Trước 20 phút</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;background:#f8fafc;border:1px solid var(--line);border-radius:var(--radius-md);padding:10px 14px">
+      <label style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="rideCfgEnableSound" checked style="width:16px;height:16px">
+        <span>🔊 Phát âm thanh chuông hai âm ding-dong</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="rideCfgEnableSpeech" checked style="width:16px;height:16px">
+        <span>🗣️ Đọc to lời nhắc tiếng Việt thân thiện ("Bố mẹ ơi, chở con đi học thôi!")</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="rideCfgEnableNotification" checked style="width:16px;height:16px">
+        <span>🔔 Bật thông báo đẩy màn hình khóa / trình duyệt</span>
+      </label>
+    </div>
+
+    <div class="confirm-actions" style="justify-content:space-between">
+      <button class="ride-btn ride-btn-test" onclick="testSchoolRideAlert()">🔊 Thử chuông &amp; giọng đọc</button>
+      <div style="display:flex;gap:8px">
+        <button class="confirm-no" onclick="closeRideReminderModal()">Hủy</button>
+        <button class="primary" onclick="saveRideReminderConfig()" style="padding:10px 20px">💾 Lưu cài đặt</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Thêm Môn Học Tùy Chỉnh -->
+<div id="customSubjectModal" class="modal-backdrop" onclick="if(event.target===this) closeCustomSubjectModal()">
+  <div class="modal-card modal-small" style="max-width:440px;text-align:left">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <h2 style="margin:0;font-size:18px">➕ Thêm môn học vào khay</h2>
+      <button class="close" onclick="closeCustomSubjectModal()">✕</button>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <div class="note" style="margin-bottom:4px;font-weight:700">Tên môn học (*):</div>
+      <input id="newSubjName" placeholder="VD: Lập trình Scratch, Bơi lội, Cờ vua...">
+    </div>
+
+    <div class="formgrid" style="margin-bottom:12px">
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">Biểu tượng (Emoji):</div>
+        <input id="newSubjIcon" value="🌟" placeholder="🌟">
+      </div>
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">Màu chủ đạo:</div>
+        <select id="newSubjColor">
+          <option value="#8b5cf6">Tím hoa cà (Dịu dàng)</option>
+          <option value="#3b82f6" selected>Xanh dương (Toán/Khoa học)</option>
+          <option value="#10b981">Xanh lá mint (Tự nhiên)</option>
+          <option value="#f59e0b">Cam ấm (Tiếng Anh/Năng động)</option>
+          <option value="#ec4899">Hồng kẹo ngọt (Đạo đức/Vui)</option>
+          <option value="#06b6d4">Xanh ngọc (Âm nhạc)</option>
+          <option value="#f97316">Cam cà rốt (Mỹ thuật/Vẽ)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="confirm-actions">
+      <button class="confirm-no" onclick="closeCustomSubjectModal()">Hủy</button>
+      <button class="primary" onclick="submitCustomSubject()" style="padding:10px 20px">➕ Thêm vào khay</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Chỉnh Sửa Ô Tiết Học Trong Thời Khóa Biểu -->
+<div id="timetableCellModal" class="modal-backdrop" onclick="if(event.target===this) closeTimetableCellModal()">
+  <div class="modal-card modal-small" style="max-width:440px;text-align:left">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div>
+        <h2 style="margin:0;font-size:18px" id="ttCellModalTitle">Chỉnh sửa tiết học</h2>
+        <div class="note" id="ttCellModalSubtitle" style="margin-top:2px">Thứ ... - Tiết ...</div>
+      </div>
+      <button class="close" onclick="closeTimetableCellModal()">✕</button>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <div class="note" style="margin-bottom:4px;font-weight:700">Chọn môn học nhanh:</div>
+      <select id="ttCellSubjectSelect" onchange="onTtCellSelectChange()"></select>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <div class="note" style="margin-bottom:4px;font-weight:700">Hoặc tự gõ tên môn:</div>
+      <input id="ttCellCustomSubject" placeholder="Tên môn học">
+    </div>
+
+    <div style="margin-bottom:14px">
+      <div class="note" style="margin-bottom:4px;font-weight:700">Ghi chú (dặn dò của cô giáo / phòng học):</div>
+      <input id="ttCellNote" placeholder="VD: Mang vở bài tập, học phòng 102, v.v.">
+    </div>
+
+    <div class="confirm-actions" style="justify-content:space-between">
+      <button class="btn delete" onclick="deleteCurrentTimetableCell()" style="padding:9px 14px">🗑️ Xóa tiết này</button>
+      <div style="display:flex;gap:8px">
+        <button class="confirm-no" onclick="closeTimetableCellModal()">Hủy</button>
+        <button class="primary" onclick="saveCurrentTimetableCell()" style="padding:9px 18px">💾 Lưu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Đồng Hồ Con Ong 15 Phút Tập Trung -->
+<div id="beeTimerModal" class="modal-backdrop" onclick="if(event.target===this) closeBeeTimerModal()">
+  <div class="modal-card modal-small" style="max-width:440px;text-align:center">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:28px">🐝⏰</span>
+        <b style="font-size:17px;color:#854d0e">Đồng hồ Con Ong 15p</b>
+      </div>
+      <button class="close" onclick="closeBeeTimerModal()">✕</button>
+    </div>
+
+    <div class="bee-card" style="box-shadow:none;border-width:1.5px">
+      <div style="font-size:14px;font-weight:800;color:#a16207">Bé tập trung ngồi học ngoan 15 phút không nghịch điện thoại!</div>
+      <div class="bee-timer-display" id="beeTimerDisplayModal">15:00</div>
+      
+      <div style="display:flex;justify-content:center;gap:6px;margin-bottom:12px">
+        <button class="tt-day-pill" onclick="setBeeTimerMinutes(10)">10 phút</button>
+        <button class="tt-day-pill active" onclick="setBeeTimerMinutes(15)">15 phút (Chuẩn)</button>
+        <button class="tt-day-pill" onclick="setBeeTimerMinutes(20)">20 phút</button>
+      </div>
+
+      <div class="bee-timer-actions">
+        <button class="bee-btn primary" id="beeStartBtnModal" onclick="toggleBeeTimer()">🚀 Bắt đầu ngay</button>
+        <button class="bee-btn secondary" onclick="resetBeeTimer()">🔄 Cài lại</button>
+      </div>
+      <div class="note" style="margin-top:10px;color:#a16207">Hoàn thành 15 phút sẽ thưởng ngay **+5 ⭐** và nhắc bé uống nước nghỉ ngơi!</div>
     </div>
   </div>
 </div>
