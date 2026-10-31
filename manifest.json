@@ -1,0 +1,18 @@
+{
+  "name": "Vui Học Cùng Con",
+  "short_name": "Vui Học",
+  "description": "Ứng dụng giao nhiệm vụ, tích lũy điểm sao, đổi quà linh hoạt và công cụ học tập cho bé",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f6f8fc",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

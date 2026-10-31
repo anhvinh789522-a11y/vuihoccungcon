@@ -1,42 +1,101 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vui Học Cùng Bảo Nhi</title><meta name="description" content="Web dành riêng cho Bảo Nhi: giao nhiệm vụ, tích điểm, đổi quà.">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#7c3aed">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Vui Học Cùng Con</title>
+<meta name="description" content="Web dành riêng cho con: giao nhiệm vụ, tích điểm, đổi quà linh hoạt và công cụ học tập.">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+<!-- Header dành riêng cho thiết bị di động -->
+<header class="mobile-header">
+  <div class="mobile-logo">
+    <span>🌟</span>
+    <span>VUI HỌC CÙNG CON</span>
+  </div>
+  <div class="mobile-header-actions">
+    <button class="mobile-parent-btn" onclick="openParentModal()">🔒 Phụ huynh</button>
+  </div>
+</header>
+
 <div class="shell">
+  <!-- Sidebar cho máy tính / màn hình lớn -->
   <aside>
-    <div class="logo">BẢO NHI <span>VUI HỌC</span> ✨</div>
+    <div class="logo">🌟 BẢO NHI <span>VUI HỌC</span></div>
     <nav>
-      <a class="active" href="#today" data-section="today">🏠 Hôm nay</a>
-      <a href="#schedule" data-section="schedule">📅 Lịch học</a>
-      <a href="#achievements" data-section="achievements">🏆 Thành tích</a>
-      <a href="#rewards" data-section="rewards">🎁 Đổi quà</a>
+      <a class="active" href="#today" data-section="today"><span class="nav-icon">🏠</span><span>Hôm nay</span></a>
+      <a href="#schedule" data-section="schedule"><span class="nav-icon">📅</span><span>Lịch học</span></a>
+      <a href="#tools" data-section="tools"><span class="nav-icon">💡</span><span>Góc học tập</span></a>
+      <a href="#achievements" data-section="achievements"><span class="nav-icon">🏆</span><span>Thành tích</span></a>
+      <a href="#rewards" data-section="rewards"><span class="nav-icon">🎁</span><span>Đổi quà</span></a>
     </nav>
-    <button class="parent-open" onclick="openParentModal()">🔒 Phụ huynh</button>
+    <button class="parent-open" onclick="openParentModal()">🔒 Khu vực phụ huynh</button>
   </aside>
 
+  <!-- Vùng nội dung chính -->
   <main>
-    <div class="child-switch" id="childSwitch"></div>
+    <!-- Thanh chọn bé & trạng thái đồng bộ -->
+    <div class="child-switch-bar">
+      <div class="child-switch" id="childSwitch"></div>
+      <div id="cloudStatusPill" class="cloud-pill" onclick="openParentModal()" title="Bấm để xem cài đặt đồng bộ Supabase">
+        <span>☁️</span> <span id="cloudStatusText">Dữ liệu trên máy</span>
+      </div>
+    </div>
 
+    <!-- 1. MÀN HÌNH HÔM NAY -->
     <section id="todaySection" class="app-section active">
       <section class="top">
         <div class="hero">
-          <div style="font-size:13px;opacity:.9">Học mỗi ngày một chút</div>
+          <div class="hero-tag">Học mỗi ngày một chút</div>
           <h1 id="hello">Chào con 👋</h1>
           <p id="heroText">Phụ huynh chưa tạo hồ sơ cho bé.</p>
           <div><span id="heroTitle" class="hero-title" style="display:none"></span></div>
         </div>
         <div class="score">
-          <div class="note">⭐ Điểm hiện có</div>
+          <div class="note">⭐ Điểm sao hiện có</div>
           <div class="big" id="score">0</div>
-          <div class="note">Tiến độ hôm nay: <b id="count">0/0</b></div>
+          <div class="note" style="margin-top:6px">Tiến độ hôm nay: <b id="count">0/0</b></div>
           <div class="progress"><i id="bar" style="width:0%"></i></div>
         </div>
       </section>
+
+      <!-- 🎯 Mục tiêu quà đang phấn đấu (hiển thị trên màn hình chính) -->
+      <div id="todayTargetGoalCard" style="display:none"></div>
+
+      <!-- 📚 KHU VỰC CỘNG ĐIỂM HỌC TẬP CHO CON -->
+      <div class="study-score-card">
+        <div class="study-score-head">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="study-badge">📚 Học tập</span>
+            <span class="study-title">Ghi nhận &amp; Cộng điểm học tập</span>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="note" style="color:#1e40af">Khích lệ bài thi, điểm 10 &amp; bài học ⭐</span>
+            <button class="study-open-modal-btn" onclick="openStudyScoreModal()">➕ Chấm điểm bài học...</button>
+          </div>
+        </div>
+        <div class="study-preset-grid" id="studyPresetList"></div>
+      </div>
+
+      <!-- ⚡ KHU VỰC THƯỞNG NÓNG & KHÍCH LỆ CON TRỰC TIẾP -->
+      <div class="quick-praise-card">
+        <div class="quick-praise-head">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="praise-badge">⚡ Thưởng nóng</span>
+            <span style="font-weight:800;font-size:15px;color:#92400e">Khen thưởng &amp; Khích lệ con</span>
+          </div>
+          <span class="note" style="color:#b45309">Chạm 1 lần để cộng điểm khích lệ ngay ⭐</span>
+        </div>
+        <div class="quick-praise-grid" id="quickPraiseList"></div>
+      </div>
 
       <section class="grid">
         <div class="card">
@@ -48,16 +107,20 @@
             <h2>⭐ Điểm của <span id="goalName">bé</span></h2>
             <div class="big" id="goalScore">0</div>
             <p class="note">💱 Quy đổi: <b id="moneyEquiv">0 đ</b></p>
-            <p class="note">Điểm tăng khi hoàn thành nhiệm vụ hoặc được phụ huynh thưởng thêm.</p>
+            <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="primary" style="flex:1;padding:9px 12px;font-size:13px" onclick="openFlexibleMoneyModal()">💱 Đổi tiền mặt</button>
+              <button class="secondary" style="flex:1;padding:9px 12px;font-size:13px" onclick="openCustomRewardModal()">⚡ Thỏa thuận quà</button>
+            </div>
           </div>
-          <div class="card" style="margin-top:22px">
-            <h2>🎁 Quà có thể đổi</h2>
+          <div class="card" style="margin-top:20px">
+            <h2>🎁 Quà có thể đổi ngay</h2>
             <div id="rewardShopToday"></div>
           </div>
         </div>
       </section>
     </section>
 
+    <!-- 2. MÀN HÌNH LỊCH HỌC -->
     <section id="scheduleSection" class="app-section">
       <div class="card">
         <h2>📅 Lịch học của <span id="scheduleName">bé</span></h2>
@@ -71,6 +134,35 @@
       </div>
     </section>
 
+    <!-- 3. MÀN HÌNH GÓC HỌC TẬP & CÔNG CỤ HỖ TRỢ HỌC -->
+    <section id="toolsSection" class="app-section">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+          <h2 style="margin:0">💡 Góc công cụ &amp; Web học tập chọn lọc</h2>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="primary" style="padding:8px 14px;font-size:13px;display:inline-flex;align-items:center;gap:6px" onclick="openStudyScoreModal()">
+              <span>⭐</span>
+              <span>Cộng điểm học tập ngay</span>
+            </button>
+            <span class="note">Nguồn học an toàn cho bé</span>
+          </div>
+        </div>
+        <p class="note" style="margin-top:0;margin-bottom:14px">Bấm <b>“Mở học ngay ↗”</b> để vào trang web, hoặc bấm <b>“Giao bài 📝”</b> để phụ huynh tạo nhanh nhiệm vụ học tập có kèm link này cho bé.</p>
+        
+        <div class="tools-filter-bar" id="toolsFilterBar">
+          <button class="tools-filter-btn active" onclick="filterStudyTools('all',this)">Tất cả nguồn</button>
+          <button class="tools-filter-btn" onclick="filterStudyTools('Toán & Khoa học',this)">📐 Toán & Khoa học</button>
+          <button class="tools-filter-btn" onclick="filterStudyTools('Tiếng Anh',this)">🇬🇧 Tiếng Anh</button>
+          <button class="tools-filter-btn" onclick="filterStudyTools('Tiếng Việt',this)">🇻🇳 Tiếng Việt</button>
+          <button class="tools-filter-btn" onclick="filterStudyTools('Sáng tạo & Lập trình',this)">💻 Lập trình & Sáng tạo</button>
+          <button class="tools-filter-btn" onclick="filterStudyTools('Khám phá thế giới',this)">🌍 Khoa học & Vũ trụ</button>
+        </div>
+
+        <div class="tools-grid" id="studyToolsGrid"></div>
+      </div>
+    </section>
+
+    <!-- 4. MÀN HÌNH THÀNH TÍCH -->
     <section id="achievementsSection" class="app-section">
       <div class="card">
         <h2>🏆 Thành tích của <span id="achievementName">bé</span></h2>
@@ -80,11 +172,35 @@
             <div class="num" id="completedCount">0</div>
           </div>
           <div class="stat-box">
-            <div class="note">Điểm hiện có</div>
+            <div class="note">Điểm sao hiện có</div>
             <div class="num" id="achievementScore">0</div>
           </div>
         </div>
-        <div class="note" style="margin-top:10px">🏅 Danh hiệu được trao khi bé đạt mốc điểm quy định và sẽ được giữ lại, kể cả sau khi dùng điểm để đổi quà.</div>
+        <div class="note" style="margin-top:12px">🏅 Danh hiệu được trao khi bé đạt mốc điểm quy định và sẽ được giữ lại, kể cả sau khi dùng điểm để đổi quà.</div>
+
+        <!-- 📚 BẢNG VÀNG ĐIỂM HỌC TẬP CỦA CON -->
+        <div class="study-gold-board" style="margin-top:22px">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+            <h3 style="margin:0;display:flex;align-items:center;gap:8px;color:#1e40af">
+              <span>📚</span>
+              <span>Bảng vàng &amp; Nhật ký điểm học tập</span>
+            </h3>
+            <button class="study-add-btn-small" onclick="openStudyScoreModal()">➕ Cộng điểm học tập</button>
+          </div>
+          <div class="stat-grid" style="margin-bottom:14px">
+            <div class="stat-box" style="background:#eff6ff;border-color:#bfdbfe">
+              <div class="note" style="color:#1e40af">Tổng điểm học tập đã đạt</div>
+              <div class="num" style="color:#1d4ed8" id="studyTotalScore">0 ⭐</div>
+            </div>
+            <div class="stat-box" style="background:#f0fdf4;border-color:#bbf7d0">
+              <div class="note" style="color:#166534">Số lần khen thưởng học tập</div>
+              <div class="num" style="color:#15803d" id="studyEntryCount">0</div>
+            </div>
+          </div>
+          <div class="study-subject-chips" id="studySubjectStats" style="margin-bottom:12px"></div>
+          <div class="note" style="margin-bottom:8px">Nhật ký các bài kiểm tra &amp; nỗ lực học tập con đã được cộng điểm:</div>
+          <div id="studyHistoryList"></div>
+        </div>
         <div style="margin-top:18px">
           <h3>🎖 Danh hiệu đã đạt</h3>
           <div id="earnedAchievements"></div>
@@ -115,15 +231,266 @@
       </div>
     </section>
 
+    <!-- 5. MÀN HÌNH ĐỔI QUÀ (CƠ CHẾ ĐỔI ĐIỂM LINH HOẠT) -->
     <section id="rewardsSection" class="app-section">
       <div class="card">
-        <h2>🎁 Phần quà dành cho <span id="rewardNameChild">bé</span></h2>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <div>
+            <h2 style="margin:0">🎁 Cửa hàng đổi quà & Quy đổi sao</h2>
+            <p class="note" style="margin:4px 0 0">Đổi điểm tích lũy của <b id="rewardNameChild">bé</b> thành phần quà mong ước hoặc tiền thưởng</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="note">Điểm của con:</span>
+            <span class="big" style="font-size:28px" id="rewardCurrentScore">0 ⭐</span>
+          </div>
+        </div>
+
+        <!-- Thanh công cụ đổi linh hoạt -->
+        <div class="rewards-action-bar">
+          <button class="reward-action-btn" onclick="openCustomRewardModal()">
+            <span class="reward-action-icon">⚡</span>
+            <div>
+              <div class="reward-action-title">Đổi quà theo thỏa thuận</div>
+              <div class="reward-action-sub">Tự do đổi việc/quà bất kỳ giữa con &amp; bố mẹ</div>
+            </div>
+          </button>
+          <button class="reward-action-btn" onclick="openFlexibleMoneyModal()">
+            <span class="reward-action-icon">💰</span>
+            <div>
+              <div class="reward-action-title">Đổi sao ra tiền mặt linh hoạt</div>
+              <div class="reward-action-sub">Tự chọn số sao muốn đổi (20, 50, 100...)</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Khối mục tiêu phấn đấu của bé -->
+        <div id="rewardsTargetGoalCard" style="display:none"></div>
+
+        <!-- Bộ lọc danh mục quà -->
+        <div class="rewards-filter-bar" id="rewardFilterBar">
+          <button class="rewards-filter-btn active" onclick="filterRewards('all',this)">Tất cả quà</button>
+          <button class="rewards-filter-btn" onclick="filterRewards('Thời gian & Đặc quyền',this)">⏱️ Đặc quyền &amp; Thời gian</button>
+          <button class="rewards-filter-btn" onclick="filterRewards('Đồ ăn & Thức uống',this)">🍦 Ăn uống &amp; Snack</button>
+          <button class="rewards-filter-btn" onclick="filterRewards('Hoạt động & Dã ngoại',this)">🎡 Đi chơi &amp; Dã ngoại</button>
+          <button class="rewards-filter-btn" onclick="filterRewards('Sách & Đồ chơi',this)">📚 Sách &amp; Đồ chơi</button>
+        </div>
+
+        <!-- Danh sách phần quà -->
         <div id="rewardShopStandalone"></div>
+
+        <!-- Danh sách quà đang chờ bố mẹ trao (Pending fulfillment) -->
+        <div id="pendingGiftsContainer" style="display:none">
+          <div class="pending-gifts-box">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <div style="font-weight:900;color:#92400e;display:flex;align-items:center;gap:6px">
+                <span>⏳</span>
+                <span>Quà con đã đổi — Chờ bố mẹ thực hiện:</span>
+              </div>
+              <span class="note" style="color:#b45309">Bố mẹ bấm để đánh dấu đã trao</span>
+            </div>
+            <div id="pendingGiftsList"></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <div class="site-footer">VUI HỌC CÙNG BẢO NHI</div>
+    <div class="site-footer">VUI HỌC CÙNG CON • TÍCH ĐIỂM ĐỔI QUÀ & NÂNG CAO TRI THỨC</div>
   </main>
+</div>
+
+<!-- Thanh điều hướng cố định dưới đáy màn hình trên Mobile -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <a class="active" href="#today" data-section="today"><span class="b-icon">🏠</span><span>Hôm nay</span></a>
+    <a href="#schedule" data-section="schedule"><span class="b-icon">📅</span><span>Lịch học</span></a>
+    <a href="#tools" data-section="tools"><span class="b-icon">💡</span><span>Học tập</span></a>
+    <a href="#achievements" data-section="achievements"><span class="b-icon">🏆</span><span>Thành tích</span></a>
+    <a href="#rewards" data-section="rewards"><span class="b-icon">🎁</span><span>Đổi quà</span></a>
+  </div>
+</nav>
+
+<!-- Modal Đổi sao ra tiền mặt linh hoạt mọi mệnh giá -->
+<div id="flexibleMoneyModal" class="modal-backdrop" onclick="if(event.target===this) closeFlexibleMoneyModal()">
+  <div class="modal-card modal-small">
+    <div style="font-size:48px;margin-bottom:6px">💰</div>
+    <h2 style="margin:0 0 6px">Đổi sao ra tiền mặt linh hoạt</h2>
+    <p class="note" id="moneyModalRateInfo">Tỷ giá: 100 ⭐ = 5.000đ</p>
+    
+    <div style="background:#f8fafc;border:1.5px solid var(--line);border-radius:14px;padding:12px;margin:12px 0;text-align:left">
+      <div style="display:flex;justify-content:space-between;font-weight:800;font-size:13px;margin-bottom:8px">
+        <span>Điểm sao hiện có của bé:</span>
+        <span style="color:var(--brand)" id="moneyModalCurrentStars">0 ⭐</span>
+      </div>
+      
+      <div class="note" style="margin-bottom:6px">Chọn nhanh mức sao muốn đổi:</div>
+      <div class="money-quick-grid">
+        <button class="money-quick-btn" onclick="selectQuickMoney(20)">20 ⭐<div class="sub" id="qSub20">1.000 đ</div></button>
+        <button class="money-quick-btn" onclick="selectQuickMoney(50)">50 ⭐<div class="sub" id="qSub50">2.500 đ</div></button>
+        <button class="money-quick-btn" onclick="selectQuickMoney(100)">100 ⭐<div class="sub" id="qSub100">5.000 đ</div></button>
+        <button class="money-quick-btn" onclick="selectQuickMoney(200)">200 ⭐<div class="sub" id="qSub200">10.000 đ</div></button>
+        <button class="money-quick-btn" onclick="selectQuickMoney(500)">500 ⭐<div class="sub" id="qSub500">25.000 đ</div></button>
+        <button class="money-quick-btn" onclick="selectAllStarsMoney()">Toàn bộ<div class="sub">Tất cả sao</div></button>
+      </div>
+
+      <div class="note" style="margin-top:10px;margin-bottom:4px">...hoặc nhập số sao tùy ý:</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="customMoneyStars" type="number" min="1" placeholder="Số sao muốn đổi" oninput="updateCustomMoneyCalc()">
+        <span style="font-weight:800">⭐</span>
+      </div>
+      
+      <div style="background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;padding:10px;margin-top:10px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700;font-size:13px;color:#065f46">Quy đổi thành tiền:</span>
+        <b style="font-size:18px;color:#065f46" id="customMoneyVndResult">0 đ</b>
+      </div>
+    </div>
+
+    <div class="confirm-actions">
+      <button class="confirm-no" onclick="closeFlexibleMoneyModal()">Hủy</button>
+      <button class="primary" onclick="confirmFlexibleMoneyRedeem()" style="padding:11px 22px">💰 Xác nhận đổi tiền</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Đổi quà theo thỏa thuận trực tiếp (Custom Reward Barter) -->
+<div id="customRewardModal" class="modal-backdrop" onclick="if(event.target===this) closeCustomRewardModal()">
+  <div class="modal-card modal-small">
+    <div style="font-size:46px;margin-bottom:4px">⚡🎁</div>
+    <h2 style="margin:0 0 6px">Đổi quà theo thỏa thuận</h2>
+    <p class="note">Bố mẹ và con cùng thống nhất món quà hoặc đặc quyền</p>
+    
+    <div style="text-align:left;margin:14px 0">
+      <div class="note" style="margin-bottom:4px">Đổi cho bé</div>
+      <select id="customRewardChild"></select>
+      
+      <div class="note" style="margin-top:10px;margin-bottom:4px">Món quà / Điều con muốn đổi</div>
+      <input id="customRewardName" placeholder="VD: Bố chơi cờ vua 30 phút, Cho con đi ăn gà rán...">
+      
+      <div class="note" style="margin-top:10px;margin-bottom:4px">Số sao thỏa thuận trừ</div>
+      <input id="customRewardCost" type="number" min="1" value="30" placeholder="VD: 30">
+      
+      <div class="note" style="margin-top:8px">Món quà này sẽ trừ số sao tương ứng và lưu vào danh sách chờ bố mẹ trao!</div>
+    </div>
+
+    <div class="confirm-actions">
+      <button class="confirm-no" onclick="closeCustomRewardModal()">Đóng</button>
+      <button class="primary" onclick="submitCustomReward()" style="padding:11px 22px">🎁 Xác nhận đổi ngay</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Thưởng nóng khích lệ xác nhận nhanh -->
+<div id="quickPraiseModal" class="modal-backdrop" onclick="if(event.target===this) closeQuickPraiseModal()">
+  <div class="modal-card modal-small">
+    <div style="font-size:52px;margin-bottom:6px" id="praiseModalIcon">👏</div>
+    <h2 id="praiseModalTitle" style="margin:0 0 6px">Khen thưởng con</h2>
+    <p class="note" id="praiseModalChild">Dành cho bé</p>
+    <div style="background:#fef3c7;border:1.5px solid #fde68a;border-radius:14px;padding:12px;margin:12px 0">
+      <div style="font-size:26px;font-weight:900;color:#b45309" id="praiseModalPoints">+10 ⭐</div>
+      <div style="font-size:14px;font-weight:700;color:#1e293b;margin-top:4px" id="praiseModalReason">Tự giác học bài</div>
+    </div>
+    <div class="confirm-actions">
+      <button class="confirm-no" onclick="closeQuickPraiseModal()">Để sau</button>
+      <button class="primary" id="praiseConfirmBtn" onclick="confirmQuickPraise()" style="padding:11px 22px">🌟 Thưởng con ngay!</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Thưởng nóng tuỳ chọn lý do & điểm -->
+<div id="customPraiseModal" class="modal-backdrop" onclick="if(event.target===this) closeCustomPraiseModal()">
+  <div class="modal-card modal-small">
+    <div style="font-size:46px;margin-bottom:4px">🌟</div>
+    <h2 style="margin:0 0 8px">Thưởng khích lệ tùy chọn</h2>
+    <p class="note">Cộng điểm ngay khi con có hành động đáng khen</p>
+    <div style="text-align:left;margin:14px 0">
+      <div class="note" style="margin-bottom:4px">Khen thưởng cho bé</div>
+      <select id="customPraiseChild"></select>
+      <div class="note" style="margin-top:10px;margin-bottom:4px">Hành động / Lý do khen con</div>
+      <input id="customPraiseReason" placeholder="VD: Chia sẻ đồ chơi với em, Tự dọn bàn học...">
+      <div class="note" style="margin-top:10px;margin-bottom:4px">Số điểm sao thưởng</div>
+      <input id="customPraisePoints" type="number" min="1" value="10" placeholder="Số sao, VD: 10">
+    </div>
+    <div class="confirm-actions">
+      <button class="confirm-no" onclick="closeCustomPraiseModal()">Đóng</button>
+      <button class="primary" onclick="submitCustomPraise()" style="padding:11px 22px">🌟 Cộng điểm ngay</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Chấm & Cộng điểm học tập chuyên nghiệp cho con -->
+<div id="studyScoreModal" class="modal-backdrop" onclick="if(event.target===this) closeStudyScoreModal()">
+  <div class="modal-card modal-small" style="max-width:540px;text-align:left">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:32px">📚🎓</span>
+        <div>
+          <h2 style="margin:0;font-size:18px">Cộng điểm học tập cho con</h2>
+          <div class="note" style="margin-top:2px">Khen thưởng bài kiểm tra, điểm tốt &amp; nỗ lực học tập</div>
+        </div>
+      </div>
+      <button class="close" onclick="closeStudyScoreModal()">✕</button>
+    </div>
+
+    <!-- Chọn bé -->
+    <div style="margin-bottom:12px">
+      <div class="note" style="margin-bottom:4px;font-weight:700">Cộng điểm cho bé:</div>
+      <select id="studyScoreChild"></select>
+    </div>
+
+    <!-- Chọn nhanh tiêu chí mẫu -->
+    <div style="margin-bottom:12px">
+      <div class="note" style="margin-bottom:6px;font-weight:700">Chọn nhanh tiêu chí học tập:</div>
+      <div class="study-chip-list" id="studyScoreChips"></div>
+    </div>
+
+    <div class="formgrid" style="margin-bottom:12px">
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">Môn học:</div>
+        <select id="studyScoreSubject" onchange="checkCustomSubject(this.value)"></select>
+      </div>
+      <div>
+        <div class="note" style="margin-bottom:4px;font-weight:700">Số điểm sao (+ ⭐):</div>
+        <input id="studyScorePoints" type="number" min="1" value="10" placeholder="Số sao, VD: 10">
+      </div>
+    </div>
+
+    <div id="customSubjectWrap" style="display:none;margin-bottom:12px">
+      <div class="note" style="margin-bottom:4px;font-weight:700">Tên môn học khác:</div>
+      <input id="studyScoreCustomSubject" placeholder="VD: Lịch sử &amp; Địa lý, Tin học, Khoa học...">
+    </div>
+
+    <!-- Cụm chọn nhanh số điểm sao -->
+    <div style="margin-bottom:12px">
+      <div class="note" style="margin-bottom:6px">Chọn nhanh mức điểm sao:</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button type="button" class="btn open" style="padding:6px 12px;font-size:12px" onclick="setStudyScoreQuickPoints(5)">+5 ⭐</button>
+        <button type="button" class="btn open" style="padding:6px 12px;font-size:12px" onclick="setStudyScoreQuickPoints(10)">+10 ⭐</button>
+        <button type="button" class="btn open" style="padding:6px 12px;font-size:12px" onclick="setStudyScoreQuickPoints(15)">+15 ⭐</button>
+        <button type="button" class="btn open" style="padding:6px 12px;font-size:12px" onclick="setStudyScoreQuickPoints(20)">+20 ⭐</button>
+        <button type="button" class="btn open" style="padding:6px 12px;font-size:12px" onclick="setStudyScoreQuickPoints(30)">+30 ⭐</button>
+        <button type="button" class="btn open" style="padding:6px 12px;font-size:12px" onclick="setStudyScoreQuickPoints(50)">+50 ⭐</button>
+      </div>
+    </div>
+
+    <!-- Tên bài kiểm tra / nội dung học tập -->
+    <div style="margin-bottom:12px">
+      <div class="note" style="margin-bottom:4px;font-weight:700">Bài kiểm tra / Nội dung học tập:</div>
+      <input id="studyScoreTopic" placeholder="VD: Điểm 10 kiểm tra 15 phút, Bài tập trang 35 SGK, Luyện viết chữ đẹp...">
+    </div>
+
+    <!-- Lời khen của bố mẹ -->
+    <div style="margin-bottom:14px">
+      <div class="note" style="margin-bottom:4px">Lời khen &amp; nhắn nhủ của bố mẹ:</div>
+      <input id="studyScoreNote" placeholder="VD: Bố mẹ rất tự hào về con! Tiếp tục phát huy nhé!">
+    </div>
+
+    <div class="confirm-actions" style="margin-top:14px">
+      <button class="confirm-no" onclick="closeStudyScoreModal()">Đóng</button>
+      <button class="primary" style="padding:11px 24px;display:inline-flex;align-items:center;gap:6px" onclick="submitStudyScore()">
+        <span>⭐</span>
+        <span>Xác nhận cộng điểm ngay!</span>
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- Parent modal -->
@@ -172,13 +539,50 @@
         <div id="subjectManager" style="margin-top:10px"></div>
       </div>
 
+      <!-- Quản lý công cụ học tập & liên kết gợi ý -->
+      <div class="parent-section">
+        <h3>💡 Quản lý liên kết học tập gợi ý</h3>
+        <div class="formgrid">
+          <div><div class="note">Tên nguồn học / Web</div><input id="newToolName" placeholder="VD: VioEdu Toán Học"></div>
+          <div><div class="note">Nhóm / Môn</div>
+            <select id="newToolCategory">
+              <option value="Toán & Khoa học">📐 Toán & Khoa học</option>
+              <option value="Tiếng Anh">🇬🇧 Tiếng Anh</option>
+              <option value="Tiếng Việt">🇻🇳 Tiếng Việt</option>
+              <option value="Sáng tạo & Lập trình">💻 Sáng tạo & Lập trình</option>
+              <option value="Khám phá thế giới">🌍 Khám phá thế giới</option>
+              <option value="Kỹ năng sống">🌟 Kỹ năng sống</option>
+            </select>
+          </div>
+          <div><div class="note">Link website</div><input id="newToolUrl" placeholder="https://..."></div>
+          <div><div class="note">Biểu tượng (Emoji)</div><input id="newToolIcon" placeholder="VD: 📐, 🦉, 💻" value="🌐"></div>
+          <div style="grid-column:1/-1"><div class="note">Mô tả ngắn gọn</div><input id="newToolDesc" placeholder="VD: Học Toán trực tuyến bám sát SGK"></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+          <button class="primary" onclick="addStudyTool()">+ Thêm công cụ học</button>
+          <button class="secondary" onclick="resetDefaultStudyTools()">Khôi phục danh mục gợi ý gốc</button>
+        </div>
+        <div id="parentToolList" class="compact-scroll" style="margin-top:12px"></div>
+      </div>
+
+      <!-- Quản lý quà tặng linh hoạt -->
       <div class="parent-section">
         <h3>🎁 Quản lý quà tặng & quy định đổi điểm</h3>
         <div class="formgrid">
           <div style="grid-column:1/-1"><div class="note">Thiết lập quà cho</div><select id="rewardTarget" onchange="renderManagers()"></select><div class="note" style="margin-top:6px">Có thể chọn từng bé hoặc Tất cả các con.</div></div>
-          <div><div class="note">Tên quà</div><input id="rewardName" placeholder="VD: 1 cây kem"></div>
-          <div><div class="note">Điểm cần đổi</div><input id="rewardCost" type="number" min="1" placeholder="VD: 100"></div>
-          <div style="grid-column:1/-1"><div class="note">Quy định / ghi chú</div><input id="rewardRule" placeholder="VD: Chỉ đổi vào cuối tuần"></div>
+          <div><div class="note">Tên quà</div><input id="rewardName" placeholder="VD: Xem TV 20 phút"></div>
+          <div><div class="note">Điểm cần đổi</div><input id="rewardCost" type="number" min="1" placeholder="VD: 25"></div>
+          <div><div class="note">Nhóm quà</div>
+            <select id="rewardCategoryInput">
+              <option value="Thời gian & Đặc quyền">⏱️ Thời gian & Đặc quyền</option>
+              <option value="Đồ ăn & Thức uống">🍦 Đồ ăn & Thức uống</option>
+              <option value="Hoạt động & Dã ngoại">🎡 Hoạt động & Dã ngoại</option>
+              <option value="Sách & Đồ chơi">📚 Sách & Đồ chơi</option>
+              <option value="Khác">🎁 Khác</option>
+            </select>
+          </div>
+          <div><div class="note">Emoji biểu tượng</div><input id="rewardIconInput" placeholder="VD: 📺, 🍦, 🎡" value="🎁"></div>
+          <div style="grid-column:1/-1"><div class="note">Quy định / ghi chú</div><input id="rewardRule" placeholder="VD: Mỗi ngày tối đa 1 lần, Đổi vào cuối tuần"></div>
         </div>
         <button class="primary" style="margin-top:10px" onclick="addReward()">+ Thêm quà</button>
         <div id="rewardManager" class="compact-scroll" style="margin-top:10px"></div>
@@ -192,7 +596,7 @@
         </div>
         <button class="primary" style="margin-top:10px" onclick="saveExchangeRate()">Lưu tỷ giá</button>
         <div class="note" style="margin-top:8px" id="rateCurrent"></div>
-        <div class="note">Chỉ một mốc đổi tiền duy nhất theo tỷ giá trên (mặc định <b>100 ⭐ = 5.000đ</b>).</div>
+        <div class="note">Hệ thống hỗ trợ đổi linh hoạt mọi mức sao theo tỷ giá này (VD: 20 ⭐, 50 ⭐, 100 ⭐ hoặc gõ số sao tùy ý).</div>
       </div>
 
       <div class="parent-section">
@@ -210,6 +614,15 @@
         </div>
         <button class="primary" style="margin-top:10px" onclick="addAchievement()">+ Thêm mốc thành tích</button>
         <div id="achievementManager" class="compact-scroll" style="margin-top:10px"></div>
+      </div>
+
+      <div class="parent-section">
+        <h3>📚 Chấm điểm &amp; Cộng điểm học tập cho con</h3>
+        <p class="note" style="margin-top:0;margin-bottom:10px">Khen thưởng bài kiểm tra (điểm 8, 9, 10), bài tập về nhà, luyện chữ, đọc sách, học tiếng Anh theo từng môn học.</p>
+        <button class="primary" style="display:inline-flex;align-items:center;gap:6px" onclick="openStudyScoreModal()">
+          <span>➕</span>
+          <span>Mở bảng chấm &amp; cộng điểm học tập</span>
+        </button>
       </div>
 
       <div class="parent-section">
@@ -235,11 +648,11 @@
 
       <div class="parent-section">
         <h3>📝 Giao nhiệm vụ</h3>
-        <div class="note" style="margin-bottom:8px">⭐ Mẫu có sẵn của Bảo Nhi — bấm để điền nhanh, rồi chọn ngày và bấm “Giao nhiệm vụ”:</div>
+        <div class="note" style="margin-bottom:8px">⭐ Mẫu có sẵn — bấm để điền nhanh, rồi chọn ngày và bấm “Giao nhiệm vụ”:</div>
         <div id="presetList" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
         <div class="formgrid">
           <div><div class="note">Giao cho</div><select id="assignTo"></select><div class="note" style="margin-top:6px">Có thể chọn từng bé hoặc giao cùng một nhiệm vụ cho tất cả các con.</div></div>
-          <div><div class="note">Tên nhiệm vụ (tự điền)</div><input id="taskName" placeholder="VD: Đọc 2 truyện"></div>
+          <div><div class="note">Tên nhiệm vụ (tự điền)</div><input id="taskName" placeholder="VD: Học bài 15 phút"></div>
           <div><div class="note">Môn học</div><select id="subject"></select></div>
           <div><div class="note">Điểm khi hoàn thành</div><input id="taskPoints" type="number" placeholder="VD: 10">
             <div style="display:flex;gap:6px;margin-top:6px">
@@ -258,8 +671,21 @@
           </div>
           <div><div class="note">Ngày kết thúc nếu lặp</div><input id="taskEndDate" type="date"></div>
           <div><div class="note">Thời lượng</div><select id="duration"><option value="5 phút">5 phút</option><option value="10 phút">10 phút</option><option value="15 phút">15 phút</option><option value="20 phút">20 phút</option><option value="25 phút">25 phút</option><option value="30 phút">30 phút</option><option value="35 phút">35 phút</option><option value="40 phút">40 phút</option><option value="45 phút">45 phút</option><option value="50 phút">50 phút</option><option value="55 phút">55 phút</option><option value="60 phút">60 phút</option></select></div>
-          <div style="grid-column:1/-1"><div class="note">Link tài liệu</div><input id="taskLink" placeholder="https://..."></div>
-          <div style="grid-column:1/-1"><div class="note">Hướng dẫn</div><textarea id="instruction" placeholder="VD: Xem video 2 lần và đọc lại từ mới"></textarea></div>
+          
+          <div style="grid-column:1/-1">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <div class="note">Link tài liệu / Web học tập</div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span class="note">Gắn nhanh từ nguồn học:</span>
+                <select id="taskQuickToolSelect" onchange="fillTaskLinkFromTool(this.value)" style="width:auto;padding:4px 8px;font-size:12px">
+                  <option value="">-- Chọn nguồn web có sẵn --</option>
+                </select>
+              </div>
+            </div>
+            <input id="taskLink" placeholder="https://...">
+          </div>
+          
+          <div style="grid-column:1/-1"><div class="note">Hướng dẫn</div><textarea id="instruction" placeholder="VD: Đọc bài và làm bài tập thực hành"></textarea></div>
         </div>
         <div class="repeat-note note">Có thể giao một lần cho cả khoảng ngày. Chọn “Lặp Thứ 2 - Thứ 6” cho các nhiệm vụ cố định trong tuần.</div>
         <button class="primary" style="margin-top:10px" onclick="addTask()">+ Giao nhiệm vụ</button>
@@ -314,10 +740,7 @@
   </div>
 </div>
 
-
-
-
-<!-- generic confirmation modal -->
+<!-- Generic confirmation modal -->
 <div id="confirmModal" class="modal-backdrop">
   <div class="modal-card modal-small">
     <div class="confirm-icon" id="confirmIcon">❓</div>
@@ -330,7 +753,7 @@
   </div>
 </div>
 
-<!-- reward success modal -->
+<!-- Reward success modal -->
 <div id="rewardSuccessModal" class="modal-backdrop" onclick="if(event.target===this) closeRewardSuccess()">
   <div class="modal-card modal-small">
     <div class="success-reward">🎉🎁</div>
@@ -338,12 +761,12 @@
     <p>Con đã đạt được phần quà:</p>
     <div class="success-gift-name" id="successGiftName"></div>
     <div class="success-points">Đã trừ <span id="successGiftPoints">0</span> điểm tích lũy</div>
-    <p class="note">Tiếp tục cố gắng để chinh phục những phần quà tiếp theo nhé!</p>
+    <p class="note">Phần quà đã được lưu vào danh sách chờ bố mẹ thực hiện. Hãy tiếp tục cố gắng nhé!</p>
     <button class="primary" onclick="closeRewardSuccess()">Tuyệt vời! 🌟</button>
   </div>
 </div>
 
-<!-- encouragement modal -->
+<!-- Encouragement modal -->
 <div id="encourageModal" class="modal-backdrop" onclick="if(event.target===this) closeEncourage()">
   <div class="modal-card modal-small">
     <div class="encourage">🌟</div>
@@ -355,7 +778,20 @@
   </div>
 </div>
 
+<!-- Canvas pháo hoa sao confetti -->
+<canvas id="confettiCanvas"></canvas>
+
+<!-- Toast thông báo nổi -->
+<div id="toastNotice" class="toast-notice"></div>
+
 <script src="js/app.js" defer></script>
 <script src="js/sync.js" defer></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
 </body>
 </html>

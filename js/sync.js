@@ -9,10 +9,16 @@ let _pushTimer=null;
 const _localSave=save;
 save=function(){_localSave();schedulePush();};
 
-function persistSync(){localStorage.setItem(SYNC_KEY,JSON.stringify(syncCfg))}
+function persistSync(){
+  localStorage.setItem(SYNC_KEY,JSON.stringify(syncCfg));
+  if(typeof updateCloudStatusPill==='function') updateCloudStatusPill();
+}
 function syncBase(){return String(syncCfg.url||'').replace(/\/+$/,'')}
 function syncHeaders(){return {'apikey':syncCfg.anon,'Authorization':'Bearer '+syncCfg.anon,'Content-Type':'application/json'}}
-function setSyncStatus(msg){const el=document.getElementById('syncStatus');if(el)el.textContent=msg}
+function setSyncStatus(msg){
+  const el=document.getElementById('syncStatus');if(el)el.textContent=msg;
+  if(typeof updateCloudStatusPill==='function') updateCloudStatusPill();
+}
 function fillSyncForm(){
   if(!syncCfg)return;
   const u=document.getElementById('syncUrl'),k=document.getElementById('syncKey'),cd=document.getElementById('syncCode'),a=document.getElementById('syncAuto');
@@ -62,6 +68,7 @@ async function syncPull(silent){
     if(!data.exchangeRate)data.exchangeRate={stars:100,vnd:5000};
     if(!Array.isArray(data.children))data.children=[];
     if(!Array.isArray(data.subjects))data.subjects=[];
+    if(!Array.isArray(data.studyTools))data.studyTools=(typeof DEFAULT_STUDY_TOOLS!=='undefined'?structuredClone(DEFAULT_STUDY_TOOLS):[]);
     if(!data.parentPassword)data.parentPassword='1234';
     data.children.forEach(c=>{updateEarnedAchievements(c)});
     _localSave();
@@ -109,4 +116,5 @@ function disconnectSync(){
   }else{
     setSyncStatus(syncCfg?'Chưa bật tự động.':'Chưa cấu hình đồng bộ.');
   }
+  if(typeof updateCloudStatusPill==='function') updateCloudStatusPill();
 })();
