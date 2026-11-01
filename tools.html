@@ -179,11 +179,11 @@
           <div>
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <span class="study-badge" style="background:linear-gradient(135deg,#ea580c,#f59e0b)">🦊 LITTLE FOX ENGLISH</span>
-              <span class="study-badge" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">LEVEL 1 → LEVEL 4</span>
-              <span class="note">Phương pháp nâng cấp câu từng bước (Sentence Ladder)</span>
+              <span class="study-badge" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">CHUẨN LEVEL 1 → LEVEL 4</span>
+              <span class="study-badge" style="background:linear-gradient(135deg,#059669,#10b981)">🔊 ÂM THANH BẢN XỨ &amp; TRANH ĐỌC</span>
             </div>
-            <h2 style="margin:6px 0 4px;font-size:22px">🦊 Bộ thẻ Little Fox &amp; Luyện nói câu cùng <span id="fcChildName">bé</span></h2>
-            <p class="note" style="margin:0">Học theo từng Level &amp; Chủ đề: Nghe từ đơn → Nói câu ngắn 3 từ (🌱 Bậc 1) → Mở rộng câu (🌿 Bậc 2) → Nói câu hoàn chỉnh (🌳 Bậc 3)!</p>
+            <h2 style="margin:6px 0 4px;font-size:22px">🦊 Bộ thẻ Hình Ảnh &amp; Nội Dung Đọc Little Fox (Level 1–4) của <span id="fcChildName">bé</span></h2>
+            <p class="note" style="margin:0">Mỗi thẻ gồm <b>Tranh minh họa trực quan</b> + <b>4 Bức ảnh &amp; Nội dung đọc tăng dần</b> (Từ đơn ➔ Câu ngắn ➔ Câu mở rộng ➔ Đoạn truyện Little Fox) kèm <b>âm thanh chuẩn Mỹ/Anh</b> đọc sáng chữ từng từ!</p>
           </div>
           <div class="fc-stats-row">
             <div class="fc-stat-pill">
@@ -196,7 +196,7 @@
             </div>
             <button class="primary" style="padding:9px 14px;font-size:13px;display:inline-flex;align-items:center;gap:6px" onclick="openAddFlashcardModal()">
               <span>➕</span>
-              <span>Thêm thẻ từ mới</span>
+              <span>Thêm thẻ &amp; ảnh đọc</span>
             </button>
           </div>
         </div>
@@ -209,20 +209,25 @@
         <!-- Thanh cài đặt giọng đọc & chế độ hiển thị -->
         <div class="fc-toolbar">
           <div class="fc-mode-tabs">
-            <button class="fc-mode-btn active" id="fcModeCardBtn" onclick="setFlashcardMode('card')">🃏 Lật thẻ &amp; Bậc thang câu</button>
-            <button class="fc-mode-btn" id="fcModeGridBtn" onclick="setFlashcardMode('grid')">📋 Bảng từ &amp; Nghe liên tiếp</button>
+            <button class="fc-mode-btn active" id="fcModeCardBtn" onclick="setFlashcardMode('card')">🃏 Thẻ hình &amp; Từng ảnh đọc</button>
+            <button class="fc-mode-btn" id="fcModeGridBtn" onclick="setFlashcardMode('grid')">🖼️ Bảng tranh &amp; Nghe nhanh</button>
+            <button class="fc-mode-btn" id="fcModeGuideBtn" onclick="setFlashcardMode('guide')">📖 Truyện tranh Little Fox (L1–L4)</button>
             <button class="fc-mode-btn" id="fcModeQuizBtn" onclick="setFlashcardMode('quiz')">🎮 Đố vui Nghe câu (+10 ⭐)</button>
-            <button class="fc-mode-btn" id="fcModeGuideBtn" onclick="setFlashcardMode('guide')">📖 Hướng dẫn &amp; Truyện Little Fox</button>
           </div>
 
           <div class="fc-voice-controls">
-            <div class="fc-accent-switch">
-              <button type="button" class="fc-accent-btn active" id="fcAccentUS" onclick="setFlashcardAccent('en-US')">🇺🇸 Mỹ (US)</button>
-              <button type="button" class="fc-accent-btn" id="fcAccentUK" onclick="setFlashcardAccent('en-GB')">🇬🇧 Anh (UK)</button>
+            <div class="fc-accent-switch" title="Chọn giọng phát âm chuẩn bản xứ Mỹ hoặc Anh">
+              <button type="button" class="fc-accent-btn active" id="fcAccentUS" onclick="setFlashcardAccent('en-US')">🇺🇸 Chuẩn Mỹ (US)</button>
+              <button type="button" class="fc-accent-btn" id="fcAccentUK" onclick="setFlashcardAccent('en-GB')">🇬🇧 Chuẩn Anh (UK)</button>
+            </div>
+            <div class="fc-accent-switch" title="Tốc độ giọng đọc">
+              <button type="button" class="fc-accent-btn active" id="fcSpeedNormal" onclick="setFlashcardSpeed(0.92)">1.0x Chuẩn</button>
+              <button type="button" class="fc-accent-btn" id="fcSpeedMedium" onclick="setFlashcardSpeed(0.76)">0.8x Vừa</button>
+              <button type="button" class="fc-accent-btn" id="fcSpeedSlow" onclick="setFlashcardSpeed(0.58)">🐢 Chậm</button>
             </div>
             <label class="fc-autospeak-toggle">
               <input type="checkbox" id="fcAutoSpeak" checked onchange="toggleFlashcardAutoSpeak(this.checked)" style="width:auto">
-              <span>🔊 Tự đọc khi chuyển thẻ</span>
+              <span>🔊 Tự đọc khi qua thẻ</span>
             </label>
           </div>
         </div>
@@ -239,12 +244,13 @@
             <button class="fc-subfilter-btn" id="fcFilterMastered" onclick="setFlashcardFilter('mastered')">✅ Đã thuộc (<span id="fcCountMastered">0</span>)</button>
           </div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <span id="fcAudioStatusBadge" class="lf-audio-status-pill">🔊 Giọng chuẩn Bản xứ sẵn sàng</span>
             <button class="fc-tool-action-btn" onclick="shuffleFlashcards()" title="Trộn ngẫu nhiên thứ tự thẻ">🔀 Trộn thẻ</button>
             <button class="fc-tool-action-btn" id="fcAutoPlayBtn" onclick="toggleFlashcardAutoPlay()">▶️ Tự động đọc cả chủ đề</button>
           </div>
         </div>
 
-        <!-- CHẾ ĐỘ 1: LẬT THẺ 3D + BẬC THANG NÂNG CẤP CÂU (3-STEP SENTENCE LADDER) -->
+        <!-- CHẾ ĐỘ 1: LẬT THẺ HÌNH ẢNH 3D + TỪNG ẢNH & NỘI DUNG ĐỌC CHUẨN LITTLE FOX -->
         <div id="fcCardView" class="fc-view-panel">
           <div class="fc-stage">
             <!-- Nút lùi thẻ trên màn hình lớn -->
@@ -253,65 +259,81 @@
             <!-- Khung thẻ 3D Flip -->
             <div class="fc-card-scene" id="fcCardScene" onclick="flipCurrentFlashcard()">
               <div class="fc-card-3d" id="fcCard3D">
-                <!-- MẶT TRƯỚC: TIẾNG ANH + HÌNH ẢNH + PHÁT ÂM + CÂU BẬC 1 -->
+                <!-- MẶT TRƯỚC: TRANH MINH HỌA SỐNG ĐỘNG + TỪ VỰNG + IPA + CÂU KHỞI ĐẦU -->
                 <div class="fc-card-face fc-card-front">
                   <div class="fc-card-top-meta">
                     <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
                       <span class="lf-level-pill" id="fcFrontLevel">🌱 Level 1</span>
+                      <span class="lf-series-pill" id="fcFrontSeries">🦊 Bat and Friends</span>
                       <span class="fc-topic-chip" id="fcFrontTopic">🐾 Động vật</span>
                     </div>
                     <span class="fc-mastered-pill" id="fcFrontMasteredBadge" style="display:none">✅ Đã thuộc</span>
                   </div>
 
-                  <div class="fc-card-emoji" id="fcFrontEmoji">🐘</div>
-                  <div class="fc-card-word" id="fcFrontWord">Elephant</div>
-                  <div class="fc-card-ipa" id="fcFrontIpa">/ˈel.ɪ.fənt/</div>
-                  <div class="fc-front-starter-sentence" id="fcFrontStarterSentence">🌱 Câu ngắn: "It is an elephant."</div>
+                  <!-- Khung tranh minh họa trực quan chuẩn Little Fox -->
+                  <div class="lf-card-illustration-wrap" id="fcFrontIllustrationBox" onclick="event.stopPropagation(); speakCurrentWord(0.9)">
+                    <div class="fc-card-emoji" id="fcFrontEmoji">🐘</div>
+                  </div>
+
+                  <div style="text-align:center;width:100%">
+                    <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap">
+                      <div class="fc-card-word" id="fcFrontWord">Elephant</div>
+                      <span class="lf-pos-badge" id="fcFrontPos">noun</span>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:4px">
+                      <span class="fc-card-ipa" id="fcFrontIpa">/ˈel.ɪ.fənt/</span>
+                      <span class="lf-quick-vi-pill" id="fcFrontQuickVi">🇻🇳 Con voi</span>
+                    </div>
+                  </div>
+
+                  <div class="fc-front-starter-sentence" id="fcFrontStarterSentence" onclick="event.stopPropagation(); speakCurrentLadderStep(1)">
+                    🌱 Câu ngắn: "It is an elephant."
+                  </div>
 
                   <div class="fc-audio-bar" onclick="event.stopPropagation()">
-                    <button type="button" class="fc-speak-btn fc-speak-normal" onclick="speakCurrentWord(0.9)">
+                    <button type="button" class="fc-speak-btn fc-speak-normal" onclick="speakCurrentWord(0.92)">
                       <span>🔊</span>
-                      <span>Đọc từ</span>
+                      <span>Đọc từ chuẩn</span>
                     </button>
-                    <button type="button" class="fc-speak-btn fc-speak-slow" onclick="speakCurrentWord(0.52)">
+                    <button type="button" class="fc-speak-btn fc-speak-slow" onclick="speakCurrentWord(0.55)">
                       <span>🐢</span>
                       <span>Đọc chậm</span>
                     </button>
                     <button type="button" class="fc-speak-btn fc-speak-sentence" onclick="speakCurrentLadderStep(1)">
                       <span>🌱</span>
-                      <span>Đọc câu ngắn</span>
+                      <span>Đọc câu 1</span>
                     </button>
                     <button type="button" class="fc-speak-btn fc-speak-vi" onclick="speakAllLadderSteps()">
-                      <span>🎧</span>
-                      <span>Nghe 3 bậc câu</span>
+                      <span>🖼️</span>
+                      <span>Đọc liền 4 ảnh</span>
                     </button>
                   </div>
 
-                  <div class="fc-flip-hint">👆 Chạm vào thẻ để lật xem Nghĩa Tiếng Việt &amp; 3 bậc câu nâng cấp 🔄</div>
+                  <div class="fc-flip-hint">👆 Chạm vào thẻ để lật xem Giải nghĩa chi tiết &amp; Tóm tắt bài đọc 🔄</div>
                 </div>
 
-                <!-- MẶT SAU: NGHĨA TIẾNG VIỆT + TÓM TẮT 3 BẬC CÂU SONG NGỮ -->
+                <!-- MẶT SAU: NGHĨA TIẾNG VIỆT + TÓM TẮT 4 BỨC ẢNH & NỘI DUNG ĐỌC -->
                 <div class="fc-card-face fc-card-back">
                   <div class="fc-card-top-meta">
                     <span class="fc-topic-chip" id="fcBackTopic">🐾 Động vật</span>
                     <span class="fc-back-word-mini" id="fcBackWordMini">Elephant • /ˈel.ɪ.fənt/</span>
                   </div>
 
-                  <div style="display:flex;align-items:center;gap:10px">
+                  <div style="display:flex;align-items:center;gap:12px;width:100%;justify-content:center">
                     <span class="fc-back-emoji-small" id="fcBackEmoji">🐘</span>
-                    <div>
-                      <div class="fc-back-label">Nghĩa Tiếng Việt:</div>
+                    <div style="text-align:left">
+                      <div class="fc-back-label">Nghĩa Tiếng Việt &amp; Ghi chú:</div>
                       <div class="fc-back-meaning" id="fcBackMeaning">Con voi</div>
                     </div>
                   </div>
 
                   <div class="fc-example-box">
-                    <div class="fc-example-label">📈 3 Bậc nói câu nâng cấp (Bấm từng câu ở khung dưới để nghe):</div>
+                    <div class="fc-example-label">🖼️ Tóm tắt nội dung đọc qua 4 ảnh (Bấm từng câu để nghe ngay):</div>
                     <div class="fc-back-ladder-preview" id="fcBackLadderPreview"></div>
                   </div>
 
                   <div class="fc-audio-bar" onclick="event.stopPropagation()">
-                    <button type="button" class="fc-speak-btn fc-speak-normal" onclick="speakCurrentWord(0.9)">
+                    <button type="button" class="fc-speak-btn fc-speak-normal" onclick="speakCurrentWord(0.92)">
                       <span>🔊</span>
                       <span>Đọc từ</span>
                     </button>
@@ -321,7 +343,7 @@
                     </button>
                     <button type="button" class="fc-speak-btn fc-speak-vi" onclick="speakAllLadderSteps()">
                       <span>🎧</span>
-                      <span>Đọc liền 3 bậc</span>
+                      <span>Đọc cả 4 ảnh</span>
                     </button>
                   </div>
 
@@ -337,50 +359,57 @@
           <!-- Thanh điều khiển dưới thẻ -->
           <div class="fc-bottom-controls">
             <div class="fc-progress-text">
-              Thẻ <b id="fcCurrentIndex">1</b> / <b id="fcTotalInDeck">10</b>
+              Thẻ <b id="fcCurrentIndex">1</b> / <b id="fcTotalInDeck">32</b>
             </div>
             <div class="fc-progress-bar">
               <i id="fcDeckProgressBar" style="width:10%"></i>
             </div>
             <div class="fc-action-buttons">
-              <button type="button" class="fc-ctrl-btn" onclick="prevFlashcard()">◀ Trước</button>
+              <button type="button" class="fc-ctrl-btn" onclick="prevFlashcard()">◀ Thẻ trước</button>
               <button type="button" class="fc-ctrl-btn fc-ctrl-flip" onclick="flipCurrentFlashcard()">🔄 Lật thẻ</button>
               <button type="button" class="fc-ctrl-btn fc-ctrl-master" id="fcMasterBtn" onclick="toggleCurrentCardMastered()">⭐ Đánh dấu Đã thuộc</button>
-              <button type="button" class="fc-ctrl-btn" onclick="nextFlashcard()">Tiếp ▶</button>
+              <button type="button" class="fc-ctrl-btn" onclick="nextFlashcard()">Thẻ tiếp ▶</button>
             </div>
           </div>
 
-          <!-- 📈 KHUNG BẬC THANG NÂNG CẤP CÂU (LITTLE FOX 3-STEP SENTENCE LADDER) & LUYỆN NÓI -->
+          <!-- 🖼️ KHUNG TỪNG ẢNH VÀ NỘI DUNG ĐỌC CHUẨN LITTLE FOX (4 BỨC TRANH + BÀI ĐỌC CÓ ÂM THANH CHUẨN) -->
           <div class="lf-ladder-card" id="fcSentenceLadderCard">
             <div class="lf-ladder-head">
               <div>
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                  <span class="study-badge" style="background:linear-gradient(135deg,#059669,#10b981)">🗣️ BẬC THANG LUYỆN NÓI CÂU</span>
-                  <b style="font-size:15px;color:#064e3b">Từ câu ngắn 3 từ → Nâng cấp lên câu dài tự nhiên</b>
+                  <span class="study-badge" style="background:linear-gradient(135deg,#059669,#10b981)">🖼️ TỪNG ẢNH &amp; NỘI DUNG ĐỌC LITTLE FOX</span>
+                  <b style="font-size:15.5px;color:#064e3b">Nhìn từng bức tranh ➔ Nghe phát âm chuẩn ➔ Đọc theo từng chữ sáng màu!</b>
                 </div>
-                <div class="note" style="margin-top:2px">Bố mẹ cho con nghe &amp; nói thuộc <b>🌱 Bậc 1</b> trước, sau đó nâng dần lên <b>🌿 Bậc 2</b> và <b>🌳 Bậc 3</b>!</div>
+                <div class="note" style="margin-top:3px">💡 <b>Mẹo học hiệu quả:</b> Chạm vào <b>bất kỳ từ Tiếng Anh nào</b> để nghe phát âm riêng từ đó, hoặc bấm <b>“▶️ Đọc lần lượt cả 4 ảnh”</b> để nghe câu chuyện liền mạch!</div>
               </div>
-              <button type="button" class="fc-speak-btn fc-speak-vi" onclick="speakAllLadderSteps()">
-                <span>🎧</span>
-                <span>Nghe đọc cả 3 bậc</span>
-              </button>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button type="button" class="fc-speak-btn fc-speak-vi" id="fcPlayAllPicturesBtn" onclick="speakAllLadderSteps()">
+                  <span>▶️</span>
+                  <span>Đọc lần lượt cả 4 ảnh</span>
+                </button>
+                <button type="button" class="fc-speak-btn fc-speak-slow" onclick="speakAllLadderSteps(0.65)">
+                  <span>🐢</span>
+                  <span>Đọc chậm 4 ảnh</span>
+                </button>
+              </div>
             </div>
 
-            <div class="lf-ladder-steps" id="fcLadderStepsBox"></div>
+            <!-- Danh sách 4 khung Ảnh + Nội dung đọc (Ảnh 1: Bậc 1, Ảnh 2: Bậc 2, Ảnh 3: Bậc 3, Ảnh 4: Bài đọc ngắn Little Fox) -->
+            <div class="lf-picture-reading-grid" id="fcLadderStepsBox"></div>
 
-            <!-- Khu vực thu âm / Luyện nói nhận sao -->
+            <!-- Khu vực thu âm / Luyện đọc theo ảnh nhận sao -->
             <div class="lf-speak-practice-bar">
               <div class="lf-speak-status" id="fcSpeakStatus">
-                🎙️ <b>Thử thách con tập nói:</b> Bấm nút <b>“🎙️ Con tập nói”</b> ở bất kỳ bậc câu nào phía trên (hoặc bấm nút bên phải) để đọc to và nhận <b>+2 ⭐</b> khích lệ!
+                🎙️ <b>Luyện đọc cùng Little Fox:</b> Bấm nút <b>“🎙️ Con tập đọc”</b> ở từng bức ảnh phía trên (hoặc nút bên phải) để máy chấm phát âm và nhận <b>+2 ⭐</b> khích lệ!
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
                 <button type="button" class="lf-mic-btn" id="fcMicPracticeBtn" onclick="startVoicePractice(0)">
                   <span>🎙️</span>
-                  <span>Con đọc Từ &amp; Câu</span>
+                  <span>Con đọc Từ &amp; Bài</span>
                 </button>
                 <button type="button" class="lf-praise-speak-btn" onclick="rewardChildSpeakingPractice()">
                   <span>👏</span>
-                  <span>Con đã nói to rõ (+2 ⭐)</span>
+                  <span>Con đã đọc to rõ (+2 ⭐)</span>
                 </button>
               </div>
             </div>
@@ -509,10 +538,16 @@
       <input id="newFcExampleEn" placeholder="VD: The colorful butterfly is flying.">
     </div>
 
-    <div style="margin-bottom:12px">
+    <div style="margin-bottom:10px">
       <div class="note" style="margin-bottom:4px;font-weight:700;color:#7c3aed">🌳 Câu Bậc 3 (Câu giao tiếp hoàn chỉnh) &amp; Nghĩa Tiếng Việt:</div>
       <input id="newFcStep3En" placeholder="VD: I see a colorful butterfly flying in the garden." style="margin-bottom:6px">
       <input id="newFcExampleVi" placeholder="Nghĩa câu ví dụ: Con thấy một chú bướm sặc sỡ đang bay trong vườn.">
+    </div>
+
+    <div style="margin-bottom:12px">
+      <div class="note" style="margin-bottom:4px;font-weight:700;color:#ea580c">📖 Đoạn đọc ngắn Little Fox (Ảnh 4 - Tùy chọn) &amp; Link ảnh riêng (nếu có):</div>
+      <input id="newFcPassageEn" placeholder="VD: Look at the butterfly! It has bright wings. It flies from flower to flower." style="margin-bottom:6px">
+      <input id="newFcImageUrl" placeholder="Link ảnh minh họa (Tùy chọn — Để trống hệ thống tự vẽ tranh minh họa Little Fox)">
     </div>
 
     <div class="confirm-actions">

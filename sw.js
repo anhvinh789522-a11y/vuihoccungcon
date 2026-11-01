@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vuihoc-cache-v9';
+const CACHE_NAME = 'vuihoc-cache-v10';
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,6 @@ const ASSETS = [
   './achievements.html',
   './rewards.html',
   './css/style.css',
-  './css/games.css',
   './js/app.js',
   './js/games.js',
   './js/sync.js',
@@ -35,17 +34,14 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      const networked = fetch(e.request)
-        .then(res => {
-          if (res && res.status === 200 && res.type === 'basic') {
-            const copy = res.clone();
-            caches.open(CACHE_NAME).then(c => c.put(e.request, copy));
-          }
-          return res;
-        })
-        .catch(() => cached);
-      return cached || networked;
-    })
+    fetch(e.request)
+      .then(res => {
+        if (res && res.status === 200 && res.type === 'basic') {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(c => c.put(e.request, copy));
+        }
+        return res;
+      })
+      .catch(() => caches.match(e.request))
   );
 });

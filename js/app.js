@@ -1201,7 +1201,7 @@ function showSection(name){
       today: 'today.html',
       schedule: 'schedule.html',
       tools: 'tools.html',
-      flashcards: 'tools.html',
+      flashcards: 'tools.html?section=flashcards',
       achievements: 'achievements.html',
       rewards: 'rewards.html'
     };
@@ -5120,26 +5120,71 @@ function renderCoreInteractiveHub(){
   }
 
   if(activeCoreStudyTab === 'english_lf'){
+    const allCards = typeof getAllFlashcards === 'function' ? getAllFlashcards() : [];
+    const previewCard = allCards[fcCurrentIdx] || allCards[0] || {
+      level: 1, series: 'Bat and Friends', topic: '🐾 Động vật', word: 'Elephant', pos: 'noun', ipa: '/ˈel.ɪ.fənt/', meaning: 'Con voi', emoji: '🐘',
+      step1En: 'It is an elephant.', step1Vi: 'Đó là một con voi.',
+      step2En: 'The big elephant has long ears.', step2Vi: 'Con voi to lớn có đôi tai dài.',
+      step3En: 'I see a friendly elephant drinking water.', step3Vi: 'Con thấy một chú voi thân thiện đang uống nước.',
+      passageEn: 'Look at the big elephant by the river! It has two large ears and a long trunk. The friendly elephant sprays cool water and plays with its friends.'
+    };
+    const sceneSvg = typeof buildLittleFoxSceneSVG === 'function'
+      ? buildLittleFoxSceneSVG(previewCard, 1)
+      : `<div style="font-size:64px;text-align:center">${previewCard.emoji || '🦊'}</div>`;
+
     box.innerHTML = `
-      <div class="gf-reader-card" style="background:linear-gradient(135deg,#fff7ed,#eff6ff)">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
-          <div style="max-width:620px">
+      <div class="gf-reader-card" style="background:linear-gradient(135deg,#fff7ed 0%,#eff6ff 60%,#ecfdf5 100%)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;margin-bottom:14px">
+          <div style="max-width:640px">
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px">
               <span class="study-badge" style="background:linear-gradient(135deg,#ea580c,#f59e0b)">🦊 LITTLE FOX ENGLISH</span>
-              <span class="study-badge" style="background:linear-gradient(135deg,#0284c7,#4f46e5)">LEVEL 1 → LEVEL 4</span>
+              <span class="study-badge" style="background:linear-gradient(135deg,#0284c7,#4f46e5)">CHUẨN LEVEL 1 → LEVEL 4</span>
+              <span class="study-badge" style="background:linear-gradient(135deg,#059669,#10b981)">🔊 ÂM THANH BẢN XỨ &amp; TRANH ĐỌC</span>
             </div>
-            <h3 style="margin:0 0 6px;font-size:19px;color:#1e293b">Bộ thẻ 3D Little Fox &amp; Bậc thang luyện nói câu Tiếng Anh</h3>
+            <h3 style="margin:0 0 6px;font-size:19px;color:#1e293b">Bộ thẻ Hình Ảnh, Từng Ảnh Đọc &amp; Truyện Tranh Little Fox (Level 1–4)</h3>
             <p class="note" style="margin:0;font-size:13.5px;color:#334155">
-              Con học từ vựng theo chủ đề và tập nói từ câu ngắn 3 từ (🌱 Bậc 1) ➔ Mở rộng tính từ/hành động (🌿 Bậc 2) ➔ Nói câu hoàn chỉnh tự nhiên (🌳 Bậc 3), có giọng đọc chuẩn Mỹ/Anh và đố vui nhận sao!
+              Con học chuẩn lộ trình <b>Little Fox Level 1–4</b>: Nhìn <b>tranh minh họa</b> ➔ Nghe <b>âm thanh chuẩn Mỹ/Anh</b> ➔ Đọc theo <b>4 bức ảnh tăng dần</b> (Từ đơn ➔ Câu ngắn ➔ Câu mở rộng ➔ Đoạn truyện ngắn có sáng chữ từng từ)!
             </p>
           </div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button type="button" class="primary" style="padding:12px 20px;font-size:14px;background:linear-gradient(135deg,#ea580c,#f59e0b)" onclick="showSection('flashcards')">
-              🦊 Mở Bộ thẻ Little Fox &amp; Luyện nói ngay ➔
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="primary" style="padding:11px 18px;font-size:14px;background:linear-gradient(135deg,#ea580c,#f59e0b)" onclick="showSection('flashcards')">
+              🦊 Mở Toàn Bộ Thẻ Hình &amp; Từng Ảnh Đọc (${allCards.length} thẻ) ➔
             </button>
-            <button type="button" class="primary" style="padding:12px 16px;font-size:13.5px;background:linear-gradient(135deg,#10b981,#059669)" onclick="quickAwardCoreStudy('Tiếng Anh','Hoàn thành bài học Tiếng Anh Little Fox',15)">
+            <button type="button" class="secondary" style="padding:11px 15px;font-size:13.5px;font-weight:800;border-color:#fdba74;color:#c2410c;background:#fff" onclick="showSection('flashcards'); setFlashcardMode('guide')">
+              📖 Mở Truyện Tranh Little Fox
+            </button>
+            <button type="button" class="primary" style="padding:11px 15px;font-size:13.5px;background:linear-gradient(135deg,#10b981,#059669)" onclick="quickAwardCoreStudy('Tiếng Anh','Hoàn thành bài học Tiếng Anh Little Fox',15)">
               ⭐ +15 ⭐ Đã học Tiếng Anh
             </button>
+          </div>
+        </div>
+
+        <!-- Khung Học Nhanh Thẻ Hình & 4 Ảnh Đọc Ngay Tại Chỗ -->
+        <div style="background:#fff;border:2px solid #fed7aa;border-radius:16px;padding:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;align-items:center">
+          <div style="border-radius:14px;overflow:hidden;border:1.5px solid #e2e8f0;height:165px;position:relative;cursor:pointer" onclick="speakEnglishText('${safe(previewCard.word)}', 0.9)">
+            ${sceneSvg}
+          </div>
+          <div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px">
+              <span class="lf-level-pill">🌱 Level ${previewCard.level || 1}</span>
+              <span class="lf-series-pill">🦊 ${safe(previewCard.series || 'Little Fox')}</span>
+              <span class="fc-topic-chip">${safe(previewCard.topic)}</span>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+              <span style="font-size:26px;font-weight:900;color:#1e1b4b">${safe(previewCard.word)}</span>
+              <span style="font-size:14px;font-weight:700;color:#6366f1">${safe(previewCard.ipa || '')}</span>
+              <span style="font-size:16px;font-weight:800;color:#059669">— ${safe(previewCard.meaning)}</span>
+            </div>
+            <div style="margin-top:8px;font-size:13.5px;line-height:1.55;background:#f8fafc;padding:9px 12px;border-radius:12px;border:1px solid #e2e8f0">
+              <div>🖼️ <b>Ảnh 1:</b> ${safe(previewCard.step1En)} <span class="note">(${safe(previewCard.step1Vi)})</span></div>
+              <div>🖼️ <b>Ảnh 2:</b> ${safe(previewCard.step2En)} <span class="note">(${safe(previewCard.step2Vi)})</span></div>
+              <div>🖼️ <b>Ảnh 3:</b> ${safe(previewCard.step3En)} <span class="note">(${safe(previewCard.step3Vi)})</span></div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+              <button type="button" class="fc-speak-btn fc-speak-normal" onclick="speakEnglishText('${safe(previewCard.word)}', 0.9)">🔊 Đọc từ chuẩn</button>
+              <button type="button" class="fc-speak-btn fc-speak-vi" onclick="speakEnglishText('${safe(previewCard.word)}. ${safe(previewCard.step1En)} ${safe(previewCard.step2En)} ${safe(previewCard.step3En)}', 0.85)">🎧 Nghe đọc cả 3 câu</button>
+              <button type="button" class="secondary" style="padding:8px 14px;font-size:12.5px;font-weight:800" onclick="fcCurrentIdx = (fcCurrentIdx + 1) % ${Math.max(1, allCards.length)}; renderCoreStudyInteractive()">⏭ Đổi thẻ khác</button>
+            </div>
           </div>
         </div>
       </div>
@@ -5204,30 +5249,680 @@ function renderCoreInteractiveHub(){
 }
 
 /* ============================================================
-   🦊 BỘ THẺ TIẾNG ANH LITTLE FOX (LEVEL 1 → LEVEL 4) & BẬC THANG CÂU
+   🦊 BỘ THẺ TIẾNG ANH CHUẨN LITTLE FOX (LEVEL 1 → LEVEL 4)
+   HỆ THỐNG TRANH MINH HỌA TRỰC QUAN, TỪNG ẢNH ĐỌC & ÂM THANH BẢN XỨ
    ============================================================ */
 const LITTLE_FOX_LEVELS = [
-  { id: 1, name: 'Level 1', badge: '🌱 Level 1: Bắt đầu nói câu ngắn', color: '#10b981', pattern: 'It is a... / I see a... / This is my...', guide: 'Dành cho bé bắt đầu ghép 2–4 từ thành câu ngắn tự nhiên.' },
-  { id: 2, name: 'Level 2', badge: '🌿 Level 2: Mở rộng tính từ & hành động', color: '#0ea5e9', pattern: 'I like to... / The [adj] [noun] can...', guide: 'Mở rộng câu với màu sắc, kích thước và động từ chỉ hoạt động.' },
-  { id: 3, name: 'Level 3', badge: '🌳 Level 3: Giao tiếp & Kể chuyện ngắn', color: '#8b5cf6', pattern: 'When I..., I... / Because...', guide: 'Nói câu hoàn chỉnh có thời gian, địa điểm và lý do đơn giản.' },
-  { id: 4, name: 'Level 4', badge: '🚀 Level 4: Tự tin thuyết trình ý tưởng', color: '#f59e0b', pattern: 'If we..., we will... / My favorite...', guide: 'Diễn đạt suy nghĩ, so sánh và kể lại câu chuyện mạch lạc.' }
+  {
+    id: 1,
+    name: 'Level 1',
+    badge: '🌱 Level 1: Khởi đầu (Phonics & Câu 3–5 từ)',
+    shortTitle: '🌱 Level 1 — Khởi đầu',
+    seriesList: 'Bat and Friends • Tire Town School • Dino Buddies • Sam and Lucky',
+    color: '#10b981',
+    pattern: 'It is a... / I see a... / This is my... / The [noun] can...',
+    guide: 'Chuẩn Little Fox Level 1 (Pre-A1): Giúp bé nhận diện từ qua tranh lớn, phát âm chuẩn Phonics và nói câu đơn 3–5 từ.'
+  },
+  {
+    id: 2,
+    name: 'Level 2',
+    badge: '🌿 Level 2: Cơ bản (Tính từ & Giao tiếp 5–8 từ)',
+    shortTitle: '🌿 Level 2 — Cơ bản',
+    seriesList: 'Bird and Kip • Meet the Animals • Space Patrol •Sally’s Silly Hair',
+    color: '#0ea5e9',
+    pattern: 'The [adj] [noun] is... / I like to... / Every morning, I...',
+    guide: 'Chuẩn Little Fox Level 2 (A1): Mở rộng câu miêu tả màu sắc, cảm xúc, hành động hàng ngày và đọc đoạn truyện ngắn 3 câu.'
+  },
+  {
+    id: 3,
+    name: 'Level 3',
+    badge: '🌳 Level 3: Mở rộng (Câu ghép & Kể chuyện 8–12 từ)',
+    shortTitle: '🌳 Level 3 — Mở rộng',
+    seriesList: 'Rocket Girl • The Carter Family • Sam’s Backpack • Princess Pigtoria',
+    color: '#8b5cf6',
+    pattern: 'When I..., I can... / Because..., we... / Let’s find out how...',
+    guide: 'Chuẩn Little Fox Level 3 (A1+): Luyện đọc các câu chuyện phiêu lưu, câu ghép chỉ nguyên nhân - kết quả và thời gian.'
+  },
+  {
+    id: 4,
+    name: 'Level 4',
+    badge: '👑 Level 4: Tự tin thuyết trình & Khoa học (12–16 từ)',
+    shortTitle: '👑 Level 4 — Thuyết trình',
+    seriesList: 'Great Inventors • Amazing Science • Sherlock Holmes • Journey to the West',
+    color: '#f59e0b',
+    pattern: 'Even though..., they never give up / Scientists discovered that...',
+    guide: 'Chuẩn Little Fox Level 4 (A2): Đọc hiểu truyện khoa học, danh nhân thế giới, suy luận logic và thuyết trình đoạn văn dài.'
+  }
 ];
 
 const DEFAULT_FLASHCARDS = [
-  // Level 1
-  { id: 'lf_1', level: 1, topic: '🐾 Động vật', word: 'Elephant', ipa: '/ˈel.ɪ.fənt/', meaning: 'Con voi', emoji: '🐘', step1En: 'It is an elephant.', step1Vi: 'Đó là một con voi.', step2En: 'The big elephant has long ears.', step2Vi: 'Con voi to lớn có đôi tai dài.', step3En: 'I see a friendly elephant drinking water.', step3Vi: 'Con thấy một chú voi thân thiện đang uống nước.' },
-  { id: 'lf_2', level: 1, topic: '🐾 Động vật', word: 'Rabbit', ipa: '/ˈræb.ɪt/', meaning: 'Con thỏ', emoji: '🐰', step1En: 'I see a rabbit.', step1Vi: 'Con thấy một chú thỏ.', step2En: 'The white rabbit can hop fast.', step2Vi: 'Chú thỏ trắng có thể nhảy rất nhanh.', step3En: 'The cute white rabbit likes eating carrots.', step3Vi: 'Chú thỏ trắng đáng yêu thích ăn cà rốt.' },
-  { id: 'lf_3', level: 1, topic: '🍎 Đồ ăn & Quả', word: 'Apple', ipa: '/ˈæp.əl/', meaning: 'Quả táo', emoji: '🍎', step1En: 'This is an apple.', step1Vi: 'Đây là một quả táo.', step2En: 'It is a sweet red apple.', step2Vi: 'Đó là một quả táo đỏ ngọt ngào.', step3En: 'I eat a crunchy red apple every morning.', step3Vi: 'Con ăn một quả táo đỏ giòn mỗi buổi sáng.' },
-  { id: 'lf_4', level: 1, topic: '👨‍👩‍👧 Gia đình', word: 'Mother', ipa: '/ˈmʌð.ər/', meaning: 'Mẹ', emoji: '👩', step1En: 'She is my mother.', step1Vi: 'Cô ấy là mẹ của con.', step2En: 'My mother is very kind.', step2Vi: 'Mẹ của con rất dịu dàng tốt bụng.', step3En: 'I love my mother and help her every day.', step3Vi: 'Con yêu mẹ và phụ giúp mẹ mỗi ngày.' },
-  // Level 2
-  { id: 'lf_5', level: 2, topic: '🏫 Trường học', word: 'Backpack', ipa: '/ˈbæk.pæk/', meaning: 'Cặp sách / Ba lô', emoji: '🎒', step1En: 'I have a backpack.', step1Vi: 'Con có một chiếc cặp sách.', step2En: 'My blue backpack is neat and clean.', step2Vi: 'Chiếc cặp màu xanh của con rất gọn gàng.', step3En: 'I pack my books into my backpack before school.', step3Vi: 'Con xếp sách vở vào cặp trước khi đi học.' },
-  { id: 'lf_6', level: 2, topic: '🎹 Âm nhạc & Đàn', word: 'Piano', ipa: '/piˈæn.əʊ/', meaning: 'Đàn dương cầm (Piano)', emoji: '🎹', step1En: 'I play the piano.', step1Vi: 'Con chơi đàn Piano.', step2En: 'I practice the piano every evening.', step2Vi: 'Con luyện đàn Piano mỗi buổi tối.', step3En: 'Playing the piano makes my family happy.', step3Vi: 'Tiếng đàn Piano làm cả gia đình con vui vẻ.' },
-  { id: 'lf_7', level: 2, topic: '🌈 Thiên nhiên', word: 'Rainbow', ipa: '/ˈreɪn.bəʊ/', meaning: 'Cầu vồng', emoji: '🌈', step1En: 'Look at the rainbow!', step1Vi: 'Hãy nhìn cầu vồng kìa!', step2En: 'The rainbow has seven bright colors.', step2Vi: 'Cầu vồng có bảy màu rực rỡ.', step3En: 'A beautiful rainbow appears in the sky after the rain.', step3Vi: 'Một chiếc cầu vồng tuyệt đẹp hiện lên sau cơn mưa.' },
-  // Level 3
-  { id: 'lf_8', level: 3, topic: '🚀 Hành động', word: 'Explore', ipa: '/ɪkˈsplɔːr/', meaning: 'Khám phá', emoji: '🧭', step1En: 'Let us explore!', step1Vi: 'Chúng mình cùng khám phá nào!', step2En: 'We like to explore new books.', step2Vi: 'Chúng con thích khám phá những cuốn sách mới.', step3En: 'When I read books, I can explore the wonderful world.', step3Vi: 'Khi đọc sách, con có thể khám phá thế giới kỳ diệu.' },
-  { id: 'lf_9', level: 3, topic: '💖 Cảm xúc & Tính cách', word: 'Patient', ipa: '/ˈpeɪ.ʃənt/', meaning: 'Kiên nhẫn, kiên trì', emoji: '🌱', step1En: 'I am patient.', step1Vi: 'Con là người kiên nhẫn.', step2En: 'Be patient when solving math puzzles.', step2Vi: 'Hãy kiên nhẫn khi giải các câu đố Toán.', step3En: 'Because I am patient, I can learn difficult songs on the piano.', step3Vi: 'Vì kiên trì nên con có thể tập được những bản nhạc khó.' },
-  // Level 4
-  { id: 'lf_10', level: 4, topic: '👑 Vĩ nhân & Ước mơ', word: 'Inventor', ipa: '/ɪnˈven.tər/', meaning: 'Nhà phát minh', emoji: '💡', step1En: 'He is an inventor.', step1Vi: 'Ông ấy là một nhà phát minh.', step2En: 'Thomas Edison was a great inventor.', step2Vi: 'Thomas Edison là một nhà phát minh vĩ đại.', step3En: 'Like great inventors, I never give up when I face challenges.', step3Vi: 'Giống như các nhà phát minh vĩ đại, con không bao giờ bỏ cuộc trước thử thách.' }
+  // ======================== LEVEL 1 (8 THẺ CHUẨN LITTLE FOX) ========================
+  {
+    id: 'lf_1', level: 1, series: 'Meet the Animals', topic: '🐾 Động vật',
+    word: 'Elephant', pos: 'noun', ipa: '/ˈel.ɪ.fənt/', meaning: 'Con voi', emoji: '🐘',
+    sceneTheme: 'savanna',
+    step1En: 'It is an elephant.', step1Vi: 'Đó là một chú voi.', step1Icons: ['🐘','🌿'],
+    step2En: 'The big elephant has a long trunk.', step2Vi: 'Chú voi to lớn có một chiếc vòi dài.', step2Icons: ['🐘','💧','🌴'],
+    step3En: 'I see a friendly elephant drinking cool water.', step3Vi: 'Con thấy một chú voi thân thiện đang uống nước mát.', step3Icons: ['🐘','💦','☀️','🐦'],
+    passageTitle: 'The Friendly Elephant',
+    passageEn: 'Look at the big elephant! It has two large ears and a long trunk. The elephant sprays cool water in the river. It is very happy and friendly.',
+    passageVi: 'Hãy nhìn chú voi to lớn kìa! Chú có đôi tai to và chiếc vòi dài. Chú voi phun nước mát dưới dòng sông. Chú rất vui vẻ và thân thiện.',
+    passageIcons: ['🐘','🌊','🌴','☀️']
+  },
+  {
+    id: 'lf_2', level: 1, series: 'Bat and Friends', topic: '🐾 Động vật',
+    word: 'Rabbit', pos: 'noun', ipa: '/ˈræb.ɪt/', meaning: 'Con thỏ', emoji: '🐰',
+    sceneTheme: 'meadow',
+    step1En: 'I see a rabbit.', step1Vi: 'Con thấy một chú thỏ.', step1Icons: ['🐰','🌱'],
+    step2En: 'The white rabbit can hop very fast.', step2Vi: 'Chú thỏ trắng có thể nhảy rất nhanh.', step2Icons: ['🐰','💨','🌼'],
+    step3En: 'The cute white rabbit likes eating crunchy carrots.', step3Vi: 'Chú thỏ trắng đáng yêu thích ăn cà rốt giòn.', step3Icons: ['🐰','🥕','🥕','🌷'],
+    passageTitle: 'Hop, Little Rabbit!',
+    passageEn: 'Here comes a little white rabbit. It has two long pink ears. Hop, hop, hop! The rabbit jumps across the green grass to find a sweet carrot.',
+    passageVi: 'Một chú thỏ trắng nhỏ đang tới kìa. Chú có đôi tai dài màu hồng. Nhảy, nhảy, nhảy! Chú thỏ nhảy qua bãi cỏ xanh để tìm củ cà rốt ngọt.',
+    passageIcons: ['🐰','🥕','🌿','🌸']
+  },
+  {
+    id: 'lf_3', level: 1, series: 'Bat and Friends', topic: '🍎 Đồ ăn & Quả',
+    word: 'Apple', pos: 'noun', ipa: '/ˈæp.əl/', meaning: 'Quả táo', emoji: '🍎',
+    sceneTheme: 'orchard',
+    step1En: 'This is an apple.', step1Vi: 'Đây là một quả táo.', step1Icons: ['🍎','🍃'],
+    step2En: 'It is a sweet and shiny red apple.', step2Vi: 'Đó là một quả táo đỏ bóng và ngọt ngào.', step2Icons: ['🍎','✨','🌳'],
+    step3En: 'I eat a crunchy red apple every morning.', step3Vi: 'Con ăn một quả táo đỏ giòn mỗi buổi sáng.', step3Icons: ['👧','🍎','☀️','🥣'],
+    passageTitle: 'The Red Apple on the Tree',
+    passageEn: 'A red apple grows high on the green tree. Farmer Cow picks the shiny apple. Crunch, crunch! Sharing the sweet apple with friends is so much fun.',
+    passageVi: 'Một quả táo đỏ mọc trên cây xanh cao. Bác Bò hái quả táo bóng loáng. Rộp, rộp! Chia sẻ quả táo ngọt với bạn bè thật là vui.',
+    passageIcons: ['🌳','🍎','🐮','🐦']
+  },
+  {
+    id: 'lf_4', level: 1, series: 'Sam and Lucky', topic: '👨‍👩‍👧 Gia đình',
+    word: 'Mother', pos: 'noun', ipa: '/ˈmʌð.ər/', meaning: 'Mẹ', emoji: '👩',
+    sceneTheme: 'home',
+    step1En: 'She is my mother.', step1Vi: 'Cô ấy là mẹ của con.', step1Icons: ['👩','💖'],
+    step2En: 'My mother has a warm and gentle smile.', step2Vi: 'Mẹ của con có nụ cười ấm áp và dịu dàng.', step2Icons: ['👩','😊','🌸'],
+    step3En: 'I love my mother and help her every day.', step3Vi: 'Con yêu mẹ và phụ giúp mẹ mỗi ngày.', step3Icons: ['👩','👧','🏠','💕'],
+    passageTitle: 'My Kind Mother',
+    passageEn: 'My mother wakes me up every morning with a warm hug. She makes yummy breakfast for our family. After school, I help my mother clean the table.',
+    passageVi: 'Mẹ đánh thức con dậy mỗi sáng bằng một cái ôm ấm áp. Mẹ nấu bữa sáng ngon lành cho cả nhà. Sau giờ học, con giúp mẹ lau dọn bàn ăn.',
+    passageIcons: ['👩','👧','🍳','🏡']
+  },
+  {
+    id: 'lf_5', level: 1, series: 'Tire Town School', topic: '🏫 Trường học',
+    word: 'School', pos: 'noun', ipa: '/skuːl/', meaning: 'Trường học', emoji: '🏫',
+    sceneTheme: 'school',
+    step1En: 'I go to school.', step1Vi: 'Con đi đến trường học.', step1Icons: ['🏫','🎒'],
+    step2En: 'My school is big, bright, and happy.', step2Vi: 'Trường học của con rộng lớn, tươi sáng và vui vẻ.', step2Icons: ['🏫','🚌','☀️'],
+    step3En: 'I learn new things with my friends at school.', step3Vi: 'Con học nhiều điều mới cùng bạn bè ở trường.', step3Icons: ['🏫','👧','👦','📚'],
+    passageTitle: 'Fun at Tire Town School',
+    passageEn: 'Ding-dong! The school bell rings. Eddy and his friends go into the classroom. They sing songs, draw pictures, and read fun books at school.',
+    passageVi: 'Kính coong! Chuông trường reo vang. Eddy và các bạn bước vào lớp học. Các bạn hát vang, vẽ tranh và đọc những cuốn sách thú vị ở trường.',
+    passageIcons: ['🏫','🔔','📚','🎨']
+  },
+  {
+    id: 'lf_6', level: 1, series: 'Sam and Lucky', topic: '🐾 Động vật',
+    word: 'Puppy', pos: 'noun', ipa: '/ˈpʌp.i/', meaning: 'Chú cún con', emoji: '🐶',
+    sceneTheme: 'meadow',
+    step1En: 'This is my puppy.', step1Vi: 'Đây là chú cún con của con.', step1Icons: ['🐶','🦴'],
+    step2En: 'The little puppy wags its tail happily.', step2Vi: 'Chú cún nhỏ vẫy đuôi một cách vui vẻ.', step2Icons: ['🐶','🐾','🎾'],
+    step3En: 'Sam plays catch with his clever puppy in the park.', step3Vi: 'Sam chơi ném bóng với chú cún thông minh trong công viên.', step3Icons: ['👦','🐶','🎾','🌳'],
+    passageTitle: 'Lucky the Clever Puppy',
+    passageEn: 'Sam has a brown puppy named Lucky. Woof, woof! Lucky loves running after the yellow ball. When Sam comes home, Lucky runs to greet him at the door.',
+    passageVi: 'Sam có một chú cún màu nâu tên là Lucky. Gâu, gâu! Lucky rất thích chạy đuổi theo quả bóng vàng. Khi Sam về nhà, Lucky chạy ra cửa đón cậu.',
+    passageIcons: ['🐶','👦','🎾','🏡']
+  },
+  {
+    id: 'lf_7', level: 1, series: 'Dino Buddies', topic: '🍎 Đồ ăn & Quả',
+    word: 'Banana', pos: 'noun', ipa: '/bəˈnæn.ə/', meaning: 'Quả chuối', emoji: '🍌',
+    sceneTheme: 'orchard',
+    step1En: 'I like bananas.', step1Vi: 'Con thích những quả chuối.', step1Icons: ['🍌','😋'],
+    step2En: 'The ripe banana is yellow and soft.', step2Vi: 'Quả chuối chín có màu vàng và mềm thơm.', step2Icons: ['🍌','🐒','🌴'],
+    step3En: 'Little Monkey peels a sweet yellow banana for lunch.', step3Vi: 'Khỉ nhỏ bóc một quả chuối vàng ngọt ngào cho bữa trưa.', step3Icons: ['🐵','🍌','🧺','☀️'],
+    passageTitle: 'Yellow Bananas for Lunch',
+    passageEn: 'Look at the bunch of yellow bananas! Peel the banana one, two, three. It tastes soft and sweet. Eating bananas gives us energy to play all day.',
+    passageVi: 'Hãy nhìn nải chuối vàng ươm kìa! Bóc vỏ chuối một, hai, ba. Chuối mềm và ngọt lịm. Ăn chuối giúp chúng mình có nhiều năng lượng vui chơi cả ngày.',
+    passageIcons: ['🍌','🐵','🌴','✨']
+  },
+  {
+    id: 'lf_8', level: 1, series: 'Mrs. Kelly’s Class', topic: '🌈 Thiên nhiên',
+    word: 'Flower', pos: 'noun', ipa: '/ˈflaʊ.ər/', meaning: 'Bông hoa', emoji: '🌸',
+    sceneTheme: 'meadow',
+    step1En: 'Look at the flower.', step1Vi: 'Hãy nhìn bông hoa kìa.', step1Icons: ['🌸','🌱'],
+    step2En: 'The pink flower smells very sweet.', step2Vi: 'Bông hoa màu hồng có hương thơm ngát.', step2Icons: ['🌸','🐝','☀️'],
+    step3En: 'Many colorful flowers bloom in our spring garden.', step3Vi: 'Nhiều bông hoa rực rỡ nở rộ trong khu vườn mùa xuân.', step3Icons: ['🌸','🌷','🌻','🦋'],
+    passageTitle: 'Flowers in the Garden',
+    passageEn: 'Spring is here! Red, yellow, and pink flowers open their petals in the sun. Little bees and butterflies fly around the pretty flowers all morning.',
+    passageVi: 'Mùa xuân đến rồi! Hoa đỏ, hoa vàng và hoa hồng bung nở dưới ánh nắng. Những chú ong nhỏ và bướm xinh bay lượn quanh những bông hoa suốt buổi sáng.',
+    passageIcons: ['🌸','🌻','🦋','🐝']
+  },
+
+  // ======================== LEVEL 2 (8 THẺ CHUẨN LITTLE FOX) ========================
+  {
+    id: 'lf_9', level: 2, series: 'Sam’s Backpack', topic: '🏫 Trường học',
+    word: 'Backpack', pos: 'noun', ipa: '/ˈbæk.pæk/', meaning: 'Cặp sách / Ba lô', emoji: '🎒',
+    sceneTheme: 'school',
+    step1En: 'I have a backpack.', step1Vi: 'Con có một chiếc cặp sách.', step1Icons: ['🎒','📘'],
+    step2En: 'My blue backpack is always neat and clean.', step2Vi: 'Chiếc cặp màu xanh của con luôn gọn gàng sạch sẽ.', step2Icons: ['🎒','✏️','📏'],
+    step3En: 'I pack my books and pencil case into my backpack every night.', step3Vi: 'Con xếp sách vở và hộp bút vào cặp mỗi tối trước khi đi ngủ.', step3Icons: ['🎒','📚','✏️','🌙'],
+    passageTitle: 'Getting Ready for School',
+    passageEn: 'Every evening, I check my school timetable carefully. I put my notebooks, textbooks, and ruler into my blue backpack. In the morning, I am ready for school!',
+    passageVi: 'Mỗi buổi tối, con đều kiểm tra thời khóa biểu cẩn thận. Con xếp vở, sách giáo khoa và thước kẻ vào chiếc ba lô xanh. Sáng hôm sau, con đã sẵn sàng đến trường!',
+    passageIcons: ['🎒','📚','✏️','🏫']
+  },
+  {
+    id: 'lf_10', level: 2, series: 'Bird and Kip', topic: '🎹 Âm nhạc & Đàn',
+    word: 'Piano', pos: 'noun', ipa: '/piˈæn.əʊ/', meaning: 'Đàn dương cầm (Piano)', emoji: '🎹',
+    sceneTheme: 'music',
+    step1En: 'I play the piano.', step1Vi: 'Con chơi đàn Piano.', step1Icons: ['🎹','🎵'],
+    step2En: 'I practice playing the piano every evening.', step2Vi: 'Con luyện tập đàn Piano vào mỗi buổi tối.', step2Icons: ['🎹','🎶','👧'],
+    step3En: 'Playing gentle songs on the piano makes my whole family happy.', step3Vi: 'Đánh những bản nhạc êm dịu trên đàn Piano làm cả nhà con vui vẻ.', step3Icons: ['🎹','🎶','👨‍👩‍👧','🌟'],
+    passageTitle: 'Sweet Piano Melody',
+    passageEn: 'I sit straight at the piano and place my fingers on the black and white keys. Do, Re, Mi, Fa, Sol! When I practice with patience, the melody sounds clear and beautiful.',
+    passageVi: 'Con ngồi thẳng lưng bên cây đàn Piano và đặt ngón tay lên những phím đen trắng. Đô, Rê, Mi, Pha, Son! Khi con kiên trì luyện tập, giai điệu vang lên thật trong trẻo và tuyệt đẹp.',
+    passageIcons: ['🎹','🎼','🎵','👏']
+  },
+  {
+    id: 'lf_11', level: 2, series: 'Bird and Kip', topic: '🌈 Thiên nhiên',
+    word: 'Rainbow', pos: 'noun', ipa: '/ˈreɪn.bəʊ/', meaning: 'Cầu vồng', emoji: '🌈',
+    sceneTheme: 'sky',
+    step1En: 'Look at the rainbow!', step1Vi: 'Hãy nhìn cầu vồng kìa!', step1Icons: ['🌈','☁️'],
+    step2En: 'The giant rainbow has seven bright colors.', step2Vi: 'Chiếc cầu vồng khổng lồ có bảy sắc màu rực rỡ.', step2Icons: ['🌈','☀️','🌤️'],
+    step3En: 'A beautiful rainbow appears in the blue sky after the summer rain.', step3Vi: 'Một chiếc cầu vồng tuyệt đẹp hiện lên trên bầu trời xanh sau cơn mưa mùa hè.', step3Icons: ['🌈','🌦️','🐦','🌳'],
+    passageTitle: 'Colors After the Rain',
+    passageEn: 'Pitter-patter! The rain stops falling, and the warm sun comes out again. Bird looks up at the sky and shouts, "Look, Kip! A bright rainbow is shining above our tree!"',
+    passageVi: 'Lộp độp! Cơn mưa vừa tạnh và mặt trời ấm áp lại ló rạng. Chim nhỏ ngước nhìn bầu trời và reo lên: "Nhìn kìa Kip! Một chiếc cầu vồng rực rỡ đang tỏa sáng trên ngọn cây của chúng mình!"',
+    passageIcons: ['🌈','☀️','🐦','🐿️']
+  },
+  {
+    id: 'lf_12', level: 2, series: 'Meet the Animals', topic: '🐾 Động vật',
+    word: 'Dolphin', pos: 'noun', ipa: '/ˈdɒl.fɪn/', meaning: 'Cá heo', emoji: '🐬',
+    sceneTheme: 'ocean',
+    step1En: 'The dolphin can swim.', step1Vi: 'Cá heo có thể bơi lội.', step1Icons: ['🐬','🌊'],
+    step2En: 'The smart dolphin jumps high above the waves.', step2Vi: 'Chú cá heo thông minh nhảy vọt cao trên những con sóng.', step2Icons: ['🐬','💦','☀️'],
+    step3En: 'Friendly dolphins swim together and talk with clicking sounds.', step3Vi: 'Những chú cá heo thân thiện bơi cùng nhau và trò chuyện bằng âm thanh lách cách.', step3Icons: ['🐬','🐬','🌊','🐚'],
+    passageTitle: 'Dancers of the Ocean',
+    passageEn: 'Dolphins live in the deep blue ocean. They are very smart and playful animals. Splash! They leap into the air and dive back into the sparkling water together.',
+    passageVi: 'Cá heo sống trong đại dương xanh thẳm. Chúng là loài động vật rất thông minh và tinh nghịch. Tõm! Chúng tung mình lên không trung rồi cùng nhau lặn xuống làn nước lấp lánh.',
+    passageIcons: ['🐬','🌊','☀️','🐠']
+  },
+  {
+    id: 'lf_13', level: 2, series: 'Sam and Lucky', topic: '🍎 Đồ ăn & Quả',
+    word: 'Breakfast', pos: 'noun', ipa: '/ˈbrek.fəst/', meaning: 'Bữa ăn sáng', emoji: '🍳',
+    sceneTheme: 'home',
+    step1En: 'I eat my breakfast.', step1Vi: 'Con ăn bữa sáng của mình.', step1Icons: ['🍳','🥛'],
+    step2En: 'We have warm bread, eggs, and milk for breakfast.', step2Vi: 'Chúng con ăn bánh mì ấm, trứng và sữa cho bữa sáng.', step2Icons: ['🍞','🍳','🥛'],
+    step3En: 'Eating a healthy breakfast gives me energy to study well at school.', step3Vi: 'Ăn bữa sáng lành mạnh giúp con có nhiều năng lượng để học tốt ở trường.', step3Icons: ['👧','🍳','🥛','💪'],
+    passageTitle: 'A Healthy Morning Breakfast',
+    passageEn: 'Good morning! Something smells delicious in the kitchen. Dad made scrambled eggs, toast, and a glass of warm milk. I finish my breakfast with a big smile before school.',
+    passageVi: 'Chào buổi sáng! Có mùi gì thơm phức trong bếp thế nhỉ. Bố đã làm trứng chiên, bánh mì nướng và một ly sữa ấm. Con ăn hết bữa sáng với nụ cười thật tươi trước giờ đi học.',
+    passageIcons: ['🍳','🍞','🥛','☀️']
+  },
+  {
+    id: 'lf_14', level: 2, series: 'Tire Town School', topic: '🚀 Hành động',
+    word: 'Share', pos: 'verb', ipa: '/ʃeər/', meaning: 'Chia sẻ', emoji: '🤝',
+    sceneTheme: 'school',
+    step1En: 'I share with friends.', step1Vi: 'Con chia sẻ với bạn bè.', step1Icons: ['🤝','🧸'],
+    step2En: 'I like to share my crayons and storybooks.', step2Vi: 'Con thích chia sẻ bút màu và sách truyện của mình.', step2Icons: ['🖍️','📖','👫'],
+    step3En: 'When we share our toys and snacks, everyone feels happy.', step3Vi: 'Khi chúng mình chia sẻ đồ chơi và bánh kẹo, ai cũng cảm thấy vui vẻ.', step3Icons: ['👧','👦','🍪','💖'],
+    passageTitle: 'Sharing Makes Us Happy',
+    passageEn: 'Poppy forgot her colored pencils today. "Here, you can use mine!" says Eddy with a smile. Sharing with classmates makes drawing time twice as fun!',
+    passageVi: 'Hôm nay Poppy quên mang hộp chì màu. "Nè, bạn dùng chung với mình nhé!" Eddy mỉm cười nói. Biết sẻ chia với bạn cùng lớp làm giờ học vẽ vui gấp đôi!',
+    passageIcons: ['🤝','🖍️','🎨','😊']
+  },
+  {
+    id: 'lf_15', level: 2, series: 'Space Patrol', topic: '🚀 Hành động',
+    word: 'Listen', pos: 'verb', ipa: '/ˈlɪs.ən/', meaning: 'Lắng nghe', emoji: '👂',
+    sceneTheme: 'school',
+    step1En: 'Listen to the teacher.', step1Vi: 'Hãy lắng nghe cô giáo.', step1Icons: ['👂','👩‍🏫'],
+    step2En: 'I listen carefully to every English story.', step2Vi: 'Con lắng nghe chăm chú từng câu chuyện Tiếng Anh.', step2Icons: ['🎧','📖','🦊'],
+    step3En: 'When I listen closely and repeat aloud, my pronunciation gets better.', step3Vi: 'Khi con nghe kỹ và đọc to theo, phát âm của con ngày càng chuẩn hơn.', step3Icons: ['🎧','🗣️','🌟','🏆'],
+    passageTitle: 'Listening with Both Ears',
+    passageEn: 'In class, we sit quietly and listen to our teacher tell a story. Outside, we listen to the birds singing in the trees. Good listeners learn new things every single day!',
+    passageVi: 'Trong lớp học, chúng con ngồi ngay ngắn và lắng nghe cô giáo kể chuyện. Ngoài sân, chúng con lắng nghe tiếng chim hót trên cành. Người biết lắng nghe tốt sẽ học được điều mới mỗi ngày!',
+    passageIcons: ['👂','👩‍🏫','🐦','🎶']
+  },
+  {
+    id: 'lf_16', level: 2, series: 'Meet the Animals', topic: '🌈 Thiên nhiên',
+    word: 'Butterfly', pos: 'noun', ipa: '/ˈbʌt.ə.flaɪ/', meaning: 'Con bướm', emoji: '🦋',
+    sceneTheme: 'meadow',
+    step1En: 'It is a butterfly.', step1Vi: 'Đó là một chú bướm.', step1Icons: ['🦋','🌸'],
+    step2En: 'The colorful butterfly has orange and black wings.', step2Vi: 'Chú bướm sặc sỡ có đôi cánh màu cam và đen.', step2Icons: ['🦋','🌺','✨'],
+    step3En: 'A graceful butterfly dances from flower to flower in the sunny garden.', step3Vi: 'Một chú bướm duyên dáng bay lượn từ bông hoa này sang bông hoa khác trong vườn nắng.', step3Icons: ['🦋','🌻','🌷','☀️'],
+    passageTitle: 'Wings in the Sunshine',
+    passageEn: 'Flutter, flutter! A bright butterfly lands softly on a yellow sunflower. It drinks sweet nectar and spreads its colorful wings in the warm morning sunshine.',
+    passageVi: 'Chập chờn, chập chờn! Một chú bướm rực rỡ đậu nhẹ nhàng lên bông hoa hướng dương vàng. Chú hút mật ngọt và sải đôi cánh sặc sỡ dưới ánh nắng mai ấm áp.',
+    passageIcons: ['🦋','🌻','☀️','🌿']
+  },
+
+  // ======================== LEVEL 3 (8 THẺ CHUẨN LITTLE FOX) ========================
+  {
+    id: 'lf_17', level: 3, series: 'Rocket Girl', topic: '🚀 Hành động',
+    word: 'Explore', pos: 'verb', ipa: '/ɪkˈsplɔːr/', meaning: 'Khám phá, thám hiểm', emoji: '🧭',
+    sceneTheme: 'space',
+    step1En: 'Let us explore together!', step1Vi: 'Chúng mình cùng nhau khám phá nào!', step1Icons: ['🧭','🗺️'],
+    step2En: 'We love to explore new books and science museums.', step2Vi: 'Chúng con thích khám phá những cuốn sách mới và bảo tàng khoa học.', step2Icons: ['🧭','📚','🔭'],
+    step3En: 'When I read English stories, I can explore the wonderful world around me.', step3Vi: 'Khi đọc truyện Tiếng Anh, con có thể khám phá thế giới kỳ diệu quanh mình.', step3Icons: ['👧','📖','🌍','🚀'],
+    passageTitle: 'Exploring New Worlds',
+    passageEn: 'Put on your backpack and grab your compass! Whether we walk through a green forest or read a book about outer space, there is always something exciting to explore.',
+    passageVi: 'Hãy đeo ba lô lên và cầm lấy chiếc la bàn nào! Dù chúng ta đi dạo qua khu rừng xanh hay đọc một cuốn sách về vũ trụ, luôn có những điều kỳ thú đang chờ đón ta khám phá.',
+    passageIcons: ['🧭','🌍','🚀','🔭']
+  },
+  {
+    id: 'lf_18', level: 3, series: 'The Carter Family', topic: '💖 Cảm xúc & Tính cách',
+    word: 'Patient', pos: 'adj', ipa: '/ˈpeɪ.ʃənt/', meaning: 'Kiên nhẫn, bền bỉ', emoji: '🌱',
+    sceneTheme: 'music',
+    step1En: 'I am always patient.', step1Vi: 'Con luôn là người kiên nhẫn.', step1Icons: ['🌱','⏳'],
+    step2En: 'Be patient and calm when solving difficult math puzzles.', step2Vi: 'Hãy kiên nhẫn và bình tĩnh khi giải các câu đố Toán khó.', step2Icons: ['🧮','🌱','💡'],
+    step3En: 'Because I am patient, I can master new songs on the piano step by step.', step3Vi: 'Vì kiên nhẫn nên con có thể tập thành thạo từng bước những bản nhạc Piano mới.', step3Icons: ['🎹','🌱','🌟','🏆'],
+    passageTitle: 'The Power of Patience',
+    passageEn: 'At first, Oliver could not tie his shoelaces or play the new piano song. His dad smiled and said, "Take a deep breath and be patient." After practicing slowly, Oliver did it!',
+    passageVi: 'Lúc đầu, Oliver chưa biết buộc dây giày hay đánh bản nhạc Piano mới. Bố mỉm cười bảo: "Con hãy hít thở sâu và kiên nhẫn nhé." Sau khi tập chậm rãi từng bước, Oliver đã làm được!',
+    passageIcons: ['🌱','🎹','👦','🌟']
+  },
+  {
+    id: 'lf_19', level: 3, series: 'Rocket Girl', topic: '💖 Cảm xúc & Tính cách',
+    word: 'Brave', pos: 'adj', ipa: '/breɪv/', meaning: 'Dũng cảm, gan dạ', emoji: '🦁',
+    sceneTheme: 'space',
+    step1En: 'Roxy is very brave.', step1Vi: 'Roxy rất dũng cảm.', step1Icons: ['🦸‍♀️','🦁'],
+    step2En: 'A brave child is not afraid to try new things.', step2Vi: 'Một em bé dũng cảm không ngại thử sức với những điều mới mẻ.', step2Icons: ['🦁','👧','🌟'],
+    step3En: 'Rocket Girl flies into the sky because she is brave and ready to help everyone.', step3Vi: 'Cô bé Tên Lửa bay vút lên bầu trời vì cô ấy dũng cảm và sẵn sàng giúp đỡ mọi người.', step3Icons: ['🦸‍♀️','🚀','🌆','✨'],
+    passageTitle: 'Rocket Girl to the Rescue!',
+    passageEn: 'Whenever Metro City is in trouble, Roxy puts on her cape and becomes Rocket Girl. Even when the challenge looks big, she stays brave, thinks smart, and saves the day!',
+    passageVi: 'Bất cứ khi nào thành phố Metro gặp rắc rối, Roxy lại khoác áo choàng và hóa thân thành Cô bé Tên Lửa. Dù thử thách có lớn đến đâu, cô bé vẫn dũng cảm, nhanh trí và giải cứu mọi người!',
+    passageIcons: ['🦸‍♀️','🚀','🌟','🏙️']
+  },
+  {
+    id: 'lf_20', level: 3, series: 'The Carter Family', topic: '🏫 Trường học',
+    word: 'Library', pos: 'noun', ipa: '/ˈlaɪ.brər.i/', meaning: 'Thư viện', emoji: '📚',
+    sceneTheme: 'school',
+    step1En: 'We visit the library.', step1Vi: 'Chúng con đến thăm thư viện.', step1Icons: ['📚','🏛️'],
+    step2En: 'The quiet library has thousands of interesting storybooks.', step2Vi: 'Thư viện yên tĩnh có hàng ngàn cuốn truyện thú vị.', step2Icons: ['📚','📖','🤫'],
+    step3En: 'Every Saturday afternoon, Emmy borrows adventure books from the town library.', step3Vi: 'Mỗi chiều thứ Bảy, Emmy đều mượn sách phiêu lưu từ thư viện thị trấn.', step3Icons: ['👧','📚','🏛️','☀️'],
+    passageTitle: 'Treasure in the Library',
+    passageEn: 'The town library is Emmy’s favorite place. Tall bookshelves are filled with fairy tales, science books, and comics. She chooses two books and reads quietly by the sunny window.',
+    passageVi: 'Thư viện thị trấn là nơi yêu thích nhất của Emmy. Những kệ sách cao đầy ắp truyện cổ tích, sách khoa học và truyện tranh. Cô bé chọn hai cuốn và ngồi đọc yên lặng bên khung cửa sổ ngập nắng.',
+    passageIcons: ['🏛️','📚','👧','🪟']
+  },
+  {
+    id: 'lf_21', level: 3, series: 'The Carter Family', topic: '🌈 Thiên nhiên',
+    word: 'Mountain', pos: 'noun', ipa: '/ˈmaʊn.tɪn/', meaning: 'Ngọn núi', emoji: '⛰️',
+    sceneTheme: 'savanna',
+    step1En: 'The mountain is high.', step1Vi: 'Ngọn núi thật là cao.', step1Icons: ['⛰️','☁️'],
+    step2En: 'White clouds float around the green mountain peak.', step2Vi: 'Những đám mây trắng trôi bồng bềnh quanh đỉnh núi xanh.', step2Icons: ['⛰️','☁️','🌲'],
+    step3En: 'Our family hiked up the mountain trail and enjoyed the fresh morning air.', step3Vi: 'Gia đình con đã leo theo đường mòn lên núi và tận hưởng không khí trong lành buổi sớm.', step3Icons: ['⛰️','🥾','👨‍👩‍👧','☀️'],
+    passageTitle: 'Hiking Up the Mountain',
+    passageEn: 'Step by step, the Carter family climbs the winding mountain path. Tall pine trees smell fresh and cool. At the top of the mountain, they can see the whole valley below!',
+    passageVi: 'Từng bước một, gia đình nhà Carter leo lên con đường mòn uốn lượn trên núi. Những hàng thông cao tỏa hương thơm mát. Đứng trên đỉnh núi, cả nhà có thể ngắm nhìn toàn bộ thung lũng bên dưới!',
+    passageIcons: ['⛰️','🌲','🥾','🌅']
+  },
+  {
+    id: 'lf_22', level: 3, series: 'Princess Pigtoria', topic: '🎹 Âm nhạc & Đàn',
+    word: 'Melody', pos: 'noun', ipa: '/ˈmel.ə.di/', meaning: 'Giai điệu', emoji: '🎶',
+    sceneTheme: 'music',
+    step1En: 'What a sweet melody!', step1Vi: 'Thật là một giai điệu ngọt ngào!', step1Icons: ['🎶','🎵'],
+    step2En: 'The cheerful melody makes everyone want to dance.', step2Vi: 'Giai điệu vui tươi khiến ai cũng muốn nhún nhảy.', step2Icons: ['🎶','🎻','💃'],
+    step3En: 'When I play my favorite melody on the piano, my heart feels peaceful.', step3Vi: 'Khi con tấu lên giai điệu yêu thích trên đàn Piano, lòng con cảm thấy thật bình yên.', step3Icons: ['🎹','🎶','💖','✨'],
+    passageTitle: 'The Magic Melody',
+    passageEn: 'A soft melody floats through the castle hall. Notes rise and fall like gentle waves on the sea. Everyone stops talking to listen to the wonderful music.',
+    passageVi: 'Một giai điệu êm dịu ngân vang khắp sảnh lâu đài. Từng nốt nhạc trầm bổng như những làn sóng dịu êm trên biển. Mọi người đều ngừng trò chuyện để lắng nghe bản nhạc tuyệt vời ấy.',
+    passageIcons: ['🎶','🎹','🏰','✨']
+  },
+  {
+    id: 'lf_23', level: 3, series: 'Sam’s Backpack', topic: '🚀 Hành động',
+    word: 'Practice', pos: 'verb', ipa: '/ˈpræk.tɪs/', meaning: 'Luyện tập, thực hành', emoji: '🎯',
+    sceneTheme: 'school',
+    step1En: 'I practice every day.', step1Vi: 'Con luyện tập mỗi ngày.', step1Icons: ['🎯','📅'],
+    step2En: 'We practice speaking English with clear voices.', step2Vi: 'Chúng con luyện nói Tiếng Anh với giọng đọc to rõ.', step2Icons: ['🗣️','🇬🇧','🌟'],
+    step3En: 'If you practice a little bit every day, you will become great at any skill.', step3Vi: 'Nếu con luyện tập từng chút mỗi ngày, con sẽ trở nên xuất sắc ở bất kỳ kỹ năng nào.', step3Icons: ['🎯','🎹','📚','🏆'],
+    passageTitle: 'Practice Makes Progress',
+    passageEn: 'Nobody is an expert on the very first day. Whether you are learning English, math, or the piano, daily practice is the secret key that unlocks your talent!',
+    passageVi: 'Không ai trở thành chuyên gia ngay từ ngày đầu tiên cả. Dù con đang học Tiếng Anh, Toán tư duy hay đàn Piano, sự luyện tập mỗi ngày chính là chiếc chìa khóa mở ra tài năng của con!',
+    passageIcons: ['🎯','🔑','🌟','🏆']
+  },
+  {
+    id: 'lf_24', level: 3, series: 'The Carter Family', topic: '👨‍👩‍👧 Gia đình',
+    word: 'Together', pos: 'adv', ipa: '/təˈɡeð.ər/', meaning: 'Cùng nhau', emoji: '👨‍👩‍👧‍👦',
+    sceneTheme: 'home',
+    step1En: 'We play together.', step1Vi: 'Chúng con chơi đùa cùng nhau.', step1Icons: ['👫','🎈'],
+    step2En: 'Our family cooks dinner and reads stories together.', step2Vi: 'Gia đình con cùng nhau nấu bữa tối và đọc truyện.', step2Icons: ['👨‍👩‍👧','🍲','📖'],
+    step3En: 'Working together as a team helps us finish hard tasks quickly and happily.', step3Vi: 'Cùng nhau hợp sức làm việc nhóm giúp chúng con hoàn thành việc khó thật nhanh và vui vẻ.', step3Icons: ['🤝','👨‍👩‍👧','🏡','🌟'],
+    passageTitle: 'Better Together',
+    passageEn: 'Cleaning the living room alone takes a long time. But when Mom, Dad, and the children work together, the house sparkles in just ten minutes! Everything is better together.',
+    passageVi: 'Dọn dẹp phòng khách một mình sẽ mất rất nhiều thời gian. Nhưng khi Bố, Mẹ và các con cùng chung tay làm việc, ngôi nhà đã sạch bóng chỉ trong mười phút! Mọi việc đều tuyệt hơn khi làm cùng nhau.',
+    passageIcons: ['👨‍👩‍👧','🏡','✨','💖']
+  },
+
+  // ======================== LEVEL 4 (8 THẺ CHUẨN LITTLE FOX) ========================
+  {
+    id: 'lf_25', level: 4, series: 'Great Inventors', topic: '👑 Vĩ nhân & Ước mơ',
+    word: 'Inventor', pos: 'noun', ipa: '/ɪnˈven.tər/', meaning: 'Nhà phát minh', emoji: '💡',
+    sceneTheme: 'science',
+    step1En: 'He is a great inventor.', step1Vi: 'Ông ấy là một nhà phát minh vĩ đại.', step1Icons: ['💡','👨‍🔬'],
+    step2En: 'Thomas Edison was a hardworking inventor who created the light bulb.', step2Vi: 'Thomas Edison là nhà phát minh chăm chỉ đã tạo ra bóng đèn điện.', step2Icons: ['💡','⚡','🔬'],
+    step3En: 'Like great inventors, I never give up when I face difficult challenges.', step3Vi: 'Giống như các nhà phát minh vĩ đại, con không bao giờ bỏ cuộc khi gặp thử thách khó khăn.', step3Icons: ['💡','🚀','🌟','🏆'],
+    passageTitle: 'The Boy Who Asked "Why?"',
+    passageEn: 'An inventor looks at problems and imagines creative solutions. Thomas Edison failed over a thousand times before his electric light bulb finally glowed. His curiosity changed the world forever!',
+    passageVi: 'Một nhà phát minh luôn nhìn vào các vấn đề và tưởng tượng ra giải pháp sáng tạo. Thomas Edison đã thất bại hơn một ngàn lần trước khi bóng đèn điện thực sự phát sáng. Trí tò mò của ông đã thay đổi thế giới mãi mãi!',
+    passageIcons: ['💡','🔬','⚡','🌍']
+  },
+  {
+    id: 'lf_26', level: 4, series: 'Amazing Science', topic: '💖 Cảm xúc & Tính cách',
+    word: 'Curious', pos: 'adj', ipa: '/ˈkjʊə.ri.əs/', meaning: 'Ham học hỏi, tò mò khám phá', emoji: '🔍',
+    sceneTheme: 'science',
+    step1En: 'I am a curious learner.', step1Vi: 'Con là một người học ham tìm tòi.', step1Icons: ['🔍','👧'],
+    step2En: 'Curious children always ask smart questions about nature.', step2Vi: 'Những đứa trẻ ham học hỏi luôn đặt ra những câu hỏi thông minh về thiên nhiên.', step2Icons: ['🔍','🌿','🦋'],
+    step3En: 'Being curious helps scientists discover how stars shine and how plants grow.', step3Vi: 'Sự ham học hỏi giúp các nhà khoa học khám phá vì sao các vì sao tỏa sáng và cây cối lớn lên.', step3Icons: ['🔭','🌱','⭐','🔬'],
+    passageTitle: 'Keep Asking Questions!',
+    passageEn: 'Why is the sky blue? How do birds fly across the ocean? Being curious is the beginning of all wisdom. Every time you ask "Why?" and search for the answer, your brain grows stronger!',
+    passageVi: 'Tại sao bầu trời lại màu xanh? Làm thế nào chim có thể bay qua đại dương? Lòng ham học hỏi là khởi nguồn của mọi tri thức. Mỗi khi con đặt câu hỏi "Tại sao?" và tìm câu trả lời, trí tuệ của con lại thêm tỏa sáng!',
+    passageIcons: ['🔍','🔭','🌍','🧠']
+  },
+  {
+    id: 'lf_27', level: 4, series: 'Sherlock Holmes', topic: '🚀 Hành động',
+    word: 'Discover', pos: 'verb', ipa: '/dɪˈskʌv.ər/', meaning: 'Khám phá, phát hiện ra', emoji: '🔭',
+    sceneTheme: 'space',
+    step1En: 'What did you discover?', step1Vi: 'Bạn đã phát hiện ra điều gì thế?', step1Icons: ['🔭','✨'],
+    step2En: 'Astronomers use telescopes to discover distant planets.', step2Vi: 'Các nhà thiên văn học dùng kính thiên văn để phát hiện những hành tinh xa xôi.', step2Icons: ['🔭','🪐','🌌'],
+    step3En: 'When we observe carefully, we can discover amazing secrets hidden in nature.', step3Vi: 'Khi quan sát tỉ mỉ, chúng ta có thể phát hiện ra những bí mật kỳ diệu ẩn giấu trong tự nhiên.', step3Icons: ['🔍','🌿','🐞','🌟'],
+    passageTitle: 'Secrets of the Night Sky',
+    passageEn: 'Through a powerful telescope, tiny dots of light turn into giant planets with shining rings. There are still millions of wonders in the universe waiting for young minds to discover!',
+    passageVi: 'Qua chiếc kính thiên văn mạnh mẽ, những chấm sáng nhỏ li ti hiện ra thành các hành tinh khổng lồ với vành đai lấp lánh. Vẫn còn hàng triệu điều kỳ diệu trong vũ trụ đang chờ các trí óc trẻ thơ khám phá!',
+    passageIcons: ['🔭','🪐','🌟','🚀']
+  },
+  {
+    id: 'lf_28', level: 4, series: 'Journey to the West', topic: '💖 Cảm xúc & Tính cách',
+    word: 'Courage', pos: 'noun', ipa: '/ˈkʌr.ɪdʒ/', meaning: 'Lòng dũng cảm, nghị lực', emoji: '🛡️',
+    sceneTheme: 'savanna',
+    step1En: 'Have courage and be kind.', step1Vi: 'Hãy có lòng dũng cảm và sự tử tế.', step1Icons: ['🛡️','💖'],
+    step2En: 'It takes courage to speak in front of the whole class.', step2Vi: 'Cần có lòng dũng cảm để tự tin thuyết trình trước cả lớp.', step2Icons: ['🎙️','👧','👏'],
+    step3En: 'With wisdom and courage, the travelers overcame every obstacle on their long journey.', step3Vi: 'Bằng trí tuệ và lòng dũng cảm, đoàn lữ hành đã vượt qua mọi thử thách trên chặng đường dài.', step3Icons: ['🛡️','⛰️','☀️','🏆'],
+    passageTitle: 'True Courage Inside You',
+    passageEn: 'Courage does not mean you never feel scared. True courage means taking a step forward and doing the right thing even when your heart is beating fast!',
+    passageVi: 'Lòng dũng cảm không có nghĩa là con chẳng bao giờ thấy lo sợ. Dũng cảm thực sự là dám bước tới phía trước và làm điều đúng đắn ngay cả khi tim mình đang đập rộn ràng!',
+    passageIcons: ['🛡️','🦁','🌟','🏆']
+  },
+  {
+    id: 'lf_29', level: 4, series: 'Amazing Science', topic: '🌈 Thiên nhiên',
+    word: 'Environment', pos: 'noun', ipa: '/ɪnˈvaɪ.rən.mənt/', meaning: 'Môi trường thiên nhiên', emoji: '🌍',
+    sceneTheme: 'meadow',
+    step1En: 'Protect our environment.', step1Vi: 'Hãy bảo vệ môi trường của chúng ta.', step1Icons: ['🌍','🌱'],
+    step2En: 'Planting trees and recycling help keep the environment clean.', step2Vi: 'Trồng cây và tái chế giúp giữ gìn môi trường xanh sạch.', step2Icons: ['🌳','♻️','🌍'],
+    step3En: 'Every small action we take today protects the environment for animals and people.', step3Vi: 'Mỗi hành động nhỏ chúng ta làm hôm nay đều góp phần bảo vệ môi trường cho muôn loài và con người.', step3Icons: ['🌍','🐘','🐬','💚'],
+    passageTitle: 'Guardians of Planet Earth',
+    passageEn: 'Earth is our shared home. When we turn off unused lights, save water, and plant green trees, we keep the air fresh and the oceans clean. Together, we can protect our environment!',
+    passageVi: 'Trái Đất là ngôi nhà chung của chúng ta. Khi tắt đèn khi không sử dụng, tiết kiệm nước và trồng thêm cây xanh, chúng ta giữ cho bầu không khí trong lành và đại dương sạch đẹp. Cùng nhau, chúng mình bảo vệ môi trường nhé!',
+    passageIcons: ['🌍','🌳','♻️','💧']
+  },
+  {
+    id: 'lf_30', level: 4, series: 'Great Inventors', topic: '👑 Vĩ nhân & Ước mơ',
+    word: 'Knowledge', pos: 'noun', ipa: '/ˈnɒl.ɪdʒ/', meaning: 'Tri thức, kiến thức', emoji: '🎓',
+    sceneTheme: 'school',
+    step1En: 'Knowledge is a treasure.', step1Vi: 'Tri thức là một kho báu.', step1Icons: ['🎓','💎'],
+    step2En: 'Reading good books every day builds deep knowledge.', step2Vi: 'Đọc những cuốn sách hay mỗi ngày giúp bồi đắp tri thức sâu rộng.', step2Icons: ['📚','🧠','✨'],
+    step3En: 'When we combine knowledge with kindness, we can help make the world a better place.', step3Vi: 'Khi kết hợp tri thức với lòng nhân ái, chúng ta có thể giúp thế giới trở nên tốt đẹp hơn.', step3Icons: ['🎓','🌍','🤝','🌟'],
+    passageTitle: 'The Treasure That Grows',
+    passageEn: 'Money can be spent, but knowledge stays with you forever. The more you read, listen, and share what you learn with others, the brighter your knowledge shines!',
+    passageVi: 'Tiền bạc có thể tiêu hết, nhưng tri thức sẽ ở bên con mãi mãi. Con càng chăm đọc sách, lắng nghe và chia sẻ điều mình học được với mọi người, kho báu tri thức của con càng tỏa sáng rực rỡ!',
+    passageIcons: ['🎓','📚','💡','🌟']
+  },
+  {
+    id: 'lf_31', level: 4, series: 'Olympic Champions', topic: '👑 Vĩ nhân & Ước mơ',
+    word: 'Persevere', pos: 'verb', ipa: '/ˌpɜː.sɪˈvɪər/', meaning: 'Kiên trì vượt khó đến cùng', emoji: '🏔️',
+    sceneTheme: 'savanna',
+    step1En: 'We must persevere!', step1Vi: 'Chúng ta phải kiên trì đến cùng!', step1Icons: ['🏔️','💪'],
+    step2En: 'Great athletes persevere through rain, wind, and tired days.', step2Vi: 'Những vận động viên xuất sắc luôn bền bỉ vượt qua mưa gió và những ngày mệt mỏi.', step2Icons: ['🏃‍♀️','🌧️','🏅'],
+    step3En: 'Even when a lesson feels difficult at first, I persevere until I understand it completely.', step3Vi: 'Ngay cả khi bài học ban đầu có vẻ khó, con vẫn kiên trì cho đến khi hiểu thật thấu đáo.', step3Icons: ['👧','📚','🏔️','🏆'],
+    passageTitle: 'Step by Step to the Top',
+    passageEn: 'Climbing a high mountain is never easy. Sometimes your legs feel tired, and the top looks far away. But if you persevere and take one brave step at a time, you will reach the summit!',
+    passageVi: 'Chinh phục một ngọn núi cao chưa bao giờ là điều dễ dàng. Đôi khi chân con thấy mỏi và đỉnh núi trông thật xa. Nhưng nếu con kiên trì bền bỉ bước từng bước vững vàng, chắc chắn con sẽ chạm tới đỉnh vinh quang!',
+    passageIcons: ['🏔️','🥾','🌅','🏆']
+  },
+  {
+    id: 'lf_32', level: 4, series: 'Great Inventors', topic: '👑 Vĩ nhân & Ước mơ',
+    word: 'Imagination', pos: 'noun', ipa: '/ɪˌmædʒ.ɪˈneɪ.ʃən/', meaning: 'Trí tưởng tượng sáng tạo', emoji: '🚀',
+    sceneTheme: 'space',
+    step1En: 'Use your imagination!', step1Vi: 'Hãy phát huy trí tưởng tượng của con!', step1Icons: ['🚀','🎨'],
+    step2En: 'Stories and music fill our imagination with wonderful ideas.', step2Vi: 'Những câu chuyện và âm nhạc lấp đầy trí tưởng tượng của chúng ta bằng bao ý tưởng tuyệt vời.', step2Icons: ['📖','🎶','🌈'],
+    step3En: 'Albert Einstein said that imagination is one of the greatest powers in the universe.', step3Vi: 'Nhà bác học Albert Einstein từng nói rằng trí tưởng tượng là một trong những sức mạnh vĩ đại nhất vũ trụ.', step3Icons: ['🚀','🌌','💡','👑'],
+    passageTitle: 'Wings of Imagination',
+    passageEn: 'Before airplanes could fly in the sky, the Wright brothers saw them flying in their imagination. Dream big, draw your ideas, and let your imagination soar beyond the stars!',
+    passageVi: 'Trước khi máy bay có thể bay lượn trên bầu trời, hai anh em nhà Wright đã nhìn thấy chúng cất cánh trong chính trí tưởng tượng của mình. Hãy ước mơ lớn, vẽ ra ý tưởng và để trí tưởng tượng của con bay cao hơn cả những vì sao!',
+    passageIcons: ['🚀','✈️','🌟','🌌']
+  }
+];
+
+/* ============================================================
+   📖 KHO TRUYỆN TRANH ĐỌC THEO TỪNG ẢNH CHUẨN LITTLE FOX (LEVEL 1–4)
+   ============================================================ */
+const LITTLE_FOX_STORYBOOKS = [
+  {
+    id: 'story_l1_bat',
+    level: 1,
+    series: 'Bat and Friends',
+    title: 'Bat and the Red Apple (Dơi Nhỏ và Quả Táo Đỏ)',
+    emoji: '🦇',
+    summary: 'Truyện tranh Level 1: Dơi nhỏ tìm thấy một quả táo đỏ trên cây và cùng chia sẻ với các bạn ở nông trại.',
+    scenes: [
+      {
+        sceneNo: 1,
+        title: 'Ảnh 1: Quả táo trên cành cao',
+        theme: 'orchard',
+        icons: ['🦇','🍎','🌳','☀️'],
+        en: 'Bat flies in the blue sky. He sees a shiny red apple on a tall tree.',
+        vi: 'Dơi nhỏ bay trên bầu trời xanh. Cậu nhìn thấy một quả táo đỏ bóng loáng trên cây cao.',
+        vocab: 'apple (quả táo) • tall tree (cây cao)'
+      },
+      {
+        sceneNo: 2,
+        title: 'Ảnh 2: Quả táo rơi xuống cỏ',
+        theme: 'meadow',
+        icons: ['🍎','💨','🌿','🐮'],
+        en: 'The wind blows! Plop! The red apple falls down onto the soft green grass.',
+        vi: 'Gió thổi qua! Bịch! Quả táo đỏ rơi xuống thảm cỏ xanh mềm mại.',
+        vocab: 'wind blows (gió thổi) • green grass (cỏ xanh)'
+      },
+      {
+        sceneNo: 3,
+        title: 'Ảnh 3: Các bạn cùng chạy tới',
+        theme: 'meadow',
+        icons: ['🐮','🐷','🐶','🍎'],
+        en: 'Cow, Pig, and Dog run to the tree. "Look at the big red apple!" says Pig.',
+        vi: 'Bò, Heo và Cún cùng chạy tới gốc cây. "Nhìn quả táo đỏ to kìa!" Heo reo lên.',
+        vocab: 'run (chạy) • big red apple (quả táo đỏ to)'
+      },
+      {
+        sceneNo: 4,
+        title: 'Ảnh 4: Niềm vui sẻ chia',
+        theme: 'orchard',
+        icons: ['🦇','🐮','🐷','🍎'],
+        en: 'Bat shares the sweet apple with his friends. Crunch, crunch! Everyone is happy.',
+        vi: 'Dơi nhỏ chia sẻ quả táo ngọt ngào với các bạn. Rộp, rộp! Ai nấy đều vui vẻ.',
+        vocab: 'share (chia sẻ) • sweet (ngọt ngào)'
+      }
+    ]
+  },
+  {
+    id: 'story_l1_tire',
+    level: 1,
+    series: 'Tire Town School',
+    title: 'Eddy’s First Day at School (Ngày Đầu Đi Học Của Eddy)',
+    emoji: '🚗',
+    summary: 'Truyện tranh Level 1: Xe nhỏ Eddy háo hức đeo cặp sách đến trường học Thị trấn Lốp Xe.',
+    scenes: [
+      {
+        sceneNo: 1,
+        title: 'Ảnh 1: Buổi sáng đến trường',
+        theme: 'school',
+        icons: ['🚗','🎒','🏫','☀️'],
+        en: 'Good morning! Eddy puts on his blue backpack and goes to Tire Town School.',
+        vi: 'Chào buổi sáng! Eddy đeo chiếc cặp sách màu xanh và đi đến trường Thị trấn Lốp Xe.',
+        vocab: 'backpack (cặp sách) • school (trường học)'
+      },
+      {
+        sceneNo: 2,
+        title: 'Ảnh 2: Gặp gỡ bạn mới',
+        theme: 'school',
+        icons: ['🚗','🚌','🚒','👋'],
+        en: 'At the school gate, Eddy waves his hand. "Hello! My name is Eddy," he says with a smile.',
+        vi: 'Ở cổng trường, Eddy vẫy tay. "Xin chào! Tên mình là Eddy," cậu mỉm cười nói.',
+        vocab: 'school gate (cổng trường) • smile (nụ cười)'
+      },
+      {
+        sceneNo: 3,
+        title: 'Ảnh 3: Giờ học vui nhộn',
+        theme: 'school',
+        icons: ['👩‍🏫','📖','🎨','🎶'],
+        en: 'In the classroom, the teacher reads a picture book. The students sing and draw together.',
+        vi: 'Trong lớp học, cô giáo đọc một cuốn truyện tranh. Các bạn học sinh cùng nhau hát và vẽ tranh.',
+        vocab: 'classroom (lớp học) • picture book (sách tranh)'
+      },
+      {
+        sceneNo: 4,
+        title: 'Ảnh 4: Hẹn gặp lại ngày mai',
+        theme: 'home',
+        icons: ['🚗','🌟','🏡','💖'],
+        en: '"I love my school!" says Eddy. He cannot wait to see his friends again tomorrow.',
+        vi: '"Con rất yêu trường của con!" Eddy nói. Cậu háo hức chờ đến ngày mai để lại gặp các bạn.',
+        vocab: 'love (yêu quý) • tomorrow (ngày mai)'
+      }
+    ]
+  },
+  {
+    id: 'story_l2_bird',
+    level: 2,
+    series: 'Bird and Kip',
+    title: 'The Rainbow Concert (Buổi Hòa Nhạc Dưới Cầu Vồng)',
+    emoji: '🐦',
+    summary: 'Truyện tranh Level 2: Chim nhỏ Bird và Sóc Kip cùng chơi đàn và hát vang sau cơn mưa mùa hè.',
+    scenes: [
+      {
+        sceneNo: 1,
+        title: 'Ảnh 1: Cơn mưa mùa hè tạnh',
+        theme: 'sky',
+        icons: ['🌦️','☀️','🐦','🐿️'],
+        en: 'After a short summer rain, the dark clouds go away. The golden sun shines brightly again.',
+        vi: 'Sau cơn mưa rào mùa hè, những đám mây đen tan biến. Mặt trời vàng óng lại tỏa nắng rực rỡ.',
+        vocab: 'summer rain (mưa mùa hè) • shine brightly (tỏa sáng rực rỡ)'
+      },
+      {
+        sceneNo: 2,
+        title: 'Ảnh 2: Cầu vồng bảy sắc',
+        theme: 'sky',
+        icons: ['🌈','🌳','🐦','✨'],
+        en: 'Bird looks up and claps her wings. A giant rainbow with seven bright colors arches across the sky!',
+        vi: 'Chim nhỏ ngước nhìn lên và vỗ cánh reo vui. Một chiếc cầu vồng khổng lồ bảy sắc màu vắt ngang bầu trời!',
+        vocab: 'giant rainbow (cầu vồng khổng lồ) • seven colors (bảy sắc màu)'
+      },
+      {
+        sceneNo: 3,
+        title: 'Ảnh 3: Giai điệu bên cây đàn',
+        theme: 'music',
+        icons: ['🎹','🐿️','🐦','🎶'],
+        en: 'Kip brings out his little piano. As Kip plays a cheerful melody, Bird sings a sweet song.',
+        vi: 'Kip mang chiếc đàn Piano nhỏ ra. Khi Kip đàn một giai điệu vui tươi, Chim nhỏ cất tiếng hát ngọt ngào.',
+        vocab: 'cheerful melody (giai điệu vui tươi) • sweet song (bài hát ngọt ngào)'
+      },
+      {
+        sceneNo: 4,
+        title: 'Ảnh 4: Khán giả rừng xanh',
+        theme: 'meadow',
+        icons: ['🐰','🦋','🎶','👏'],
+        en: 'Rabbits and butterflies gather around the tree to listen. The forest is filled with music and joy!',
+        vi: 'Những chú thỏ và bướm xinh tụ hội quanh gốc cây để lắng nghe. Khu rừng tràn ngập âm nhạc và niềm vui!',
+        vocab: 'gather around (tụ tập quanh) • music and joy (âm nhạc và niềm vui)'
+      }
+    ]
+  },
+  {
+    id: 'story_l3_rocket',
+    level: 3,
+    series: 'Rocket Girl',
+    title: 'Rocket Girl and the Lost Puppy (Cô Bé Tên Lửa Cứu Chú Cún Lạc)',
+    emoji: '🦸‍♀️',
+    summary: 'Truyện tranh Level 3: Roxy dùng lòng dũng cảm và sự kiên nhẫn để giúp chú cún nhỏ tìm lại chủ nhân.',
+    scenes: [
+      {
+        sceneNo: 1,
+        title: 'Ảnh 1: Tiếng gọi trong công viên',
+        theme: 'meadow',
+        icons: ['🦸‍♀️','🐶','🌳','🔍'],
+        en: 'While walking home from school, Roxy heard a soft whimper behind the green bushes in the park.',
+        vi: 'Khi đang đi bộ từ trường về nhà, Roxy nghe thấy tiếng kêu khe khẽ phía sau bụi cây xanh trong công viên.',
+        vocab: 'behind the bushes (sau bụi cây) • heard (nghe thấy)'
+      },
+      {
+        sceneNo: 2,
+        title: 'Ảnh 2: Làm bạn với chú cún nhỏ',
+        theme: 'meadow',
+        icons: ['👧','🐶','💧','💖'],
+        en: 'She found a scared little puppy. Because Roxy was gentle and patient, the puppy wagged its tail and came closer.',
+        vi: 'Cô bé tìm thấy một chú cún nhỏ đang sợ hãi. Vì Roxy rất dịu dàng và kiên nhẫn nên chú cún đã vẫy đuôi bước lại gần.',
+        vocab: 'gentle and patient (dịu dàng và kiên nhẫn) • wagged its tail (vẫy đuôi)'
+      },
+      {
+        sceneNo: 3,
+        title: 'Ảnh 3: Bay lên quan sát từ trên cao',
+        theme: 'space',
+        icons: ['🦸‍♀️','🚀','🏙️','👦'],
+        en: 'Rocket Girl flew high into the sky to look around Metro City. Soon, she spotted a boy looking for his lost pet!',
+        vi: 'Cô bé Tên Lửa bay vút lên bầu trời để quan sát khắp thành phố Metro. Chẳng mấy chốc, cô nhìn thấy một cậu bé đang tìm thú cưng bị lạc!',
+        vocab: 'flew high (bay lên cao) • spotted (nhìn thấy, phát hiện)'
+      },
+      {
+        sceneNo: 4,
+        title: 'Ảnh 4: Cuộc đoàn tụ hạnh phúc',
+        theme: 'home',
+        icons: ['👦','🐶','🦸‍♀️','🌟'],
+        en: 'When the boy hugged his puppy tightly, he thanked Rocket Girl with a big smile. Helping others is the best superpower!',
+        vi: 'Khi cậu bé ôm chặt chú cún vào lòng, cậu cảm ơn Cô bé Tên Lửa với nụ cười thật tươi. Giúp đỡ mọi người chính là siêu năng lực tuyệt vời nhất!',
+        vocab: 'hugged tightly (ôm chặt) • superpower (siêu năng lực)'
+      }
+    ]
+  },
+  {
+    id: 'story_l4_edison',
+    level: 4,
+    series: 'Great Inventors',
+    title: 'Thomas Edison and the Shining Light (Nhà Phát Minh Edison & Ánh Sáng Kỳ Diệu)',
+    emoji: '💡',
+    summary: 'Truyện tranh Level 4: Câu chuyện truyền cảm hứng về lòng ham học hỏi và sự kiên trì không bỏ cuộc của Thomas Edison.',
+    scenes: [
+      {
+        sceneNo: 1,
+        title: 'Ảnh 1: Cậu bé luôn đặt câu hỏi "Tại sao?"',
+        theme: 'science',
+        icons: ['👦','🔍','📚','❓'],
+        en: 'When Thomas Edison was a young boy, he was deeply curious about how things worked. He read science books every single day.',
+        vi: 'Khi Thomas Edison còn là một cậu bé nhỏ, ông vô cùng ham tìm tòi về cách vạn vật vận hành. Ông đọc sách khoa học mỗi ngày.',
+        vocab: 'deeply curious (vô cùng tò mò/ham học) • how things worked (cách mọi thứ hoạt động)'
+      },
+      {
+        sceneNo: 2,
+        title: 'Ảnh 2: Ước mơ thắp sáng màn đêm',
+        theme: 'science',
+        icons: ['🕯️','🌙','👨‍🔬','💡'],
+        en: 'In those days, people used candles and oil lamps in the dark. Edison dreamed of inventing a safe electric light bulb for every home.',
+        vi: 'Vào thời đó, mọi người phải dùng nến và đèn dầu trong bóng tối. Edison ước mơ phát minh ra bóng đèn điện an toàn cho mọi gia đình.',
+        vocab: 'candles (những ngọn nến) • electric light bulb (bóng đèn điện)'
+      },
+      {
+        sceneNo: 3,
+        title: 'Ảnh 3: Kiên trì qua hàng ngàn thử nghiệm',
+        theme: 'science',
+        icons: ['🔬','⚡','⏳','💪'],
+        en: 'Even though his experiments failed more than a thousand times, Edison did not give up. He said each failure taught him something new.',
+        vi: 'Mặc dù các thí nghiệm thất bại hơn một ngàn lần, Edison vẫn không bỏ cuộc. Ông nói rằng mỗi lần thất bại đều dạy cho ông một bài học mới.',
+        vocab: 'experiments (các thí nghiệm) • did not give up (không bỏ cuộc)'
+      },
+      {
+        sceneNo: 4,
+        title: 'Ảnh 4: Ánh sáng làm thay đổi thế giới',
+        theme: 'space',
+        icons: ['💡','✨','🌍','🏆'],
+        en: 'Finally, a warm golden light glowed inside the glass bulb! Because Edison persevered with courage and imagination, he brightened the whole world.',
+        vi: 'Cuối cùng, một luồng sáng vàng ấm áp đã tỏa rạng bên trong bóng thủy tinh! Nhờ kiên trì với lòng dũng cảm và trí tưởng tượng, ông đã thắp sáng cả thế giới.',
+        vocab: 'glowed (phát sáng) • persevered (kiên trì đến cùng)'
+      }
+    ]
+  }
 ];
 
 let fcCurrentLevel = 'all';
@@ -5236,10 +5931,17 @@ let fcCurrentFilter = 'all';
 let fcCurrentMode = 'card';
 let fcCurrentIdx = 0;
 let fcAccent = 'en-US';
+let fcSpeechRate = 0.92;
 let fcAutoSpeak = true;
 let fcAutoPlayTimer = null;
+let fcLadderSequenceTimer = null;
+let fcWordHighlightTimers = [];
+let fcActiveStoryId = 'story_l1_bat';
+let fcStoryAutoTimer = null;
 let fcQuizTarget = null;
 let fcQuizStreak = 0;
+let fcCurrentAudioObj = null;
+const fcDictAudioCache = {};
 
 function getAllFlashcards(){
   const custom = Array.isArray(data.customFlashcards) ? data.customFlashcards : [];
@@ -5265,33 +5967,383 @@ function getFilteredFlashcards(){
   });
 }
 
-function speakEnglishText(text, rate = 0.88){
+/* ============================================================
+   🎨 BỘ VẼ TRANH MINH HỌA TRỰC QUAN CHUẨN LITTLE FOX (SVG SCENE)
+   ============================================================ */
+function buildLittleFoxSceneSVG(card, stepIndex = 1){
+  if(!card) return '';
+  if(card.imageUrl && stepIndex === 1){
+    return `
+      <img src="${safe(card.imageUrl)}" alt="${safe(card.word)}" onerror="this.style.display='none'">
+      <span class="lf-illus-scene-label">🖼️ ${safe(card.word)}</span>
+      <span class="lf-illus-sound-tag">🔊 Chạm để nghe</span>
+    `;
+  }
+
+  const palettes = {
+    savanna: { sky1: '#fef3c7', sky2: '#fde68a', hill1: '#86efac', hill2: '#4ade80', sun: '#f59e0b', accent: '#ea580c' },
+    meadow:  { sky1: '#e0f2fe', sky2: '#bae6fd', hill1: '#bbf7d0', hill2: '#4ade80', sun: '#facc15', accent: '#16a34a' },
+    orchard: { sky1: '#fff7ed', sky2: '#ffedd5', hill1: '#86efac', hill2: '#22c55e', sun: '#fb923c', accent: '#dc2626' },
+    home:    { sky1: '#fdf2f8', sky2: '#fce7f3', hill1: '#fde68a', hill2: '#fcd34d', sun: '#f472b6', accent: '#db2777' },
+    school:  { sky1: '#eff6ff', sky2: '#dbeafe', hill1: '#a7f3d0', hill2: '#34d399', sun: '#38bdf8', accent: '#2563eb' },
+    music:   { sky1: '#f5f3ff', sky2: '#ede9fe', hill1: '#ddd6fe', hill2: '#c4b5fd', sun: '#a855f7', accent: '#7c3aed' },
+    sky:     { sky1: '#e0f2fe', sky2: '#fef9c3', hill1: '#a7f3d0', hill2: '#6ee7b7', sun: '#f59e0b', accent: '#0284c7' },
+    ocean:   { sky1: '#cffafe', sky2: '#a5f3fc', hill1: '#38bdf8', hill2: '#0284c7', sun: '#facc15', accent: '#0369a1' },
+    space:   { sky1: '#1e1b4b', sky2: '#312e81', hill1: '#4338ca', hill2: '#3730a3', sun: '#fde047', accent: '#f59e0b' },
+    science: { sky1: '#ecfeff', sky2: '#e0e7ff', hill1: '#c7d2fe', hill2: '#a5b4fc', sun: '#f59e0b', accent: '#4f46e5' }
+  };
+
+  const themeKey = card.sceneTheme || card.theme || (card.level === 4 ? 'science' : (card.level === 3 ? 'space' : (card.level === 2 ? 'sky' : 'meadow')));
+  const pal = palettes[themeKey] || palettes.meadow;
+  const isDark = themeKey === 'space';
+
+  let icons = [card.emoji || '🦊'];
+  if(stepIndex === 1 && Array.isArray(card.step1Icons)) icons = card.step1Icons;
+  else if(stepIndex === 2 && Array.isArray(card.step2Icons)) icons = card.step2Icons;
+  else if(stepIndex === 3 && Array.isArray(card.step3Icons)) icons = card.step3Icons;
+  else if(stepIndex === 4 && Array.isArray(card.passageIcons)) icons = card.passageIcons;
+  else if(Array.isArray(card.icons)) icons = card.icons;
+
+  const mainIcon = icons[0] || card.emoji || '🦊';
+  const subIcon1 = icons[1] || '✨';
+  const subIcon2 = icons[2] || '🌿';
+  const subIcon3 = icons[3] || '';
+
+  const stepLabels = {
+    1: 'Ảnh 1 • Từ & Câu ngắn',
+    2: 'Ảnh 2 • Mở rộng miêu tả',
+    3: 'Ảnh 3 • Tình huống truyện',
+    4: 'Ảnh 4 • Đoạn đọc Little Fox'
+  };
+  const topLabel = card.sceneNo ? `Ảnh ${card.sceneNo}` : (stepLabels[stepIndex] || 'Tranh minh họa');
+  const wordLabel = card.word ? `${card.word}` : (card.title || 'Little Fox');
+  const uidGrad = `lfGrad_${(card.id || 's')}_${stepIndex}_${Math.floor(Math.random()*999)}`;
+
+  return `
+    <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="${uidGrad}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${pal.sky1}"/>
+          <stop offset="100%" stop-color="${pal.sky2}"/>
+        </linearGradient>
+      </defs>
+      <!-- Bầu trời nền -->
+      <rect width="400" height="180" fill="url(#${uidGrad})"/>
+      <!-- Mặt trời / Mặt trăng & Sao -->
+      <circle cx="${340 - (stepIndex * 18)}" cy="42" r="24" fill="${pal.sun}" opacity="0.88"/>
+      <circle cx="${340 - (stepIndex * 18)}" cy="42" r="32" fill="${pal.sun}" opacity="0.22"/>
+      ${isDark ? `
+        <circle cx="55" cy="34" r="2.2" fill="#fff" opacity="0.9"/>
+        <circle cx="115" cy="24" r="1.8" fill="#fde047" opacity="0.8"/>
+        <circle cx="245" cy="30" r="2.5" fill="#fff" opacity="0.85"/>
+        <circle cx="85" cy="65" r="1.6" fill="#fff" opacity="0.7"/>
+      ` : `
+        <ellipse cx="78" cy="40" rx="28" ry="12" fill="#ffffff" opacity="0.75"/>
+        <ellipse cx="96" cy="36" rx="22" ry="14" fill="#ffffff" opacity="0.85"/>
+        <ellipse cx="255" cy="52" rx="24" ry="10" fill="#ffffff" opacity="0.65"/>
+      `}
+      <!-- Đồi cỏ / Sóng nền -->
+      <path d="M-20 140 Q 95 102 220 136 T 420 126 L 420 190 L -20 190 Z" fill="${pal.hill1}"/>
+      <path d="M-20 154 Q 150 122 290 148 T 420 142 L 420 190 L -20 190 Z" fill="${pal.hill2}"/>
+      <!-- Vòng tròn sáng trung tâm nổi bật nhân vật -->
+      <circle cx="200" cy="94" r="52" fill="#ffffff" opacity="${isDark ? '0.16' : '0.68'}"/>
+      <circle cx="200" cy="94" r="44" fill="#ffffff" opacity="${isDark ? '0.22' : '0.82'}"/>
+      <!-- Các biểu tượng phụ tạo bối cảnh sinh động -->
+      <text x="86" y="118" font-size="34" text-anchor="middle">${subIcon1}</text>
+      <text x="312" y="114" font-size="34" text-anchor="middle">${subIcon2}</text>
+      ${subIcon3 ? `<text x="272" y="58" font-size="26" text-anchor="middle">${subIcon3}</text>` : ''}
+      <!-- Nhân vật / Hình ảnh chính -->
+      <text x="200" y="114" font-size="64" text-anchor="middle">${mainIcon}</text>
+    </svg>
+    <span class="lf-illus-scene-label">🖼️ ${safe(topLabel)}</span>
+    <span class="lf-illus-sound-tag">🔊 ${safe(wordLabel)}</span>
+  `;
+}
+
+/* ============================================================
+   🔊 HỆ THỐNG ÂM THANH CHUẨN BẢN XỨ ĐA TẦNG (US/UK + KARAOKE TỪNG TỪ)
+   ============================================================ */
+function initLittleFoxVoices(){
   try{
-    if(!('speechSynthesis' in window) || !text) return;
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = fcAccent || 'en-US';
-    u.rate = rate;
-    const voices = window.speechSynthesis.getVoices();
-    const enVoice = voices.find(v => v.lang === fcAccent) || voices.find(v => v.lang.startsWith('en'));
-    if(enVoice) u.voice = enVoice;
-    window.speechSynthesis.speak(u);
+    if('speechSynthesis' in window){
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+  }catch(e){}
+}
+initLittleFoxVoices();
+
+function pickBestEnglishVoice(preferredLang = 'en-US'){
+  try{
+    if(!('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices() || [];
+    if(!voices.length) return null;
+    const isUK = preferredLang === 'en-GB';
+    const langPrefix = isUK ? 'en-gb' : 'en-us';
+
+    const enVoices = voices.filter(v => {
+      const l = (v.lang || '').toLowerCase().replace('_', '-');
+      return l.startsWith('en');
+    });
+    if(!enVoices.length) return null;
+
+    const scoreVoice = (v) => {
+      const name = (v.name || '').toLowerCase();
+      const lang = (v.lang || '').toLowerCase().replace('_', '-');
+      let score = 0;
+      if(lang === langPrefix) score += 50;
+      else if(isUK && (lang.includes('gb') || lang.includes('uk') || name.includes('uk') || name.includes('british'))) score += 45;
+      else if(!isUK && (lang.includes('us') || name.includes('us') || name.includes('united states'))) score += 45;
+      if(name.includes('natural') || name.includes('neural') || name.includes('online')) score += 40;
+      if(name.includes('aria') || name.includes('jenny') || name.includes('guy') || name.includes('sonia') || name.includes('libby')) score += 35;
+      if(name.includes('google us english') || name.includes('google uk english')) score += 32;
+      if(name.includes('samantha') || name.includes('alex') || name.includes('daniel') || name.includes('karen') || name.includes('moira')) score += 28;
+      return score;
+    };
+
+    enVoices.sort((a, b) => scoreVoice(b) - scoreVoice(a));
+    return enVoices[0] || null;
+  }catch(e){
+    return null;
+  }
+}
+
+function clearWordHighlights(){
+  fcWordHighlightTimers.forEach(t => clearTimeout(t));
+  fcWordHighlightTimers = [];
+  document.querySelectorAll('.lf-word-token.is-speaking').forEach(el => el.classList.remove('is-speaking'));
+  const badge = document.getElementById('fcAudioStatusBadge');
+  if(badge){
+    badge.classList.remove('speaking');
+    badge.innerHTML = `🔊 Giọng chuẩn ${fcAccent === 'en-GB' ? 'Anh (UK)' : 'Mỹ (US)'} sẵn sàng`;
+  }
+}
+
+function stopCurrentEnglishAudio(){
+  clearWordHighlights();
+  if(fcCurrentAudioObj){
+    try{
+      fcCurrentAudioObj.pause();
+      fcCurrentAudioObj.src = '';
+    }catch(e){}
+    fcCurrentAudioObj = null;
+  }
+  try{
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
   }catch(e){}
 }
 
+function scheduleWordKaraokeHighlight(text, rate = 0.9, containerSelector = null){
+  clearWordHighlights();
+  const badge = document.getElementById('fcAudioStatusBadge');
+  if(badge){
+    badge.classList.add('speaking');
+    badge.innerHTML = `🔊 Đang phát âm chuẩn (${fcAccent === 'en-GB' ? 'UK 🇬🇧' : 'US 🇺🇸'})...`;
+  }
+
+  const scope = containerSelector ? document.querySelector(containerSelector) : document;
+  if(!scope) return;
+  const tokens = Array.from(scope.querySelectorAll('.lf-word-token'));
+  if(!tokens.length) return;
+
+  const words = String(text || '').trim().split(/\s+/).filter(Boolean);
+  if(!words.length) return;
+
+  let cumulativeMs = 60;
+  const speedFactor = Math.max(0.45, Math.min(1.3, rate || 0.9));
+
+  tokens.forEach((tokenEl, idx) => {
+    const w = tokenEl.textContent || words[idx] || '';
+    const baseMs = Math.max(210, Math.min(620, w.length * 58));
+    const hasPause = /[,.;!?]$/.test(w);
+    const durMs = Math.round((baseMs + (hasPause ? 190 : 0)) / speedFactor);
+
+    const tStart = setTimeout(() => {
+      document.querySelectorAll('.lf-word-token.is-speaking').forEach(el => el.classList.remove('is-speaking'));
+      tokenEl.classList.add('is-speaking');
+    }, cumulativeMs);
+    fcWordHighlightTimers.push(tStart);
+    cumulativeMs += durMs;
+  });
+
+  const tEnd = setTimeout(() => {
+    clearWordHighlights();
+  }, cumulativeMs + 250);
+  fcWordHighlightTimers.push(tEnd);
+}
+
+async function resolveDictionaryHumanMp3(word, accent = 'en-US'){
+  const cleanWord = String(word || '').trim().toLowerCase().replace(/[^a-z-]/g, '');
+  if(!cleanWord || cleanWord.includes(' ')) return null;
+  const cacheKey = `${cleanWord}_${accent}`;
+  if(fcDictAudioCache[cacheKey] !== undefined) return fcDictAudioCache[cacheKey];
+
+  try{
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 1400);
+    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(cleanWord)}`, { signal: controller.signal });
+    clearTimeout(timer);
+    if(!res.ok){
+      fcDictAudioCache[cacheKey] = null;
+      return null;
+    }
+    const json = await res.json();
+    const phonetics = [];
+    if(Array.isArray(json)){
+      json.forEach(entry => {
+        if(Array.isArray(entry.phonetics)) phonetics.push(...entry.phonetics);
+      });
+    }
+    const audioUrls = phonetics.map(p => p && p.audio ? String(p.audio).trim() : '').filter(Boolean);
+    if(!audioUrls.length){
+      fcDictAudioCache[cacheKey] = null;
+      return null;
+    }
+    const preferTag = accent === 'en-GB' ? '-uk' : '-us';
+    const matched = audioUrls.find(u => u.toLowerCase().includes(preferTag)) || audioUrls[0];
+    fcDictAudioCache[cacheKey] = matched;
+    return matched;
+  }catch(e){
+    fcDictAudioCache[cacheKey] = null;
+    return null;
+  }
+}
+
+function speakWithWebSpeechFallback(cleanText, effectiveRate, onFinish){
+  try{
+    if(!('speechSynthesis' in window)){
+      if(typeof onFinish === 'function') onFinish();
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(cleanText);
+    u.lang = fcAccent || 'en-US';
+    u.rate = Math.max(0.5, Math.min(1.2, effectiveRate));
+    u.pitch = 1.02;
+    const bestVoice = pickBestEnglishVoice(fcAccent);
+    if(bestVoice) u.voice = bestVoice;
+    u.onend = () => {
+      clearWordHighlights();
+      if(typeof onFinish === 'function') onFinish();
+    };
+    u.onerror = () => {
+      clearWordHighlights();
+      if(typeof onFinish === 'function') onFinish();
+    };
+    window.speechSynthesis.speak(u);
+  }catch(e){
+    clearWordHighlights();
+    if(typeof onFinish === 'function') onFinish();
+  }
+}
+
+async function speakEnglishText(text, rate = null, opts = {}){
+  const cleanText = String(text || '').replace(/\s+/g, ' ').trim();
+  if(!cleanText) return;
+  const effectiveRate = rate !== null ? rate : (fcSpeechRate || 0.92);
+  stopCurrentEnglishAudio();
+
+  scheduleWordKaraokeHighlight(cleanText, effectiveRate, opts.containerSelector || null);
+
+  const isSingleWord = !cleanText.includes(' ') && cleanText.length <= 24;
+  const youdaoType = fcAccent === 'en-GB' ? 1 : 2;
+  const cloudVoiceUrl = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(cleanText)}&type=${youdaoType}`;
+
+  let primaryUrl = cloudVoiceUrl;
+  if(isSingleWord){
+    const dictMp3 = await resolveDictionaryHumanMp3(cleanText, fcAccent);
+    if(dictMp3) primaryUrl = dictMp3;
+  }
+
+  let finished = false;
+  const finishOnce = () => {
+    if(finished) return;
+    finished = true;
+    clearWordHighlights();
+    if(typeof opts.onEnd === 'function') opts.onEnd();
+  };
+
+  try{
+    const audio = new Audio();
+    audio.referrerPolicy = 'no-referrer';
+    audio.preload = 'auto';
+    audio.src = primaryUrl;
+    fcCurrentAudioObj = audio;
+
+    const applyPlaybackRate = () => {
+      try{
+        const mappedRate = Math.max(0.55, Math.min(1.15, effectiveRate / 0.92));
+        if('preservesPitch' in audio) audio.preservesPitch = true;
+        if('mozPreservesPitch' in audio) audio.mozPreservesPitch = true;
+        if('webkitPreservesPitch' in audio) audio.webkitPreservesPitch = true;
+        audio.playbackRate = mappedRate;
+      }catch(e){}
+    };
+
+    audio.onloadedmetadata = applyPlaybackRate;
+    audio.onplay = applyPlaybackRate;
+    audio.onended = finishOnce;
+
+    let fallbackTriggered = false;
+    const triggerFallback = () => {
+      if(fallbackTriggered || finished) return;
+      fallbackTriggered = true;
+      if(primaryUrl !== cloudVoiceUrl){
+        try{
+          audio.src = cloudVoiceUrl;
+          audio.play().catch(() => speakWithWebSpeechFallback(cleanText, effectiveRate, finishOnce));
+          return;
+        }catch(e){}
+      }
+      speakWithWebSpeechFallback(cleanText, effectiveRate, finishOnce);
+    };
+
+    audio.onerror = triggerFallback;
+    const playPromise = audio.play();
+    if(playPromise && typeof playPromise.catch === 'function'){
+      playPromise.catch(triggerFallback);
+    }
+  }catch(e){
+    speakWithWebSpeechFallback(cleanText, effectiveRate, finishOnce);
+  }
+}
+
+function speakSingleWordToken(rawWord){
+  const cleaned = String(rawWord || '').replace(/^[^a-zA-Z0-9']+|[^a-zA-Z0-9']+$/g, '');
+  if(!cleaned) return;
+  speakEnglishText(cleaned, 0.88);
+  showToast(`🔊 Phát âm từ: "${cleaned}"`);
+}
+
+function renderInteractiveEnglishTokens(sentence, targetWord = ''){
+  const words = String(sentence || '').trim().split(/\s+/).filter(Boolean);
+  const normTarget = String(targetWord || '').toLowerCase().replace(/[^a-z]/g, '');
+  return words.map((w, idx) => {
+    const cleanW = w.toLowerCase().replace(/[^a-z]/g, '');
+    const isTarget = normTarget && (cleanW === normTarget || cleanW.startsWith(normTarget));
+    const escapedWord = safe(w).replace(/'/g, "\\'");
+    return `<span class="lf-word-token ${isTarget ? 'target-word' : ''}" data-word-idx="${idx}" title="Chạm để nghe phát âm từ này" onclick="event.stopPropagation(); speakSingleWordToken('${escapedWord}')">${safe(w)}</span>`;
+  }).join(' ');
+}
+
 function setFlashcardLevel(lv){
+  stopFlashcardSequences();
   fcCurrentLevel = lv;
   fcCurrentIdx = 0;
   renderFlashcards();
 }
 
 function setFlashcardTopic(tp){
+  stopFlashcardSequences();
   fcCurrentTopic = tp;
   fcCurrentIdx = 0;
   renderFlashcards();
 }
 
 function setFlashcardFilter(flt){
+  stopFlashcardSequences();
   fcCurrentFilter = flt;
   fcCurrentIdx = 0;
   document.querySelectorAll('.fc-subfilter-btn').forEach(b => b.classList.remove('active'));
@@ -5301,6 +6353,7 @@ function setFlashcardFilter(flt){
 }
 
 function setFlashcardMode(mode){
+  stopFlashcardSequences();
   fcCurrentMode = mode;
   ['card','grid','quiz','guide'].forEach(m => {
     const btn = document.getElementById('fcMode' + m.charAt(0).toUpperCase() + m.slice(1) + 'Btn');
@@ -5316,6 +6369,16 @@ function setFlashcardAccent(acc){
   fcAccent = acc;
   document.getElementById('fcAccentUS')?.classList.toggle('active', acc === 'en-US');
   document.getElementById('fcAccentUK')?.classList.toggle('active', acc === 'en-GB');
+  clearWordHighlights();
+  speakCurrentWord(fcSpeechRate);
+}
+
+function setFlashcardSpeed(spd){
+  fcSpeechRate = Number(spd) || 0.92;
+  document.getElementById('fcSpeedNormal')?.classList.toggle('active', fcSpeechRate >= 0.88);
+  document.getElementById('fcSpeedMedium')?.classList.toggle('active', fcSpeechRate >= 0.7 && fcSpeechRate < 0.88);
+  document.getElementById('fcSpeedSlow')?.classList.toggle('active', fcSpeechRate < 0.7);
+  showToast(`🔊 Đã chọn tốc độ đọc: ${fcSpeechRate >= 0.88 ? '1.0x Chuẩn' : (fcSpeechRate >= 0.7 ? '0.8x Vừa' : '🐢 Chậm rõ từng từ')}`);
 }
 
 function toggleFlashcardAutoSpeak(checked){
@@ -5327,29 +6390,48 @@ function flipCurrentFlashcard(){
   if(card3d) card3d.classList.toggle('is-flipped');
 }
 
+function stopFlashcardSequences(){
+  if(fcLadderSequenceTimer){
+    clearTimeout(fcLadderSequenceTimer);
+    fcLadderSequenceTimer = null;
+  }
+  if(fcStoryAutoTimer){
+    clearTimeout(fcStoryAutoTimer);
+    fcStoryAutoTimer = null;
+  }
+  document.querySelectorAll('.lf-pic-read-card.active-reading, .lf-story-scene-item.active-reading').forEach(el => el.classList.remove('active-reading'));
+  const playAllBtn = document.getElementById('fcPlayAllPicturesBtn');
+  if(playAllBtn) playAllBtn.innerHTML = '<span>▶️</span><span>Đọc lần lượt cả 4 ảnh</span>';
+  stopCurrentEnglishAudio();
+}
+
 function prevFlashcard(){
+  stopFlashcardSequences();
   const deck = getFilteredFlashcards();
   if(!deck.length) return;
   fcCurrentIdx = (fcCurrentIdx - 1 + deck.length) % deck.length;
   document.getElementById('fcCard3D')?.classList.remove('is-flipped');
   renderFlashcards();
-  if(fcAutoSpeak) speakCurrentWord(0.9);
+  if(fcAutoSpeak) speakCurrentWord(fcSpeechRate);
 }
 
 function nextFlashcard(){
+  stopFlashcardSequences();
   const deck = getFilteredFlashcards();
   if(!deck.length) return;
   fcCurrentIdx = (fcCurrentIdx + 1) % deck.length;
   document.getElementById('fcCard3D')?.classList.remove('is-flipped');
   renderFlashcards();
-  if(fcAutoSpeak) speakCurrentWord(0.9);
+  if(fcAutoSpeak) speakCurrentWord(fcSpeechRate);
 }
 
 function shuffleFlashcards(){
+  stopFlashcardSequences();
   const deck = getFilteredFlashcards();
   if(deck.length > 1){
     fcCurrentIdx = Math.floor(Math.random() * deck.length);
     renderFlashcards();
+    if(fcAutoSpeak) speakCurrentWord(fcSpeechRate);
     showToast('🔀 Đã chọn thẻ ngẫu nhiên!');
   }
 }
@@ -5359,53 +6441,109 @@ function toggleFlashcardAutoPlay(){
   if(fcAutoPlayTimer){
     clearInterval(fcAutoPlayTimer);
     fcAutoPlayTimer = null;
-    if(btn) btn.textContent = '▶️ Tự động đọc cả chủ đề';
+    if(btn){
+      btn.classList.remove('playing');
+      btn.textContent = '▶️ Tự động đọc cả chủ đề';
+    }
+    stopFlashcardSequences();
     return;
   }
-  if(btn) btn.textContent = '⏹ Dừng tự động đọc';
-  speakCurrentWord(0.9);
+  if(btn){
+    btn.classList.add('playing');
+    btn.textContent = '⏹ Dừng tự động đọc';
+  }
+  speakCurrentWord(fcSpeechRate);
   fcAutoPlayTimer = setInterval(() => {
     nextFlashcard();
-  }, 4200);
+  }, 4800);
 }
 
-function speakCurrentWord(rate = 0.9){
+function speakCurrentWord(rate = null){
   const deck = getFilteredFlashcards();
   const card = deck[fcCurrentIdx] || deck[0];
-  if(card) speakEnglishText(card.word, rate);
+  if(card) speakEnglishText(card.word, rate || fcSpeechRate);
 }
 
 function speakCurrentExample(){
   const deck = getFilteredFlashcards();
   const card = deck[fcCurrentIdx] || deck[0];
-  if(card) speakEnglishText(card.step2En || card.step1En, 0.86);
+  if(card) speakEnglishText(card.step2En || card.step1En, fcSpeechRate, { containerSelector: '#lfPicCard_2' });
 }
 
-function speakCurrentLadderStep(stepNum){
+function speakCurrentLadderStep(stepNum, customRate = null, onDone = null){
   const deck = getFilteredFlashcards();
   const card = deck[fcCurrentIdx] || deck[0];
   if(!card) return;
-  const txt = stepNum === 1 ? card.step1En : (stepNum === 2 ? card.step2En : card.step3En);
-  speakEnglishText(txt, 0.85);
+  document.querySelectorAll('.lf-pic-read-card.active-reading').forEach(el => el.classList.remove('active-reading'));
+  const cardEl = document.getElementById(`lfPicCard_${stepNum}`);
+  if(cardEl){
+    cardEl.classList.add('active-reading');
+  }
+  const passageText = card.passageEn || `${card.step1En} ${card.step2En} ${card.step3En}`;
+  const txt = stepNum === 1 ? card.step1En : (stepNum === 2 ? card.step2En : (stepNum === 3 ? card.step3En : passageText));
+  speakEnglishText(txt, customRate || fcSpeechRate, {
+    containerSelector: `#lfPicCard_${stepNum}`,
+    onEnd: () => {
+      if(cardEl && !fcLadderSequenceTimer) cardEl.classList.remove('active-reading');
+      if(typeof onDone === 'function') onDone();
+    }
+  });
 }
 
-function speakAllLadderSteps(){
+function speakAllLadderSteps(customRate = null){
+  if(fcLadderSequenceTimer){
+    stopFlashcardSequences();
+    return;
+  }
   const deck = getFilteredFlashcards();
   const card = deck[fcCurrentIdx] || deck[0];
   if(!card) return;
-  speakEnglishText(`${card.word}. ${card.step1En} ${card.step2En} ${card.step3En}`, 0.84);
+
+  const playAllBtn = document.getElementById('fcPlayAllPicturesBtn');
+  if(playAllBtn) playAllBtn.innerHTML = '<span>⏹</span><span>Dừng đọc 4 ảnh</span>';
+
+  const rateToUse = customRate || fcSpeechRate;
+  const steps = [1, 2, 3, 4];
+  let idx = 0;
+
+  const playNextStep = () => {
+    if(idx >= steps.length){
+      stopFlashcardSequences();
+      showToast(`🌟 Đã đọc xong cả 4 bức ảnh của từ "${card.word}"!`);
+      return;
+    }
+    const stepNo = steps[idx++];
+    const panelEl = document.getElementById(`lfPicCard_${stepNo}`);
+    if(panelEl){
+      panelEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    fcLadderSequenceTimer = setTimeout(() => {
+      speakCurrentLadderStep(stepNo, rateToUse, () => {
+        if(!fcLadderSequenceTimer) return;
+        fcLadderSequenceTimer = setTimeout(playNextStep, 550);
+      });
+    }, 120);
+  };
+
+  speakEnglishText(card.word, rateToUse, {
+    onEnd: () => {
+      fcLadderSequenceTimer = setTimeout(playNextStep, 400);
+    }
+  });
 }
 
-function toggleCurrentCardMastered(){
+function toggleCurrentCardMastered(cardId = null){
   const c = child();
   if(!c) return;
+  const all = getAllFlashcards();
   const deck = getFilteredFlashcards();
-  const card = deck[fcCurrentIdx] || deck[0];
+  const card = cardId ? all.find(x => x.id === cardId) : (deck[fcCurrentIdx] || deck[0]);
   if(!card) return;
   if(!Array.isArray(c.masteredFlashcards)) c.masteredFlashcards = [];
   const idx = c.masteredFlashcards.indexOf(card.id);
   if(idx >= 0){
     c.masteredFlashcards.splice(idx, 1);
+    showToast(`Đã chuyển "${card.word}" về danh sách Đang học`);
   }else{
     c.masteredFlashcards.push(card.id);
     c.score += 2;
@@ -5417,22 +6555,166 @@ function toggleCurrentCardMastered(){
   renderFlashcards();
 }
 
-function startVoicePractice(){
+function startVoicePractice(stepNum = 0){
+  const deck = getFilteredFlashcards();
+  const card = deck[fcCurrentIdx] || deck[0];
+  if(!card) return;
+
+  const targetText = stepNum === 1 ? card.step1En
+    : (stepNum === 2 ? card.step2En
+    : (stepNum === 3 ? card.step3En
+    : (stepNum === 4 ? (card.passageEn || card.step3En) : `${card.word}. ${card.step1En}`)));
+
   const statusEl = document.getElementById('fcSpeakStatus');
-  if(statusEl) statusEl.innerHTML = '🎙️ <b>Con hãy đọc to từ và 3 bậc câu cùng bố mẹ nhé!</b> Sau khi đọc xong, bấm nút <b>“👏 Con đã nói to rõ (+2 ⭐)”</b> bên cạnh!';
-  speakAllLadderSteps();
+  const micBtn = document.getElementById('fcMicPracticeBtn');
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if(SpeechRec){
+    try{
+      stopCurrentEnglishAudio();
+      const rec = new SpeechRec();
+      rec.lang = fcAccent || 'en-US';
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+
+      if(micBtn) micBtn.classList.add('listening');
+      if(statusEl){
+        statusEl.innerHTML = `🎙️ <b style="color:#dc2626">Máy đang lắng nghe bé đọc...</b> Con hãy đọc to: <b style="color:#1e1b4b">"${safe(targetText)}"</b>`;
+      }
+
+      rec.onresult = (event) => {
+        if(micBtn) micBtn.classList.remove('listening');
+        const transcript = event.results?.[0]?.[0]?.transcript || '';
+        const cleanSpoken = transcript.toLowerCase().replace(/[^a-z\s]/g, '').trim();
+        const cleanTarget = targetText.toLowerCase().replace(/[^a-z\s]/g, '').trim();
+        const targetWords = cleanTarget.split(/\s+/).filter(Boolean);
+        const spokenWords = cleanSpoken.split(/\s+/).filter(Boolean);
+        let matched = 0;
+        targetWords.forEach(tw => {
+          if(spokenWords.includes(tw)) matched++;
+        });
+        const accuracy = targetWords.length ? Math.min(100, Math.round((matched / targetWords.length) * 100)) : 85;
+
+        if(accuracy >= 50){
+          playChime('success');
+          if(statusEl){
+            statusEl.innerHTML = `🎉 <b>Tuyệt vời (${accuracy}% chuẩn)!</b> Bé vừa đọc: <i>"${safe(transcript)}"</i> — Đã thưởng nóng <b>+2 ⭐</b>!`;
+          }
+          rewardChildSpeakingPractice();
+        }else{
+          if(statusEl){
+            statusEl.innerHTML = `💡 Bé vừa đọc: <i>"${safe(transcript)}"</i>. Hãy nghe lại mẫu và đọc to rõ hơn nhé, hoặc bố mẹ bấm nút khen thưởng bên phải!`;
+          }
+          speakEnglishText(targetText, 0.8);
+        }
+      };
+
+      rec.onerror = () => {
+        if(micBtn) micBtn.classList.remove('listening');
+        if(statusEl){
+          statusEl.innerHTML = `🔊 <b>Hãy nghe mẫu và đọc theo:</b> <b style="color:#1e1b4b">"${safe(targetText)}"</b> — Đọc xong bấm nút <b>“👏 Con đã đọc to rõ (+2 ⭐)”</b> nhé!`;
+        }
+        speakEnglishText(targetText, 0.84);
+      };
+
+      rec.onend = () => {
+        if(micBtn) micBtn.classList.remove('listening');
+      };
+
+      rec.start();
+      return;
+    }catch(e){}
+  }
+
+  if(statusEl){
+    statusEl.innerHTML = `🎙️ <b>Con hãy nghe mẫu và đọc to:</b> <b style="color:#1e1b4b">"${safe(targetText)}"</b>. Sau khi đọc xong, bấm nút <b>“👏 Con đã đọc to rõ (+2 ⭐)”</b> bên cạnh!`;
+  }
+  if(stepNum >= 1 && stepNum <= 4){
+    speakCurrentLadderStep(stepNum, 0.84);
+  }else{
+    speakAllLadderSteps(0.84);
+  }
 }
 
 function rewardChildSpeakingPractice(){
   const deck = getFilteredFlashcards();
   const card = deck[fcCurrentIdx] || deck[0];
-  quickAwardCoreStudy('Tiếng Anh', `Luyện nói to rõ bậc thang câu từ "${card ? card.word : 'Little Fox'}"`, 2);
+  quickAwardCoreStudy('Tiếng Anh', `Luyện đọc to rõ theo tranh Little Fox: "${card ? card.word : 'Little Fox'}"`, 2);
+}
+
+/* ============================================================
+   📖 TRÌNH ĐỌC TRUYỆN TRANH THEO TỪNG ẢNH (STORYBOOK READER)
+   ============================================================ */
+function selectLittleFoxStory(storyId){
+  stopFlashcardSequences();
+  fcActiveStoryId = storyId;
+  renderFlashcards();
+}
+
+function speakStoryScene(storyId, sceneIdx, rate = null){
+  const story = LITTLE_FOX_STORYBOOKS.find(s => s.id === storyId) || LITTLE_FOX_STORYBOOKS[0];
+  if(!story) return;
+  const scene = story.scenes[sceneIdx];
+  if(!scene) return;
+
+  document.querySelectorAll('.lf-story-scene-item.active-reading').forEach(el => el.classList.remove('active-reading'));
+  const sceneEl = document.getElementById(`lfStoryScene_${sceneIdx}`);
+  if(sceneEl){
+    sceneEl.classList.add('active-reading');
+    sceneEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  speakEnglishText(scene.en, rate || fcSpeechRate, {
+    containerSelector: `#lfStoryScene_${sceneIdx}`,
+    onEnd: () => {
+      if(sceneEl && !fcStoryAutoTimer) sceneEl.classList.remove('active-reading');
+    }
+  });
+}
+
+function togglePlayEntireStorybook(storyId){
+  if(fcStoryAutoTimer){
+    stopFlashcardSequences();
+    renderFlashcards();
+    return;
+  }
+  const story = LITTLE_FOX_STORYBOOKS.find(s => s.id === storyId) || LITTLE_FOX_STORYBOOKS[0];
+  if(!story || !Array.isArray(story.scenes)) return;
+
+  let idx = 0;
+  const playNext = () => {
+    if(idx >= story.scenes.length){
+      stopFlashcardSequences();
+      renderFlashcards();
+      showToast(`🎉 Bé đã nghe xong truyện "${story.title}"!`);
+      return;
+    }
+    const currentIdx = idx++;
+    document.querySelectorAll('.lf-story-scene-item.active-reading').forEach(el => el.classList.remove('active-reading'));
+    const sceneEl = document.getElementById(`lfStoryScene_${currentIdx}`);
+    if(sceneEl){
+      sceneEl.classList.add('active-reading');
+      sceneEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    fcStoryAutoTimer = setTimeout(() => {
+      speakEnglishText(story.scenes[currentIdx].en, fcSpeechRate, {
+        containerSelector: `#lfStoryScene_${currentIdx}`,
+        onEnd: () => {
+          if(!fcStoryAutoTimer) return;
+          fcStoryAutoTimer = setTimeout(playNext, 650);
+        }
+      });
+    }, 150);
+  };
+
+  playNext();
 }
 
 function nextFlashcardQuizQuestion(){
-  const all = getAllFlashcards();
-  if(!all.length) return;
-  fcQuizTarget = all[Math.floor(Math.random() * all.length)];
+  const deck = getFilteredFlashcards();
+  const pool = deck.length >= 4 ? deck : getAllFlashcards();
+  if(!pool.length) return;
+  fcQuizTarget = pool[Math.floor(Math.random() * pool.length)];
   const emojiEl = document.getElementById('fcQuizEmoji');
   const viEl = document.getElementById('fcQuizVi');
   const ipaEl = document.getElementById('fcQuizIpa');
@@ -5441,12 +6723,13 @@ function nextFlashcardQuizQuestion(){
   const fb = document.getElementById('fcQuizFeedback');
   if(!emojiEl || !optBox) return;
 
-  emojiEl.textContent = fcQuizTarget.emoji || '🌟';
-  if(viEl) viEl.textContent = fcQuizTarget.meaning;
-  if(ipaEl) ipaEl.textContent = fcQuizTarget.ipa || '';
-  if(hintEl) hintEl.textContent = `🌱 Gợi ý câu: "${fcQuizTarget.step1En}"`;
+  emojiEl.innerHTML = `<div style="max-width:340px;height:135px;margin:0 auto 8px;border-radius:16px;overflow:hidden;border:2px solid #e0e7ff;position:relative">${buildLittleFoxSceneSVG(fcQuizTarget, 1)}</div>`;
+  if(viEl) viEl.textContent = `${fcQuizTarget.meaning} (Level ${fcQuizTarget.level || 1})`;
+  if(ipaEl) ipaEl.textContent = `${fcQuizTarget.ipa || ''} • ${fcQuizTarget.series || 'Little Fox'}`;
+  if(hintEl) hintEl.textContent = `🌱 Câu trong tranh: "${fcQuizTarget.step1En}"`;
   if(fb) fb.innerHTML = '';
 
+  const all = getAllFlashcards();
   const others = all.filter(x => x.id !== fcQuizTarget.id).sort(() => Math.random() - 0.5).slice(0, 3);
   const choices = [fcQuizTarget, ...others].sort(() => Math.random() - 0.5);
 
@@ -5454,23 +6737,26 @@ function nextFlashcardQuizQuestion(){
   choices.forEach(ch => {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'fc-quiz-opt-btn';
-    btn.innerHTML = `<b>${safe(ch.word)}</b> <span class="note">(${safe(ch.meaning)})</span>`;
+    btn.className = 'fc-quiz-opt';
+    btn.innerHTML = `<div>${ch.emoji || '🌟'} <b>${safe(ch.word)}</b></div><div class="note" style="font-size:12px;margin-top:2px">${safe(ch.step1En)}</div>`;
     btn.onclick = () => {
       if(ch.id === fcQuizTarget.id){
+        btn.classList.add('correct');
         fcQuizStreak++;
         playChime('success');
+        speakEnglishText(`${ch.word}. ${ch.step1En}`, 0.9);
         document.getElementById('fcQuizProgressText').textContent = `${fcQuizStreak} / 5`;
-        if(fb) fb.innerHTML = `<div style="color:#059669;font-weight:800;margin-top:8px">🎉 Đúng rồi! ${safe(ch.word)} — ${safe(ch.step1En)}</div>`;
+        if(fb) fb.innerHTML = `<div style="color:#059669;font-weight:800;margin-top:8px">🎉 Chính xác! ${safe(ch.word)} — ${safe(ch.step1En)}</div>`;
         if(fcQuizStreak >= 5){
           fcQuizStreak = 0;
           document.getElementById('fcQuizProgressText').textContent = `0 / 5`;
           quickAwardCoreStudy('Tiếng Anh', 'Hoàn thành xuất sắc 5 câu đố Tiếng Anh Little Fox', 10);
         }
-        setTimeout(nextFlashcardQuizQuestion, 1100);
+        setTimeout(nextFlashcardQuizQuestion, 1500);
       }else{
+        btn.classList.add('wrong');
         playPenaltySound();
-        if(fb) fb.innerHTML = `<div style="color:#dc2626;font-weight:800;margin-top:8px">💡 Thử lại nhé con! Hãy bấm nghe lại phát âm chuẩn.</div>`;
+        if(fb) fb.innerHTML = `<div style="color:#dc2626;font-weight:800;margin-top:8px">💡 Chưa đúng rồi! Hãy bấm 🔊 Nghe phát âm chuẩn và thử lại nhé.</div>`;
       }
     };
     optBox.appendChild(btn);
@@ -5482,14 +6768,14 @@ function speakQuizTarget(rate = 0.9){
 }
 
 function speakQuizSentence(){
-  if(fcQuizTarget) speakEnglishText(fcQuizTarget.step1En, 0.85);
+  if(fcQuizTarget) speakEnglishText(`${fcQuizTarget.step1En} ${fcQuizTarget.step2En}`, 0.85);
 }
 
 function openAddFlashcardModal(){
   const sel = document.getElementById('newFcTopic');
   if(sel){
     sel.innerHTML = '';
-    ['🐾 Động vật','🍎 Đồ ăn & Quả','👨‍👩‍👧 Gia đình','🏫 Trường học','🎹 Âm nhạc & Đàn','🌈 Thiên nhiên','🚀 Hành động'].forEach(t => sel.add(new Option(t, t)));
+    ['🐾 Động vật','🍎 Đồ ăn & Quả','👨‍👩‍👧 Gia đình','🏫 Trường học','🎹 Âm nhạc & Đàn','🌈 Thiên nhiên','🚀 Hành động','💖 Cảm xúc & Tính cách','👑 Vĩ nhân & Ước mơ'].forEach(t => sel.add(new Option(t, t)));
   }
   document.getElementById('addFlashcardModal')?.classList.add('show');
 }
@@ -5510,16 +6796,23 @@ function submitNewFlashcard(){
   const step2En = document.getElementById('newFcExampleEn')?.value.trim() || `I like this ${word.toLowerCase()}.`;
   const step3En = document.getElementById('newFcStep3En')?.value.trim() || `I can see a nice ${word.toLowerCase()} today.`;
   const stepVi = document.getElementById('newFcExampleVi')?.value.trim() || meaning;
+  const passageEn = document.getElementById('newFcPassageEn')?.value.trim() || `${step1En} ${step2En} ${step3En}`;
+  const imageUrl = document.getElementById('newFcImageUrl')?.value.trim() || '';
 
   if(!Array.isArray(data.customFlashcards)) data.customFlashcards = [];
   data.customFlashcards.push({
-    id: uid('lf'), level, topic, word, ipa, meaning, emoji,
-    step1En, step1Vi: stepVi, step2En, step2Vi: stepVi, step3En, step3Vi: stepVi
+    id: uid('lf'), level, series: `Custom Level ${level}`, topic, word, pos: 'word', ipa, meaning, emoji,
+    imageUrl,
+    step1En, step1Vi: stepVi, step1Icons: [emoji, '🌱'],
+    step2En, step2Vi: stepVi, step2Icons: [emoji, '🌿', '✨'],
+    step3En, step3Vi: stepVi, step3Icons: [emoji, '🌳', '🌟'],
+    passageTitle: `Story about ${word}`,
+    passageEn, passageVi: stepVi, passageIcons: [emoji, '📖', '🌟']
   });
   save();
   closeAddFlashcardModal();
   renderFlashcards();
-  showToast(`🎉 Đã thêm thẻ từ "${word}" vào bộ Little Fox!`);
+  showToast(`🎉 Đã thêm thẻ hình & nội dung đọc "${word}" vào bộ Little Fox!`);
 }
 
 function renderFlashcards(){
@@ -5535,6 +6828,15 @@ function renderFlashcards(){
   const mCountEl = document.getElementById('fcMasteredCount');
   if(mCountEl) mCountEl.textContent = `${mastered.size}/${all.length}`;
 
+  // Tính tổng sao thưởng Tiếng Anh của bé
+  const earnedStarsEl = document.getElementById('fcEarnedStars');
+  if(earnedStarsEl && c && Array.isArray(c.logs)){
+    const enStars = c.logs
+      .filter(l => (l.subject === 'Tiếng Anh' || (l.reason && l.reason.includes('Tiếng Anh'))) && Number(l.amount) > 0)
+      .reduce((sum, l) => sum + Number(l.amount || 0), 0);
+    earnedStarsEl.textContent = `+${enStars} ⭐`;
+  }
+
   const cAll = document.getElementById('fcCountAll');
   const cLearn = document.getElementById('fcCountLearning');
   const cMast = document.getElementById('fcCountMastered');
@@ -5542,23 +6844,65 @@ function renderFlashcards(){
   if(cLearn) cLearn.textContent = Math.max(0, all.length - mastered.size);
   if(cMast) cMast.textContent = mastered.size;
 
-  // Level bar
+  // 1. Thanh chọn Level Little Fox (Level 1 -> Level 4)
   const lvBar = document.getElementById('fcLevelBar');
   if(lvBar){
-    let html = `<button type="button" class="tools-filter-btn ${fcCurrentLevel==='all'?'active':''}" onclick="setFlashcardLevel('all')">🌟 Tất cả Level (1–4)</button>`;
+    const countByLv = (lvId) => all.filter(x => Number(x.level || 1) === lvId).length;
+    let html = `
+      <button type="button" class="lf-level-btn ${fcCurrentLevel==='all'?'active':''}" onclick="setFlashcardLevel('all')">
+        <div class="lf-level-top">
+          <span class="lf-level-title">🦊 Tất cả Level (1–4)</span>
+          <span class="lf-level-badge">${all.length} thẻ</span>
+        </div>
+        <div class="lf-level-desc">Toàn bộ lộ trình hình ảnh &amp; bài đọc Little Fox</div>
+      </button>
+    `;
     LITTLE_FOX_LEVELS.forEach(lv => {
-      html += `<button type="button" class="tools-filter-btn ${Number(fcCurrentLevel)===lv.id?'active':''}" onclick="setFlashcardLevel(${lv.id})">${lv.badge}</button>`;
+      const cnt = countByLv(lv.id);
+      html += `
+        <button type="button" class="lf-level-btn ${Number(fcCurrentLevel)===lv.id?'active':''}" onclick="setFlashcardLevel(${lv.id})">
+          <div class="lf-level-top">
+            <span class="lf-level-title">${lv.shortTitle}</span>
+            <span class="lf-level-badge">${cnt} thẻ</span>
+          </div>
+          <div class="lf-level-desc">${safe(lv.seriesList)}</div>
+        </button>
+      `;
     });
     lvBar.innerHTML = html;
   }
 
-  // Topic bar
+  // Banner mô tả chi tiết Level đang chọn
+  const lvBanner = document.getElementById('fcLevelBanner');
+  if(lvBanner){
+    const activeLvObj = LITTLE_FOX_LEVELS.find(l => l.id === Number(fcCurrentLevel));
+    if(activeLvObj){
+      lvBanner.innerHTML = `
+        <div>
+          <div style="font-weight:900;font-size:14.5px;color:#92400e">${activeLvObj.badge}</div>
+          <div style="font-size:12.5px;color:#78350f;margin-top:2px">🎬 <b>Series Little Fox:</b> ${safe(activeLvObj.seriesList)} • <b>Mẫu câu:</b> <code>${safe(activeLvObj.pattern)}</code></div>
+        </div>
+        <span class="study-badge" style="background:${activeLvObj.color}">${safe(activeLvObj.name)}</span>
+      `;
+    }else{
+      lvBanner.innerHTML = `
+        <div>
+          <div style="font-weight:900;font-size:14px;color:#92400e">🦊 Lộ trình Chuẩn Little Fox Level 1 → Level 4 (32+ Thẻ Tranh &amp; 8 Truyện Đọc Theo Ảnh)</div>
+          <div style="font-size:12.5px;color:#78350f;margin-top:2px">Bấm chọn từng <b>Level 1, 2, 3, 4</b> phía trên để học từ câu ngắn 3 từ đến đoạn văn thuyết trình hoàn chỉnh!</div>
+        </div>
+        <button type="button" class="secondary" style="padding:6px 12px;font-size:12px;font-weight:800;background:#fff" onclick="setFlashcardMode('guide')">📖 Xem Truyện Tranh L1–L4</button>
+      `;
+    }
+  }
+
+  // 2. Thanh chọn Chủ đề (Topics)
   const tpBar = document.getElementById('fcTopicBar');
   if(tpBar){
     const topics = Array.from(new Set(all.map(x => x.topic)));
-    let html = `<button type="button" class="tools-filter-btn ${fcCurrentTopic==='all'?'active':''}" onclick="setFlashcardTopic('all')">📚 Tất cả chủ đề</button>`;
+    let html = `<button type="button" class="fc-topic-btn ${fcCurrentTopic==='all'?'active':''}" onclick="setFlashcardTopic('all')"><span>📚 Tất cả chủ đề</span><span class="fc-topic-count">${all.length}</span></button>`;
     topics.forEach(tp => {
-      html += `<button type="button" class="tools-filter-btn ${fcCurrentTopic===tp?'active':''}" onclick="setFlashcardTopic('${safe(tp)}')">${safe(tp)}</button>`;
+      const cnt = all.filter(x => x.topic === tp).length;
+      html += `<button type="button" class="fc-topic-btn ${fcCurrentTopic===tp?'active':''}" onclick="setFlashcardTopic('${safe(tp)}')"><span>${safe(tp)}</span><span class="fc-topic-count">${cnt}</span></button>`;
     });
     tpBar.innerHTML = html;
   }
@@ -5571,82 +6915,223 @@ function renderFlashcards(){
   const isMast = mastered.has(current.id);
   const setTxt = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
   setTxt('fcFrontLevel', `🌱 Level ${current.level || 1}`);
+  setTxt('fcFrontSeries', `🦊 ${current.series || 'Little Fox'}`);
   setTxt('fcFrontTopic', current.topic);
-  setTxt('fcFrontEmoji', current.emoji || '🌟');
   setTxt('fcFrontWord', current.word);
+  setTxt('fcFrontPos', current.pos || 'noun');
   setTxt('fcFrontIpa', current.ipa || '');
-  setTxt('fcFrontStarterSentence', `🌱 Câu ngắn: "${current.step1En}"`);
-  setTxt('fcBackTopic', current.topic);
+  setTxt('fcFrontQuickVi', `🇻🇳 ${current.meaning}`);
+  setTxt('fcBackTopic', `${current.topic} • ${current.series || 'Little Fox'}`);
   setTxt('fcBackWordMini', `${current.word} • ${current.ipa || ''}`);
   setTxt('fcBackEmoji', current.emoji || '🌟');
   setTxt('fcBackMeaning', current.meaning);
   setTxt('fcCurrentIndex', deck.length ? (fcCurrentIdx + 1) : 0);
   setTxt('fcTotalInDeck', deck.length);
 
+  // Vẽ tranh minh họa trực quan trên mặt trước thẻ 3D
+  const illusBox = document.getElementById('fcFrontIllustrationBox');
+  if(illusBox){
+    illusBox.innerHTML = buildLittleFoxSceneSVG(current, 1);
+  }
+
+  const starterEl = document.getElementById('fcFrontStarterSentence');
+  if(starterEl){
+    starterEl.innerHTML = `🌱 <b>Ảnh 1:</b> ${renderInteractiveEnglishTokens(current.step1En, current.word)}`;
+  }
+
   const badgeEl = document.getElementById('fcFrontMasteredBadge');
   if(badgeEl) badgeEl.style.display = isMast ? 'inline-block' : 'none';
+
+  const masterBtn = document.getElementById('fcMasterBtn');
+  if(masterBtn){
+    masterBtn.classList.toggle('mastered', isMast);
+    masterBtn.innerHTML = isMast ? '✅ Đã thuộc (Bấm để học lại)' : '⭐ Đánh dấu Đã thuộc (+2 ⭐)';
+  }
 
   const progBar = document.getElementById('fcDeckProgressBar');
   if(progBar) progBar.style.width = (deck.length ? Math.round(((fcCurrentIdx + 1) / deck.length) * 100) : 0) + '%';
 
+  const passageText = current.passageEn || `${current.step1En} ${current.step2En} ${current.step3En}`;
+  const passageViText = current.passageVi || `${current.step1Vi} ${current.step2Vi} ${current.step3Vi}`;
+
   const backPreview = document.getElementById('fcBackLadderPreview');
   if(backPreview){
     backPreview.innerHTML = `
-      <div>🌱 <b>Bậc 1:</b> ${safe(current.step1En)} <i>(${safe(current.step1Vi)})</i></div>
-      <div>🌿 <b>Bậc 2:</b> ${safe(current.step2En)} <i>(${safe(current.step2Vi)})</i></div>
-      <div>🌳 <b>Bậc 3:</b> ${safe(current.step3En)} <i>(${safe(current.step3Vi)})</i></div>
+      <div style="cursor:pointer" onclick="event.stopPropagation(); speakCurrentLadderStep(1)">🖼️ <b>Ảnh 1:</b> ${safe(current.step1En)} <i>(${safe(current.step1Vi)})</i></div>
+      <div style="cursor:pointer" onclick="event.stopPropagation(); speakCurrentLadderStep(2)">🖼️ <b>Ảnh 2:</b> ${safe(current.step2En)} <i>(${safe(current.step2Vi)})</i></div>
+      <div style="cursor:pointer" onclick="event.stopPropagation(); speakCurrentLadderStep(3)">🖼️ <b>Ảnh 3:</b> ${safe(current.step3En)} <i>(${safe(current.step3Vi)})</i></div>
+      <div style="cursor:pointer;color:#b45309;margin-top:2px" onclick="event.stopPropagation(); speakCurrentLadderStep(4)">📖 <b>Ảnh 4 (Đoạn đọc):</b> ${safe(passageText)}</div>
     `;
   }
 
+  // 3. Render 4 Bức Ảnh & Nội Dung Đọc Chuẩn Little Fox (Từng ảnh + Nội dung đọc + Âm thanh chuẩn)
   const ladderBox = document.getElementById('fcLadderStepsBox');
   if(ladderBox){
-    ladderBox.innerHTML = [1, 2, 3].map(step => {
-      const en = step === 1 ? current.step1En : (step === 2 ? current.step2En : current.step3En);
-      const vi = step === 1 ? current.step1Vi : (step === 2 ? current.step2Vi : current.step3Vi);
-      const label = step === 1 ? '🌱 Bậc 1 (Câu ngắn 3–4 từ)' : (step === 2 ? '🌿 Bậc 2 (Mở rộng tính từ / hành động)' : '🌳 Bậc 3 (Câu giao tiếp hoàn chỉnh)');
-      return `
-        <div class="lf-step-item">
+    const stepsData = [
+      {
+        step: 1,
+        tagClass: 't1',
+        tagLabel: '🖼️ ẢNH 1 • TỪ VỰNG & CÂU NGẮN (STARTER)',
+        en: current.step1En,
+        vi: current.step1Vi
+      },
+      {
+        step: 2,
+        tagClass: 't2',
+        tagLabel: '🖼️ ẢNH 2 • MỞ RỘNG ĐẶC ĐIỂM & HÀNH ĐỘNG',
+        en: current.step2En,
+        vi: current.step2Vi
+      },
+      {
+        step: 3,
+        tagClass: 't3',
+        tagLabel: '🖼️ ẢNH 3 • CÂU GIAO TIẾP TRONG TRUYỆN',
+        en: current.step3En,
+        vi: current.step3Vi
+      },
+      {
+        step: 4,
+        tagClass: 't1',
+        tagLabel: `📖 ẢNH 4 • BÀI ĐỌC NGẮN LITTLE FOX: "${safe(current.passageTitle || current.word)}"`,
+        en: passageText,
+        vi: passageViText
+      }
+    ];
+
+    ladderBox.innerHTML = stepsData.map(item => `
+      <div class="lf-pic-read-card step-${item.step}" id="lfPicCard_${item.step}">
+        <div class="lf-pic-visual" onclick="speakCurrentLadderStep(${item.step})" title="Chạm vào bức ảnh để nghe đọc nội dung">
+          ${buildLittleFoxSceneSVG(current, item.step)}
+        </div>
+        <div class="lf-pic-body">
           <div>
-            <div style="font-size:12px;font-weight:800;color:#047857">${label}</div>
-            <div style="font-size:15px;font-weight:900;color:#0f172a;margin-top:2px">${safe(en)}</div>
-            <div class="note">${safe(vi)}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px">
+              <span class="lf-step-tag ${item.tagClass}">${item.tagLabel}</span>
+              <span class="note" style="font-size:11px">👆 Chạm từng từ để nghe lẻ</span>
+            </div>
+            <div class="lf-interactive-sentence">
+              ${renderInteractiveEnglishTokens(item.en, current.word)}
+            </div>
+            <div class="lf-step-vi" style="margin-top:5px">🇻🇳 ${safe(item.vi)}</div>
           </div>
-          <button type="button" class="secondary" style="padding:6px 12px;font-size:12px" onclick="speakCurrentLadderStep(${step})">🔊 Nghe Bậc ${step}</button>
+          <div class="lf-step-actions" style="margin-top:6px">
+            <button type="button" class="lf-step-btn primary-speak" onclick="speakCurrentLadderStep(${item.step})">
+              🔊 Đọc chuẩn Ảnh ${item.step}
+            </button>
+            <button type="button" class="lf-step-btn slow-speak" onclick="speakCurrentLadderStep(${item.step}, 0.58)">
+              🐢 Đọc chậm
+            </button>
+            <button type="button" class="lf-step-btn mic-speak" onclick="startVoicePractice(${item.step})">
+              🎙️ Con tập đọc
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // 4. Chế độ 2: Bảng tranh & Nghe nhanh (Grid View có tranh minh họa từng thẻ)
+  const gridBox = document.getElementById('fcGridContainer');
+  if(gridBox && fcCurrentMode === 'grid'){
+    gridBox.innerHTML = deck.map((item, idx) => {
+      const itemMastered = mastered.has(item.id);
+      return `
+        <div class="fc-mini-card ${itemMastered ? 'mastered' : ''}">
+          <div>
+            <div style="height:115px;border-radius:12px;overflow:hidden;position:relative;margin-bottom:8px;cursor:pointer;border:1px solid #e2e8f0" onclick="speakEnglishText('${safe(item.word)}. ${safe(item.step1En)}', fcSpeechRate)">
+              ${buildLittleFoxSceneSVG(item, 1)}
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:4px">
+              <span class="lf-level-pill" style="font-size:10px">Level ${item.level}</span>
+              <span class="note" style="font-size:11px;font-weight:700">${safe(item.series || item.topic)}</span>
+            </div>
+            <div class="fc-mini-word">${safe(item.word)} <span class="fc-mini-ipa">${safe(item.ipa || '')}</span></div>
+            <div class="fc-mini-meaning">🇻🇳 ${safe(item.meaning)}</div>
+            <div style="margin-top:6px;font-size:12.5px;line-height:1.45;color:#1e293b">
+              <div>🖼️ <b>1:</b> ${safe(item.step1En)}</div>
+              <div>🖼️ <b>2:</b> ${safe(item.step2En)}</div>
+              <div>🖼️ <b>3:</b> ${safe(item.step3En)}</div>
+            </div>
+          </div>
+          <div class="fc-mini-actions" style="flex-wrap:wrap">
+            <button type="button" class="fc-mini-btn speak" onclick="speakEnglishText('${safe(item.word)}', fcSpeechRate)">🔊 Từ</button>
+            <button type="button" class="fc-mini-btn speak" onclick="speakEnglishText('${safe(item.step1En)} ${safe(item.step2En)} ${safe(item.step3En)}', fcSpeechRate)">🎧 3 Câu</button>
+            <button type="button" class="fc-mini-btn" onclick="fcCurrentIdx=${idx}; setFlashcardMode('card')">🖼️ Mở 4 ảnh</button>
+            <button type="button" class="fc-mini-btn master ${itemMastered ? 'active' : ''}" onclick="toggleCurrentCardMastered('${item.id}')">${itemMastered ? '✅' : '⭐'}</button>
+          </div>
         </div>
       `;
     }).join('');
   }
 
-  // Grid view
-  const gridBox = document.getElementById('fcGridContainer');
-  if(gridBox && fcCurrentMode === 'grid'){
-    gridBox.innerHTML = deck.map(item => `
-      <div class="tool-card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font-size:28px">${item.emoji}</span>
-          <span class="study-badge" style="background:#0284c7">Level ${item.level}</span>
-        </div>
-        <div style="font-size:18px;font-weight:900;margin-top:6px">${safe(item.word)} <span class="note">${safe(item.ipa||'')}</span></div>
-        <div style="font-weight:700;color:#059669">${safe(item.meaning)}</div>
-        <div class="note" style="margin-top:4px">🌱 ${safe(item.step1En)}<br>🌿 ${safe(item.step2En)}</div>
-        <div style="display:flex;gap:6px;margin-top:8px">
-          <button type="button" class="secondary" style="padding:6px 10px;font-size:12px" onclick="speakEnglishText('${safe(item.word)}',0.9)">🔊 Từ</button>
-          <button type="button" class="secondary" style="padding:6px 10px;font-size:12px" onclick="speakEnglishText('${safe(item.step2En)}',0.85)">💬 Câu</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  // Guide view
+  // 5. Chế độ 4: Truyện tranh đọc theo từng ảnh chuẩn Little Fox (Level 1 -> Level 4)
   const guideBox = document.getElementById('fcGuideContainer');
   if(guideBox && fcCurrentMode === 'guide'){
-    guideBox.innerHTML = LITTLE_FOX_LEVELS.map(lv => `
-      <div class="tool-card" style="margin-bottom:10px">
-        <div style="font-weight:900;font-size:16px;color:${lv.color}">${lv.badge}</div>
-        <div style="margin-top:4px;font-weight:700">Mẫu câu trọng tâm: <code>${safe(lv.pattern)}</code></div>
-        <div class="note" style="margin-top:4px">${safe(lv.guide)}</div>
+    const activeStory = LITTLE_FOX_STORYBOOKS.find(s => s.id === fcActiveStoryId) || LITTLE_FOX_STORYBOOKS[0];
+    const storyTabsHtml = LITTLE_FOX_STORYBOOKS.map(st => `
+      <button type="button" class="lf-story-tab-btn ${st.id === activeStory.id ? 'active' : ''}" onclick="selectLittleFoxStory('${st.id}')">
+        <span>${st.emoji}</span>
+        <span><b>Level ${st.level}:</b> ${safe(st.series)}</span>
+      </button>
+    `).join('');
+
+    const scenesHtml = activeStory.scenes.map((sc, sIdx) => `
+      <div class="lf-story-scene-item" id="lfStoryScene_${sIdx}">
+        <div class="lf-pic-visual" style="height:160px" onclick="speakStoryScene('${activeStory.id}', ${sIdx})">
+          ${buildLittleFoxSceneSVG(sc, sIdx + 1)}
+        </div>
+        <div class="lf-pic-body">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:4px">
+              <span class="lf-step-tag t2">${safe(sc.title)}</span>
+              <span class="note" style="font-size:11px">🔑 ${safe(sc.vocab)}</span>
+            </div>
+            <div class="lf-interactive-sentence">
+              ${renderInteractiveEnglishTokens(sc.en)}
+            </div>
+            <div class="lf-step-vi" style="margin-top:6px">🇻🇳 ${safe(sc.vi)}</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+            <button type="button" class="lf-step-btn primary-speak" onclick="speakStoryScene('${activeStory.id}', ${sIdx})">🔊 Nghe đọc Ảnh ${sc.sceneNo}</button>
+            <button type="button" class="lf-step-btn slow-speak" onclick="speakStoryScene('${activeStory.id}', ${sIdx}, 0.6)">🐢 Đọc chậm</button>
+          </div>
+        </div>
       </div>
     `).join('');
+
+    guideBox.innerHTML = `
+      <div class="lf-method-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+          <div>
+            <span class="study-badge" style="background:linear-gradient(135deg,#ea580c,#f59e0b)">📖 TRUYỆN TRANH ĐỌC THEO TỪNG ẢNH LITTLE FOX</span>
+            <h3 style="margin:6px 0 2px;font-size:19px;color:#1e293b">Chọn bộ truyện theo Level ➔ Nhìn từng bức tranh &amp; Nghe giọng bản xứ đọc</h3>
+            <div class="note">Mỗi câu chuyện gồm 4 bức tranh liên hoàn. Chạm vào từng từ để nghe phát âm lẻ hoặc bấm <b>“▶️ Tự động đọc cả truyện”</b>!</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="fc-speak-btn fc-speak-vi" onclick="togglePlayEntireStorybook('${activeStory.id}')">
+              ${fcStoryAutoTimer ? '⏹ Dừng đọc truyện' : '▶️ Tự động đọc cả 4 ảnh truyện'}
+            </button>
+            <button type="button" class="primary" style="padding:9px 15px;font-size:13px;background:linear-gradient(135deg,#10b981,#059669)" onclick="quickAwardCoreStudy('Tiếng Anh','Hoàn thành đọc truyện tranh Little Fox: ${safe(activeStory.title)}',15)">
+              ⭐ +15 ⭐ Đã đọc xong truyện
+            </button>
+          </div>
+        </div>
+
+        <div class="lf-story-tabs">${storyTabsHtml}</div>
+
+        <div style="background:#fff;border:1.5px solid #fed7aa;border-radius:16px;padding:14px;margin-bottom:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <div>
+              <span class="lf-level-pill">Level ${activeStory.level} • ${safe(activeStory.series)}</span>
+              <h4 style="margin:4px 0 2px;font-size:17px;color:#0f172a">${activeStory.emoji} ${safe(activeStory.title)}</h4>
+              <div class="note">${safe(activeStory.summary)}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lf-story-scenes-list">${scenesHtml}</div>
+      </div>
+    `;
   }
 }
 
