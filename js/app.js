@@ -1694,15 +1694,14 @@ function renderToday(){
     return;
   }
 
-  const today=todayISO();
-  const tasks=c.tasks.filter(t=>t.date===today);
-  const done=tasks.filter(t=>t.done).length;
+  const coreTasks = ensureCoreTodayTasks(c);
+  const done = coreTasks.filter(t=>t.done).length;
 
   if(avatarEl) avatarEl.textContent=childIcon(c);
   if(helloEl) helloEl.textContent='Chào '+childIcon(c)+' '+c.name+' 👋';
   if(scoreEl) scoreEl.textContent=c.score;
-  if(countEl) countEl.textContent=done+'/'+tasks.length;
-  if(barEl) barEl.style.width=(tasks.length?done/tasks.length*100:0)+'%';
+  if(countEl) countEl.textContent=done+'/'+coreTasks.length;
+  if(barEl) barEl.style.width=(coreTasks.length?done/coreTasks.length*100:0)+'%';
   if(moneyEl) moneyEl.textContent=fmtVND(starsToVND(c.score));
   if(goalNameEl) goalNameEl.textContent=childIcon(c)+' '+c.name;
 
@@ -1714,49 +1713,122 @@ function renderToday(){
   renderTodayCategories();
 }
 
-function submitTodayManualTask(){
+const CORE_TODAY_REMINDERS = [
+  { key: 'core_en', icon: '🇬🇧', name: 'Tiếng Anh', subject: 'Tiếng Anh', defaultPoints: 10 },
+  { key: 'core_zh', icon: '🐼', name: 'Tiếng Trung', subject: 'Tiếng Trung', defaultPoints: 10 },
+  { key: 'core_old', icon: '📖', name: 'Học bài cũ', subject: 'Học bài cũ', defaultPoints: 10 }
+];
+
+function ensureCoreTodayTasks(c){
+  if(!c) return [];
+  if(!Array.isArray(c.tasks)) c.tasks = [];
+  const today = todayISO();
+  let changed = false;
+  const result = CORE_TODAY_REMINDERS.map(def => {
+    let t = c.tasks.find(x => x.date === today && (x.coreKey === def.key || x.name === def.name));
+    if(!t){
+      t = {
+        id: uid('t'),
+        coreKey: def.key,
+        seriesId: null,
+        name: def.name,
+        subject: def.subject,
+        category: 'home_study',
+        date: today,
+        points: def.defaultPoints,
+        duration: '',
+        link: '',
+        instruction: '',
+        done: false,
+        awardedPoints: 0,
+        completedAt: null
+      };
+      c.tasks.push(t);
+      changed = true;
+    } else if(!t.coreKey) {
+      t.coreKey = def.key;
+    }
+    return t;
+  });
+  if(changed) save();
+  return result;
+}
+
+function completeCoreTodayTask(taskId, mode = 'add'){
+  const c = child();
+  if(!c) return;
+  const t = c.tasks.find(x => x.id === taskId);
+  if(!t || t.done) return;
+  const inp = document.getElementById('coreTaskPts_' + taskId);
+  const rawPts = Math.max(1, Math.min(500, Math.round(Number(inp?.value || t.points || 10))));
+  const delta = mode === 'sub' ? -rawPts : rawPts;
+
+  t.done = true;
+  t.awardedPoints = delta;
+  t.completedAt = new Date().toISOString();
+  c.score = Math.max(0, (c.score || 0) + delta);
+  if(delta > 0) c.highestScore = Math.max(c.highestScore || 0, c.score);
+
+  logPoint(c, delta >= 0 ? 'task' : 'penalty', delta, (delta >= 0 ? 'Hoàn thành: ' : 'Nhắc nhở: ') + t.name);
+  if(delta > 0) boostPiggyOnGoodDeed(c, 'Hoàn thành: ' + t.name, 15, 0.1);
+  updateEarnedAchievements(c);
+  save();
+  render();
+
+  if(delta > 0){
+    playChime('success');
+    triggerConfetti();
+    showToast(`🎉 Đã cộng +${delta} ⭐ mục "${t.name}"!`);
+  } else {
+    playPenaltySound();
+    showToast(`⚠️ Đã trừ ${delta} ⭐ mục "${t.name}"!`);
+  }
+}
+
+function undoCoreTodayTask(taskId){
+  const c = child();
+  if(!c) return;
+  const t = c.tasks.find(x => x.id === taskId);
+  if(!t || !t.done) return;
+  const back = Number(t.awardedPoints ?? t.points ?? 0);
+  c.score = Math.max(0, (c.score || 0) - back);
+  logPoint(c, 'undo-task', -back, 'Hoàn tác: ' + t.name);
+  t.done = false;
+  t.awardedPoints = 0;
+  t.completedAt = null;
+  save();
+  render();
+  showToast(`↩ Đã hoàn tác mục "${t.name}"!`);
+}
+
+function submitTodayManualTask(mode = 'add'){
   const c = child();
   if(!c) return alert('Chưa có hồ sơ bé.');
   const nameInp = document.getElementById('todayManualTaskInput');
   const ptsInp = document.getElementById('todayManualPointsInput');
-  const name = (nameInp ? nameInp.value : '').trim();
-  if(!name){
-    if(nameInp) nameInp.focus();
-    showToast('✍️ Hãy nhập tên việc vừa làm để cộng sao nhé!');
-    return;
-  }
+  const rawName = (nameInp ? nameInp.value : '').trim();
   const pts = Math.max(1, Math.min(500, Math.round(Number(ptsInp?.value || 10))));
-  const today = todayISO();
+  const isSub = (mode === 'sub');
+  const delta = isSub ? -pts : pts;
+  const reason = rawName || (isSub ? 'Trừ điểm nhắc nhở' : 'Cộng điểm thưởng');
 
-  const newTask = {
-    id: uid('t'),
-    seriesId: null,
-    name,
-    subject: '',
-    category: 'home_study',
-    date: today,
-    points: pts,
-    duration: '',
-    link: '',
-    instruction: '',
-    done: true,
-    awardedPoints: pts,
-    completedAt: new Date().toISOString()
-  };
-
-  c.tasks.push(newTask);
-  c.score = (c.score || 0) + pts;
-  c.highestScore = Math.max(c.highestScore || 0, c.score);
-  logPoint(c, 'task', pts, 'Hoàn thành: ' + name);
-  boostPiggyOnGoodDeed(c, 'Hoàn thành: ' + name, 15, 0.1);
+  c.score = Math.max(0, (c.score || 0) + delta);
+  if(delta > 0) c.highestScore = Math.max(c.highestScore || 0, c.score);
+  logPoint(c, isSub ? 'penalty' : 'bonus', delta, reason);
+  if(delta > 0) boostPiggyOnGoodDeed(c, reason, 15, 0.1);
   updateEarnedAchievements(c);
 
   if(nameInp) nameInp.value = '';
   save();
   render();
-  playChime('success');
-  triggerConfetti();
-  showToast(`🎉 Đã cộng +${pts} ⭐ cho việc "${name}"!`);
+  if(delta > 0){
+    playChime('success');
+    triggerConfetti();
+    showToast(`🎉 Đã cộng +${pts} ⭐ (${reason})!`);
+  } else {
+    playPenaltySound();
+    showToast(`⚠️ Đã trừ -${pts} ⭐ (${reason})!`);
+  }
 }
 
 function renderTodayCategories(){
@@ -1767,60 +1839,51 @@ function renderTodayCategories(){
     container.innerHTML = '<div class="empty">Chưa có hồ sơ bé nào.</div>';
     return;
   }
-  const today = todayISO();
-  const tasks = c.tasks.filter(t => t.date === today);
-  const doneCount = tasks.filter(t => t.done).length;
+
+  const coreTasks = ensureCoreTodayTasks(c);
+  const doneCount = coreTasks.filter(t => t.done).length;
 
   const badgeEl = document.getElementById('todayMinimalTaskCountBadge');
   if(badgeEl) {
-    badgeEl.textContent = `${doneCount}/${tasks.length} đã xong`;
+    badgeEl.textContent = `${doneCount}/${coreTasks.length} đã xong`;
   }
 
   container.innerHTML = '';
-
-  if(!tasks.length) {
-    container.innerHTML = `<div class="today-minimal-empty">✨ Chưa có việc nhắc sẵn hôm nay — nhập tay việc vừa làm ở trên để cộng sao ngay nhé!</div>`;
-    return;
-  }
-
-  // Sắp xếp việc chưa xong lên đầu, việc đã xong xuống dưới
-  const sorted = tasks.slice().sort((a, b) => Number(Boolean(a.done)) - Number(Boolean(b.done)));
   const listWrap = document.createElement('div');
   listWrap.className = 'today-minimal-list';
 
-  sorted.forEach(t => {
-    const isPenalty = Number(t.points) < 0;
+  coreTasks.forEach((t, idx) => {
+    const def = CORE_TODAY_REMINDERS[idx] || { icon: '📘', name: t.name };
     const row = document.createElement('div');
     row.className = 'today-minimal-row ' + (t.done ? 'is-done' : '');
-
-    const metaParts = [];
-    if(t.subject) metaParts.push(safe(t.subject));
-    if(t.duration) metaParts.push(safe(t.duration));
-    if(t.instruction) metaParts.push(safe(t.instruction));
-    const metaText = metaParts.length ? `<span class="today-minimal-meta">• ${metaParts.join(' • ')}</span>` : '';
 
     let actionHtml = '';
     if(t.done) {
       const awarded = Number(t.awardedPoints ?? t.points ?? 0);
+      const isPos = awarded >= 0;
       actionHtml = `
         <div class="today-minimal-done-group">
-          <span class="today-minimal-pts-done">${awarded >= 0 ? '+' + awarded : awarded} ⭐</span>
-          <button type="button" class="today-minimal-undo-btn" title="Hoàn tác" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">↩</button>
+          <span class="today-minimal-pts-done" style="color:${isPos ? '#059669' : '#dc2626'}">${isPos ? '+' + awarded : awarded} ⭐</span>
+          <button type="button" class="today-minimal-undo-btn" title="Hoàn tác" onclick="undoCoreTodayTask('${t.id}')">↩</button>
         </div>
       `;
     } else {
       actionHtml = `
-        <button type="button" class="today-minimal-finish-btn ${isPenalty ? 'penalty' : ''}" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">
-          ${isPenalty ? t.points + ' ⭐' : '+' + t.points + ' ⭐ Xong'}
-        </button>
+        <div class="today-core-Controls">
+          <div class="today-manual-pts-group" style="padding:2px 6px">
+            <input id="coreTaskPts_${t.id}" type="number" min="1" max="500" value="${Math.abs(t.points || 10)}" title="Số điểm">
+            <span class="pts-unit">⭐</span>
+          </div>
+          <button type="button" class="today-core-btn add" onclick="completeCoreTodayTask('${t.id}', 'add')" title="Cộng điểm hoàn thành">+ Cộng</button>
+          <button type="button" class="today-core-btn sub" onclick="completeCoreTodayTask('${t.id}', 'sub')" title="Trừ điểm nhắc nhở">- Trừ</button>
+        </div>
       `;
     }
 
     row.innerHTML = `
-      <div class="today-minimal-left" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">
-        <span class="today-minimal-check">${t.done ? '✅' : '⬜'}</span>
-        <span class="today-minimal-title">${safe(t.name)}</span>
-        ${metaText}
+      <div class="today-minimal-left">
+        <span class="today-minimal-check">${t.done ? '✅' : def.icon}</span>
+        <span class="today-minimal-title">${safe(def.name)}</span>
       </div>
       <div class="today-minimal-right">${actionHtml}</div>
     `;

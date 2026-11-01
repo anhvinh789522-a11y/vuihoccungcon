@@ -95,28 +95,29 @@
       <!-- 🐷 NGÔI NHÀ THÚ CƯNG: HEO ĐẤT ỤT ỊT (TRUNG TÂM CHĂM SÓC CỦA BÉ) -->
       <div id="todayPiggyWidget" style="margin-bottom:16px"></div>
 
-      <!-- 📋 KHU VỰC NHẮC VIỆC HÔM NAY CHO BÉ (THIẾT KẾ TỐI GIẢN + NHẬP TAY CỘNG SAO) -->
+      <!-- 📋 KHU VỰC NHẮC VIỆC HÔM NAY CHO BÉ (3 MỤC CỐ ĐỊNH + NHẬP ĐIỂM +/-) -->
       <div class="card today-minimal-tasks-card" style="padding:14px 16px;margin-bottom:14px">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px">
           <div style="display:flex;align-items:center;gap:8px">
             <span style="font-size:20px">📋</span>
             <h3 style="margin:0;font-size:16px;color:#1e293b">Nhắc Việc Hôm Nay Của Bé</h3>
           </div>
-          <span id="todayMinimalTaskCountBadge" style="font-size:12px;font-weight:800;color:#059669;background:#ecfdf5;border:1px solid #a7f3d0;padding:3px 10px;border-radius:999px">0/0 đã xong</span>
+          <span id="todayMinimalTaskCountBadge" style="font-size:12px;font-weight:800;color:#059669;background:#ecfdf5;border:1px solid #a7f3d0;padding:3px 10px;border-radius:999px">0/3 đã xong</span>
         </div>
 
-        <!-- ✍️ KHUNG NHẬP TAY ĐỂ CỘNG SAO NGAY -->
-        <div class="today-manual-entry-bar">
-          <input id="todayManualTaskInput" type="text" placeholder="✍️ Nhập tay việc vừa làm để cộng sao (VD: Đọc sách, học bài, phụ mẹ...)" onkeydown="if(event.key==='Enter') submitTodayManualTask()">
+        <!-- 3 Việc nhắc cố định: Tiếng Anh, Tiếng Trung, Học bài cũ -->
+        <div class="today-categories-container" id="todayCategoriesContainer"></div>
+
+        <!-- ✍️ KHUNG NHẬP ĐIỂM + HOẶC - (TRỪ) NGAY TẠI CHỖ -->
+        <div class="today-manual-entry-bar" style="margin-top:10px;margin-bottom:0">
+          <input id="todayManualTaskInput" type="text" placeholder="✍️ Ghi chú (tùy chọn)..." onkeydown="if(event.key==='Enter') submitTodayManualTask('add')">
           <div class="today-manual-pts-group">
-            <input id="todayManualPointsInput" type="number" min="1" max="500" value="10" title="Số sao cộng thêm">
+            <input id="todayManualPointsInput" type="number" min="1" max="500" value="10" title="Nhập số điểm sao">
             <span class="pts-unit">⭐</span>
           </div>
-          <button type="button" class="today-manual-add-btn" onclick="submitTodayManualTask()">➕ Cộng</button>
+          <button type="button" class="today-manual-add-btn" onclick="submitTodayManualTask('add')">➕ Cộng</button>
+          <button type="button" class="today-manual-sub-btn" onclick="submitTodayManualTask('sub')">➖ Trừ</button>
         </div>
-
-        <!-- Danh sách việc tối giản trong ngày -->
-        <div class="today-categories-container" id="todayCategoriesContainer"></div>
       </div>
 
       <!-- Các phần tử ẩn để tương thích code cũ -->
