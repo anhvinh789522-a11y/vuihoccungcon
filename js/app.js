@@ -343,6 +343,11 @@ function ensurePiggyPet(c) {
   if (typeof p.coinsVND !== 'number') p.coinsVND = 0;
   if (typeof p.exp !== 'number') p.exp = 0;
   if (typeof p.fullness !== 'number') p.fullness = 80;
+  if (!p.status) p.status = 'active';
+  if (!p.generation) p.generation = 1;
+  if (typeof p.harvestedAmount !== 'number') p.harvestedAmount = 0;
+  if (typeof p.totalHarvestedAllTime !== 'number') p.totalHarvestedAllTime = 0;
+  if (typeof p.harvestCount !== 'number') p.harvestCount = 0;
 
   // Tính số ngày không tương tác
   const lastDate = (p.lastInteractedDate || p.lastFedDate || today).slice(0, 10);
@@ -397,6 +402,10 @@ function boostPiggyOnGoodDeed(c, reasonText, expBoost = 15, weightBoost = 0.1) {
   if (!c) return;
   const p = ensurePiggyPet(c);
   if (!p) return;
+  if (p.status === 'harvested') {
+    showToast('🎉 Bé làm việc tốt: Được thưởng sao! Hãy mua heo giống mới (10.000đ / 100 ⭐) để cùng nuôi lứa mới nhé!');
+    return;
+  }
   const oldLevel = p.level;
 
   p.exp += expBoost;
@@ -431,6 +440,9 @@ function feedPiggyWithStars(tier) {
 
   const opt = TIERS[tier];
   if (!opt) return;
+  if (p.status === 'harvested') {
+    return alert('Bé vừa mổ heo rồi, chuồng đang trống! Bé hãy mua heo giống mới (10.000đ / 100 ⭐) để bắt đầu lứa mới nhé!');
+  }
 
   if (c.score < opt.stars) {
     playChime('error');
@@ -478,6 +490,9 @@ function patPiggyPet() {
   if (!c) return;
   const p = ensurePiggyPet(c);
   if (!p) return;
+  if (p.status === 'harvested') {
+    return alert('Bé vừa mổ heo xong! Bé hãy mua heo giống mới (10.000đ hoặc 100 ⭐) để rước heo con về chuồng cưng nựng nhé!');
+  }
 
   const today = todayISO();
   if (p.lastPatDate === today) {
@@ -507,35 +522,124 @@ function harvestPiggyCoins() {
   const p = ensurePiggyPet(c);
   if (!p) return;
 
-  const coins = p.coinsVND || 0;
-  if (coins < 10000) {
-    return alert('Bụng Heo đang có ' + coins.toLocaleString('vi-VN') + ' đ. Tích lũy tối thiểu 10.000 đ để thu hoạch bố mẹ trao tiền thật bỏ heo ngoài đời nhé!');
+  if (p.status === 'harvested') {
+    return alert('Bé vừa mổ heo rồi! Hãy mua heo giống mới (10.000 đ hoặc 100 ⭐) để bắt đầu lứa nuôi tiếp theo nhé!');
   }
 
+  const coins = p.coinsVND || 0;
+  if (coins < 10000) {
+    return alert('Bụng Heo đang có ' + coins.toLocaleString('vi-VN') + ' đ. Tích lũy tối thiểu 10.000 đ để mổ heo nhé!');
+  }
+
+  const nextGen = (p.generation || 1) + 1;
+  const remainingProfit = Math.max(0, coins - 10000);
+
   askConfirm(
-    'Thu hoạch tiền nuôi Heo Đất',
-    'Con có muốn "Mổ Heo Đất" để nhận ' + coins.toLocaleString('vi-VN') + ' đ tiền mặt từ bố mẹ bỏ vào heo thật ngoài đời không?\n\n(Sau khi mổ heo, Heo vẫn giữ nguyên Cấp độ ' + p.level + ' và Cân nặng ' + p.weightKg + 'kg để con tiếp tục nuôi!)',
+    'Mổ Heo Đất Thu Hoạch',
+    'Bụng Heo Đất Lứa ' + (p.generation || 1) + ' đang có ' + coins.toLocaleString('vi-VN') + ' đ!\n\n💡 BÀI HỌC TÀI CHÍNH CHO BÉ:\n• Tổng tiền thu hoạch: ' + coins.toLocaleString('vi-VN') + ' đ\n• Mua heo giống mới (Lứa ' + nextGen + '): Cần 10.000 đ\n• Tiền lãi thực nhận bỏ túi: ' + remainingProfit.toLocaleString('vi-VN') + ' đ\n\nCon có chắc chắn muốn mổ heo hôm nay không?',
     () => {
       const harvested = coins;
+      p.status = 'harvested';
+      p.harvestedAmount = harvested;
+      p.totalHarvestedAllTime = (p.totalHarvestedAllTime || 0) + harvested;
+      p.harvestCount = (p.harvestCount || 0) + 1;
       p.coinsVND = 0;
+
       if (!Array.isArray(c.giftHistory)) c.giftHistory = [];
       c.giftHistory.unshift({
         id: uid('g'),
         rewardId: 'piggy_harvest',
-        name: 'Thu hoạch Heo Đất (' + harvested.toLocaleString('vi-VN') + ' đ)',
+        name: 'Mổ Heo Đất Lứa ' + (p.generation || 1) + ' (Thu hoạch ' + harvested.toLocaleString('vi-VN') + ' đ)',
         cost: 0,
         moneyVND: harvested,
         date: todayISO(),
         status: 'pending'
       });
+
       playChime('success');
       triggerConfetti();
       save();
       render();
-      showToast('🎉 Tuyệt vời! Bé đã thu hoạch ' + harvested.toLocaleString('vi-VN') + ' đ từ Heo Đất! Đã đưa vào danh sách chờ bố mẹ trao!');
+      showToast('🎉 Đã mổ heo thành công! Bé thu hoạch ' + harvested.toLocaleString('vi-VN') + ' đ! Hãy mua chú heo giống mới (10.000 đ) để bắt đầu Lứa ' + nextGen + ' nhé!');
     },
-    { yesText: 'Thu hoạch ngay 🐷', icon: '💰' }
+    { yesText: 'Mổ heo ngay 🔨', icon: '💰' }
   );
+}
+
+// 🛒 Mua heo giống mới (Cần 10.000 đ hoặc 100 ⭐)
+function buyNewPiggyBreed(method) {
+  const c = child();
+  if (!c) return;
+  const p = ensurePiggyPet(c);
+  if (!p) return;
+
+  const nextGen = (p.generation || 1) + 1;
+  const inp = document.getElementById('newPiggyNameInput');
+  const chosenName = (inp && inp.value.trim()) ? inp.value.trim() : ('Heo Đất Ụt Ịt Lứa ' + nextGen);
+
+  if (method === 'stars') {
+    if (c.score < 100) {
+      playChime('error');
+      return alert('Bé cần 100 ⭐ để mua heo giống mới (Bé hiện đang có ' + c.score + ' ⭐). Bé hãy hoàn thành bài học để kiếm thêm sao hoặc trích 10.000 đ tiền mặt nhé!');
+    }
+
+    askConfirm(
+      'Mua Heo Giống Bằng Sao',
+      'Bé có muốn dùng 100 ⭐ (tương đương 10.000 đ) để rước chú "' + chosenName + '" về chuồng nuôi tiếp không?\n\n• Chi phí giống: 100 ⭐ (10.000 đ)\n• Cấp bắt đầu: Cấp 1 (1.0 kg)\n• Số sao còn lại của bé: ' + (c.score - 100) + ' ⭐',
+      () => {
+        c.score -= 100;
+        logPoint(c, 'reward', -100, 'Mua heo giống mới (100 ⭐) - Lứa ' + nextGen);
+        initNewPiggyPet(p, chosenName, nextGen);
+        save();
+        render();
+        playPiggyOinkSound();
+        triggerConfetti();
+        showToast('🎉 Chúc mừng bé! Đã rước chú "' + chosenName + '" về chuồng thành công! 🐷❤️');
+      },
+      { yesText: 'Mua bằng 100 ⭐', icon: '⭐' }
+    );
+  } else {
+    // method === 'money'
+    askConfirm(
+      'Mua Heo Giống Bằng Tiền Mặt',
+      'Bé có muốn trích 10.000 đ (từ tiền mổ heo vừa nhận hoặc tiền tiêu vặt) để rước chú "' + chosenName + '" về chuồng nuôi tiếp không?\n\n• Tiền mua heo giống: 10.000 đ\n• Cấp bắt đầu: Cấp 1 (1.0 kg)\n• Chuồng heo sẽ hoạt động trở lại ngay lập tức!',
+      () => {
+        if (!Array.isArray(c.giftHistory)) c.giftHistory = [];
+        c.giftHistory.unshift({
+          id: uid('g'),
+          rewardId: 'piggy_breed_purchase',
+          name: 'Mua heo giống mới Lứa ' + nextGen + ' (10.000 đ)',
+          cost: 0,
+          moneyVND: -10000,
+          date: todayISO(),
+          status: 'fulfilled'
+        });
+        initNewPiggyPet(p, chosenName, nextGen);
+        save();
+        render();
+        playPiggyOinkSound();
+        triggerConfetti();
+        showToast('🎉 Tuyệt vời! Bé đã đầu tư 10.000 đ mua giống "' + chosenName + '" thành công! Bắt đầu nuôi lứa ' + nextGen + '! 🐷❤️');
+      },
+      { yesText: 'Trích 10.000 đ mua', icon: '💵' }
+    );
+  }
+}
+
+function initNewPiggyPet(p, name, nextGen) {
+  p.status = 'active';
+  p.name = name;
+  p.generation = nextGen;
+  p.level = 1;
+  p.exp = 0;
+  p.weightKg = 1.0;
+  p.coinsVND = 0;
+  p.fullness = 100;
+  p.mood = 'happy';
+  p.lastFedDate = todayISO();
+  p.lastInteractedDate = todayISO();
+  p.daysWithoutCare = 0;
+  p.lastPatDate = '';
 }
 
 // 🧪 Thử nghiệm mô phỏng ngày không tương tác
@@ -579,11 +683,58 @@ function renderPiggyPet() {
   }
 
   const p = ensurePiggyPet(c);
+  const nextGen = (p.generation || 1) + 1;
+
+  // TRƯỜNG HỢP 1: ĐÃ MỔ HEO (CHUỒNG ĐANG TRỐNG CHỜ MUA HEO GIỐNG 10.000Đ / 100⭐)
+  if (p.status === 'harvested') {
+    const emptyPenMarkup = `
+      <div class="piggy-care-widget empty-pen">
+        <div class="piggy-empty-pen-head">
+          <span style="font-size:32px">🧺🏚️</span>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:900;color:#b45309">🎉 Đã Mổ Heo Thành Công!</div>
+            <div style="font-size:11.5px;color:#78350f">
+              Lứa ${p.generation || 1} đã thu hoạch <b>${(p.harvestedAmount || 0).toLocaleString('vi-VN')} đ</b>!
+            </div>
+          </div>
+          <span class="piggy-level-pill" style="background:#fef3c7;color:#b45309;border-color:#fde68a">Lứa ${p.generation || 1}</span>
+        </div>
+
+        <div style="background:#ffffff;border-radius:14px;padding:12px;margin:10px 0;border:1.5px solid #fde68a;box-shadow:0 2px 8px rgba(245,158,11,0.08)">
+          <div style="font-size:12.5px;font-weight:800;color:#92400e;margin-bottom:4px;display:flex;align-items:center;gap:6px">
+            <span>🛒</span> <span>Mua Heo Giống Mới (Lứa ${nextGen}) — Cần 10.000 đ</span>
+          </div>
+          <div style="font-size:11px;color:#78350f;margin-bottom:10px;line-height:1.4">
+            💡 <b>Bài học tài chính:</b> Sau khi mổ heo, bé cần <b>10.000 đ</b> (hoặc dùng <b>100 ⭐</b>) để mua chú heo giống mới về nuôi tiếp lứa sau nhé! Đây là tiền vốn tái đàn để heo sinh sôi tiền tiết kiệm!
+          </div>
+
+          <div style="margin-bottom:10px">
+            <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:3px">Đặt tên cho chú heo mới:</label>
+            <input type="text" id="newPiggyNameInput" value="Heo Đất Ụt Ịt Lứa ${nextGen}" style="width:100%;padding:7px 10px;border-radius:8px;border:1.5px solid #fcd34d;font-size:12px;font-weight:700;box-sizing:border-box">
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button type="button" class="today-cat-pill" style="justify-content:center;padding:9px;background:#fef3c7;border-color:#f59e0b;font-size:11.5px;font-weight:800;color:#b45309" onclick="buyNewPiggyBreed('money')">
+              💵 Trích 10.000 đ
+            </button>
+            <button type="button" class="today-cat-pill" style="justify-content:center;padding:9px;background:#fce7f3;border-color:#ec4899;font-size:11.5px;font-weight:800;color:#be185d" onclick="buyNewPiggyBreed('stars')">
+              ⭐ Dùng 100 ⭐ (Có ${c.score}⭐)
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    if (todayBox) todayBox.innerHTML = emptyPenMarkup;
+    if (farmBox) farmBox.innerHTML = emptyPenMarkup;
+    return;
+  }
+
+  // TRƯỜNG HỢP 2: ĐANG NUÔI HEO BÌNH THƯỜNG
   const lvlInfo = PIGGY_LEVELS[p.level - 1] || PIGGY_LEVELS[0];
   const nextExp = lvlInfo.nextExp;
   const expPercent = Math.min(100, Math.round((p.exp / nextExp) * 100));
 
-  // Xác định biểu cảm & hình ảnh heo
   let pigAvatar = '🐷';
   let moodBadge = '🥰';
   let moodText = 'No nê vui vẻ (' + p.fullness + '%)';
@@ -628,7 +779,7 @@ function renderPiggyPet() {
           <div class="piggy-card-title-wrap">
             <span style="font-size:18px">🐷</span>
             <span class="piggy-card-title">${safe(p.name)}</span>
-            <span class="piggy-level-pill">${lvlInfo.badge}</span>
+            <span class="piggy-level-pill">${lvlInfo.badge} • Lứa ${p.generation || 1}</span>
           </div>
           <button type="button" onclick="toggleSimulatePiggyHunger()" style="border:none;background:none;font-size:11px;color:#94a3b8;cursor:pointer" title="Bấm để thử nghiệm / tắt cảnh báo đói">⚙️ Thử</button>
         </div>
@@ -711,7 +862,7 @@ function renderPiggyPet() {
             <span style="font-size:24px">${pigAvatar}</span>
             <div>
               <div style="font-weight:900;font-size:14.5px;color:#9d174d">${safe(p.name)} (${lvlInfo.name})</div>
-              <div style="font-size:11.5px;color:#64748b">Cân nặng: ${p.weightKg.toFixed(1)}kg • Đã bón ${p.totalStarsEaten || 0} ⭐</div>
+              <div style="font-size:11.5px;color:#64748b">Lứa ${p.generation || 1} • Cân nặng: ${p.weightKg.toFixed(1)}kg • Đã bón ${p.totalStarsEaten || 0} ⭐</div>
             </div>
           </div>
           ${canHarvest ? `

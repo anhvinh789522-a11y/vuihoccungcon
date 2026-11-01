@@ -3493,3 +3493,15 @@ textarea{min-height:80px;resize:vertical}
 .piggy-harvest-btn:active {
   transform: scale(0.96);
 }
+
+.piggy-care-widget.empty-pen {
+  background: linear-gradient(135deg, #ffffff 0%, #fffbeb 50%, #fef3c7 100%);
+  border-color: #fde68a;
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.12);
+}
+
+.piggy-empty-pen-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
