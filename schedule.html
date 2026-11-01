@@ -57,16 +57,16 @@
           <div>
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
               <span class="study-badge" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">🎒 THỜI KHÓA BIỂU</span>
-              <span class="study-badge" style="background:linear-gradient(135deg,#10b981,#0ea5e9)">HỌC SINH LỚP 1</span>
-              <span class="note">Kéo thả &amp; Chạm để gán môn học trực quan</span>
+              <span class="study-badge" style="background:linear-gradient(135deg,#10b981,#0ea5e9)">LỚP 1A4</span>
+              <span class="note">Áp dụng từ 07/09/2026 • Kéo thả &amp; Chạm để gán môn</span>
             </div>
-            <h2 style="margin:6px 0 4px;font-size:22px">🎒 Thời khóa biểu của <span id="scheduleName">bé</span> 🌟</h2>
+            <h2 style="margin:6px 0 4px;font-size:22px">🎒 Thời khóa biểu Lớp 1A4 của <span id="scheduleName">bé</span> 🌟</h2>
             <p class="note" style="margin:0">Bố mẹ và con cùng sắp xếp lịch học từng ngày: Kéo môn từ khay thả vào ô, hoặc chạm chọn môn rồi chạm ô để dán!</p>
           </div>
           <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
             <button class="primary" style="padding:9px 13px;font-size:13px;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#7c3aed,#6366f1)" onclick="loadGrade1DefaultTimetable()">
               <span>⚡</span>
-              <span>Nạp Mẫu Lớp 1 chuẩn</span>
+              <span>Nạp Mẫu Lớp 1A4 chuẩn</span>
             </button>
             <button class="secondary" style="padding:9px 11px;font-size:13px;display:inline-flex;align-items:center;gap:5px" onclick="openCustomSubjectModal()">
               <span>➕</span>
@@ -90,10 +90,24 @@
         <!-- 🛵 BỘ NHẮC BÁO GIỜ CHỞ BÉ ĐI HỌC (TRƯỚC 10 PHÚT) -->
         <div id="scheduleRideReminderCard" class="ride-card" style="margin-bottom:14px"></div>
 
-        <!-- Thanh chuyển chế độ xem: Thời khóa biểu tuần vs Lịch tháng cũ -->
+        <!-- Bảng chú thích viết tắt & lưu ý Lớp 1A4 -->
+        <div style="background:#f8fafc;border:1.5px solid var(--line);border-radius:var(--radius-md);padding:10px 14px;margin-bottom:14px;font-size:12.5px;color:#334155;line-height:1.5">
+          <div style="display:flex;align-items:center;gap:6px;font-weight:800;color:#0f172a;margin-bottom:4px">
+            <span>💡</span> <span>CHÚ THÍCH &amp; LƯU Ý LỚP 1A4:</span>
+          </div>
+          <div>
+            <b>TVTC:</b> Tiếng Việt tăng cường • <b>TTC:</b> Toán tăng cường • <b>TNXH:</b> Tự nhiên &amp; Xã hội • <b>HĐTN:</b> Hoạt động trải nghiệm • <b>GDTC:</b> Giáo dục thể chất • <b>KNS:</b> Kĩ năng sống • <b>STEM:</b> Hoạt động học tích hợp • <b>ATGT:</b> An toàn giao thông
+          </div>
+          <div style="margin-top:4px;color:#b45309;font-weight:700">
+            👕 <b>Lưu ý đồng phục:</b> Thứ Tư và Thứ Năm có GDTC, HS mặc đồng phục thể dục (áo thể dục) • Chiều Thứ Sáu nghỉ!
+          </div>
+        </div>
+
+        <!-- Thanh chuyển chế độ xem: Thời khóa biểu tuần vs Soạn sách vs Hướng dẫn -->
         <div class="tt-view-switch" style="margin-bottom:14px">
           <button class="tt-switch-btn active" id="ttViewTimetableBtn" onclick="switchTimetableTab('timetable')">🎒 Bảng Thời khóa biểu (Kéo thả)</button>
           <button class="tt-switch-btn" id="ttViewBagBtn" onclick="switchTimetableTab('bag')">🎒 Soạn cặp sách ngày mai</button>
+          <button class="tt-switch-btn" id="ttViewGuideBtn" onclick="switchTimetableTab('guide')">📖 Hướng dẫn soạn sách vở (Lớp 1A4)</button>
           <button class="tt-switch-btn" id="ttViewBeeBtn" onclick="switchTimetableTab('bee')">🐝 Đồng hồ Con Ong 15p</button>
           <button class="tt-switch-btn" id="ttViewCalendarBtn" onclick="switchTimetableTab('calendar')">📅 Lịch tháng &amp; Nhiệm vụ</button>
         </div>
@@ -141,12 +155,17 @@
           <div id="scheduleSchoolBagCard" class="bag-card"></div>
         </div>
 
-        <!-- 3. VÙNG ĐỒNG HỒ CON ONG 15 PHÚT TẬP TRUNG -->
+        <!-- 3. VÙNG BẢNG HƯỚNG DẪN SOẠN SÁCH VỞ LỚP 1A4 -->
+        <div id="ttGuideTabWrap" style="display:none">
+          <div id="scheduleBagGuideContainer"></div>
+        </div>
+
+        <!-- 4. VÙNG ĐỒNG HỒ CON ONG 15 PHÚT TẬP TRUNG -->
         <div id="ttBeeTabWrap" style="display:none">
           <div id="scheduleBeeTimerCard" class="bee-card"></div>
         </div>
 
-        <!-- 4. VÙNG LỊCH THÁNG & NHIỆM VỤ CŨ -->
+        <!-- 5. VÙNG LỊCH THÁNG & NHIỆM VỤ CŨ -->
         <div id="ttCalendarTabWrap" style="display:none">
           <div class="calendar-head">
             <button onclick="changeMonth(-1)">‹ Tháng trước</button>

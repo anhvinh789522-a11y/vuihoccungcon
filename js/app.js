@@ -116,68 +116,189 @@ const DEFAULT_REWARDS=[
   {id:uid('r'),name:'Chuyến đi dã ngoại xa cùng cả gia đình',cost:1000,category:'Đi chơi & Dã ngoại',icon:'🏖️',rule:'Dịp nghỉ lễ hoặc cuối tháng'}
 ];
 
-// 🎒 DANH MỤC MÔN HỌC CHUẨN TIỂU HỌC (LỚP 1)
+// 🎒 DANH MỤC MÔN HỌC CHUẨN LỚP 1A4
 const GRADE1_SUBJECTS = [
   { name: 'Tiếng Việt', icon: '📖', color: '#8b5cf6', bg: '#f5f3ff', border: '#ddd6fe', textColor: '#6d28d9' },
   { name: 'Toán', icon: '📐', color: '#3b82f6', bg: '#eff6ff', border: '#bfdbfe', textColor: '#1d4ed8' },
+  { name: 'SHDC', icon: '🚩', color: '#ef4444', bg: '#fef2f2', border: '#fecaca', textColor: '#b91c1c' },
+  { name: 'TVTC', icon: '✍️', color: '#9333ea', bg: '#faf5ff', border: '#e9d5ff', textColor: '#7e22ce' },
+  { name: 'TTC', icon: '🧮', color: '#2563eb', bg: '#eff6ff', border: '#bfdbfe', textColor: '#1d4ed8' },
   { name: 'Tiếng Anh', icon: '🇬🇧', color: '#f59e0b', bg: '#fffbeb', border: '#fde68a', textColor: '#b45309' },
-  { name: 'Đạo đức', icon: '💖', color: '#ec4899', bg: '#fdf2f8', border: '#fbcfe8', textColor: '#be185d' },
-  { name: 'TN & Xã hội', icon: '🔬', color: '#10b981', bg: '#ecfdf5', border: '#a7f3d0', textColor: '#047857' },
+  { name: 'TNXH', icon: '🔬', color: '#10b981', bg: '#ecfdf5', border: '#a7f3d0', textColor: '#047857' },
+  { name: 'GDTC', icon: '⚽', color: '#14b8a6', bg: '#f0fdfa', border: '#99f6e4', textColor: '#0f766e' },
+  { name: 'Mĩ thuật', icon: '🎨', color: '#f97316', bg: '#fff7ed', border: '#fed7aa', textColor: '#c2410c' },
   { name: 'Âm nhạc', icon: '🎵', color: '#06b6d4', bg: '#ecfeff', border: '#a5f3fc', textColor: '#0e7490' },
-  { name: 'Mỹ thuật', icon: '🎨', color: '#f97316', bg: '#fff7ed', border: '#fed7aa', textColor: '#c2410c' },
-  { name: 'GD Thể chất', icon: '⚽', color: '#14b8a6', bg: '#f0fdfa', border: '#99f6e4', textColor: '#0f766e' },
-  { name: 'HĐ Trải nghiệm', icon: '🌟', color: '#eab308', bg: '#fefce8', border: '#fef08a', textColor: '#a16207' },
-  { name: 'Tin học', icon: '💻', color: '#6366f1', bg: '#eef2ff', border: '#c7d2fe', textColor: '#4338ca' },
-  { name: 'Toán tư duy', icon: '🧮', color: '#a855f7', bg: '#faf5ff', border: '#e9d5ff', textColor: '#7e22ce' },
-  { name: 'Bán trú / Nghỉ', icon: '😴', color: '#64748b', bg: '#f8fafc', border: '#e2e8f0', textColor: '#475569' }
+  { name: 'Đạo đức', icon: '💖', color: '#ec4899', bg: '#fdf2f8', border: '#fbcfe8', textColor: '#be185d' },
+  { name: 'HĐTN', icon: '🌟', color: '#eab308', bg: '#fefce8', border: '#fef08a', textColor: '#a16207' },
+  { name: 'KNS', icon: '🤝', color: '#84cc16', bg: '#f7fee7', border: '#d9f99d', textColor: '#4d7c0f' },
+  { name: 'STEM', icon: '🚀', color: '#6366f1', bg: '#eef2ff', border: '#c7d2fe', textColor: '#4338ca' },
+  { name: 'ATGT', icon: '🚦', color: '#f43f5e', bg: '#fff1f2', border: '#fecdd3', textColor: '#be123c' },
+  { name: 'Nghỉ', icon: '😴', color: '#64748b', bg: '#f8fafc', border: '#e2e8f0', textColor: '#475569' }
 ];
 
-// 🎒 MẪU THỜI KHÓA BIỂU LỚP 1 TIÊU CHUẨN (BỘ GD&ĐT)
+// 🎒 MẪU THỜI KHÓA BIỂU LỚP 1A4 (ÁP DỤNG TỪ NGÀY 07/09/2026)
 const DEFAULT_GRADE1_TIMETABLE = {
   // Thứ 2
-  "2_1": { subject: "HĐ Trải nghiệm", note: "Chào cờ đầu tuần" },
-  "2_2": { subject: "Tiếng Việt", note: "Học vần" },
-  "2_3": { subject: "Tiếng Việt", note: "Tập viết" },
-  "2_4": { subject: "Toán", note: "Số & phép đếm" },
-  "2_5": { subject: "Âm nhạc", note: "Hát múa vui nhộn" },
-  "2_6": { subject: "GD Thể chất", note: "Vận động cơ bản" },
-  "2_7": { subject: "Tiếng Việt", note: "Đọc mở rộng" },
+  "2_1": { subject: "SHDC", note: "Sinh hoạt dưới cờ" },
+  "2_2": { subject: "Toán", note: "Toán" },
+  "2_3": { subject: "Tiếng Việt", note: "Tiếng Việt" },
+  "2_4": { subject: "Tiếng Việt", note: "Tiếng Việt" },
+  "2_5": { subject: "TVTC", note: "Tiếng Việt tăng cường" },
+  "2_6": { subject: "Đạo đức", note: "Đạo đức" },
+  "2_7": { subject: "Tiếng Việt", note: "Tiếng Việt" },
 
   // Thứ 3
-  "3_1": { subject: "Toán", note: "Phép cộng trừ" },
-  "3_2": { subject: "Tiếng Việt", note: "Tập đọc" },
-  "3_3": { subject: "Tiếng Việt", note: "Chính tả" },
-  "3_4": { subject: "Tiếng Anh", note: "Từ vựng Unit" },
-  "3_5": { subject: "Mỹ thuật", note: "Vẽ tranh & xé dán" },
-  "3_6": { subject: "Toán tư duy", note: "Ghép que tính" },
-  "3_7": { subject: "Tiếng Việt", note: "Kể chuyện" },
+  "3_1": { subject: "Toán", note: "Toán" },
+  "3_2": { subject: "Tiếng Việt", note: "Tiếng Việt" },
+  "3_3": { subject: "Tiếng Việt", note: "Tiếng Việt" },
+  "3_4": { subject: "TNXH", note: "Tự nhiên và Xã hội" },
+  "3_5": { subject: "Âm nhạc", note: "Âm nhạc" },
+  "3_6": { subject: "HĐTN", note: "Hoạt động trải nghiệm" },
+  "3_7": { subject: "TNXH", note: "Tự nhiên và Xã hội" },
 
-  // Thứ 4
-  "4_1": { subject: "Tiếng Việt", note: "Học vần mới" },
-  "4_2": { subject: "Tiếng Việt", note: "Luyện đọc câu" },
-  "4_3": { subject: "Toán", note: "Hình học phẳng" },
-  "4_4": { subject: "Đạo đức", note: "Gọn gàng ngăn nắp" },
-  "4_5": { subject: "TN & Xã hội", note: "Gia đình em" },
-  "4_6": { subject: "GD Thể chất", note: "Trò chơi vận động" },
-  "4_7": { subject: "Tiếng Việt", note: "Đọc sách tranh" },
+  // Thứ 4 (Lưu ý: Mặc áo thể dục)
+  "4_1": { subject: "GDTC", note: "Thể dục (Mặc áo thể dục)" },
+  "4_2": { subject: "Mĩ thuật", note: "Mĩ thuật" },
+  "4_3": { subject: "Tiếng Việt", note: "Tiếng Việt" },
+  "4_4": { subject: "Tiếng Việt", note: "Tiếng Việt" },
+  "4_5": { subject: "Tiếng Anh", note: "Tiếng Anh" },
+  "4_6": { subject: "Tiếng Việt", note: "Tiếng Việt" },
+  "4_7": { subject: "TTC", note: "Toán tăng cường" },
 
-  // Thứ 5
-  "5_1": { subject: "Toán", note: "Giải toán có lời văn" },
-  "5_2": { subject: "Tiếng Việt", note: "Tập viết ô ly" },
-  "5_3": { subject: "Tiếng Việt", note: "Luyện từ & câu" },
-  "5_4": { subject: "Tiếng Anh", note: "Bài hát tiếng Anh" },
-  "5_5": { subject: "TN & Xã hội", note: "Trường học thân yêu" },
-  "5_6": { subject: "Tin học", note: "Làm quen chuột máy tính" },
-  "5_7": { subject: "Kỹ năng sống", note: "Tự phục vụ bản thân" },
+  // Thứ 5 (Lưu ý: Mặc áo thể dục)
+  "5_1": { subject: "GDTC", note: "Thể dục (Mặc áo thể dục)" },
+  "5_2": { subject: "Tiếng Việt", note: "Tiếng Việt" },
+  "5_3": { subject: "Tiếng Anh", note: "Tiếng Anh" },
+  "5_4": { subject: "Tiếng Việt", note: "Tiếng Việt" },
+  "5_5": { subject: "KNS", note: "Kĩ năng sống" },
+  "5_6": { subject: "STEM", note: "Bài học STEM" },
+  "5_7": { subject: "ATGT", note: "An toàn giao thông" },
 
   // Thứ 6
-  "6_1": { subject: "Tiếng Việt", note: "Ôn tập cuối tuần" },
-  "6_2": { subject: "Tiếng Việt", note: "Kiểm tra đánh giá" },
-  "6_3": { subject: "Toán", note: "Luyện tập chung" },
-  "6_4": { subject: "Tiếng Anh", note: "Trò chơi đố chữ" },
-  "6_5": { subject: "Mỹ thuật", note: "Tô màu sáng tạo" },
-  "6_6": { subject: "HĐ Trải nghiệm", note: "Sinh hoạt lớp & Sao chăm ngoan" },
-  "6_7": { subject: "Tổng kết tuần", note: "Khen thưởng cuối tuần" }
+  "6_1": { subject: "Toán", note: "Toán" },
+  "6_2": { subject: "Tiếng Việt", note: "Tiếng Việt" },
+  "6_3": { subject: "Tiếng Việt", note: "Tiếng Việt" },
+  "6_4": { subject: "HĐTN", note: "Hoạt động trải nghiệm" },
+  "6_5": { subject: "Nghỉ", note: "Chiều Thứ 6 nghỉ" },
+  "6_6": { subject: "Nghỉ", note: "Chiều Thứ 6 nghỉ" },
+  "6_7": { subject: "Nghỉ", note: "Chiều Thứ 6 nghỉ" }
+};
+
+// 🎒 HƯỚNG DẪN CÁCH SOẠN SÁCH VỞ THEO THỜI KHÓA BIỂU (LỚP 1A4)
+const GRADE1_BAG_GUIDE = {
+  "2": {
+    dayLabel: "Thứ Hai",
+    themeColor: "#ef4444",
+    themeBg: "#fef2f2",
+    themeBorder: "#fecaca",
+    uniform: null,
+    books: [
+      { name: "Sách Toán", icon: "📘" },
+      { name: "Sách Tiếng Việt", icon: "📖" },
+      { name: "Sách Đạo đức", icon: "💖" }
+    ],
+    notebooks: [
+      { name: "Vở màu xanh", color: "#3b82f6", label: "Vở xanh" },
+      { name: "Vở màu đỏ", color: "#ef4444", label: "Vở đỏ" },
+      { name: "Vở màu vàng", color: "#eab308", label: "Vở vàng" }
+    ],
+    supplies: [
+      { name: "Màu sáp", icon: "🖍️" }
+    ],
+    note: "Chào cờ đầu tuần (SHDC) - Đi học đúng giờ"
+  },
+  "3": {
+    dayLabel: "Thứ Ba",
+    themeColor: "#f97316",
+    themeBg: "#fff7ed",
+    themeBorder: "#fed7aa",
+    uniform: null,
+    books: [
+      { name: "Sách Tiếng Việt", icon: "📖" },
+      { name: "Sách Toán", icon: "📘" },
+      { name: "Sách TN XH", icon: "🔬" },
+      { name: "Sách Âm nhạc", icon: "🎵" },
+      { name: "Sách HĐTN", icon: "🌟" }
+    ],
+    notebooks: [
+      { name: "Vở Tập Viết", color: "#8b5cf6", label: "Vở Tập Viết" },
+      { name: "Vở màu xanh", color: "#3b82f6", label: "Vở xanh" },
+      { name: "Vở màu đỏ", color: "#ef4444", label: "Vở đỏ" },
+      { name: "Vở màu vàng", color: "#eab308", label: "Vở vàng" }
+    ],
+    supplies: [
+      { name: "Màu sáp", icon: "🖍️" },
+      { name: "Thanh phách", icon: "🥁" }
+    ],
+    note: "Có tiết Âm nhạc & TNXH"
+  },
+  "4": {
+    dayLabel: "Thứ Tư",
+    themeColor: "#10b981",
+    themeBg: "#ecfdf5",
+    themeBorder: "#a7f3d0",
+    uniform: "Áo thể dục (Học môn GDTC)",
+    books: [
+      { name: "Sách Mĩ thuật", icon: "🎨" },
+      { name: "VBT Mĩ Thuật", icon: "📑" },
+      { name: "Sách Tiếng Việt & VBT Tiếng Việt", icon: "📖" },
+      { name: "Sách Tiếng Anh", icon: "🇬🇧" },
+      { name: "VBT Tiếng Anh", icon: "📑" },
+      { name: "VBT Toán", icon: "📐" }
+    ],
+    notebooks: [
+      { name: "Vở màu vàng", color: "#eab308", label: "Vở vàng" },
+      { name: "Vở màu xanh", color: "#3b82f6", label: "Vở xanh" },
+      { name: "Vở màu đỏ", color: "#ef4444", label: "Vở đỏ" },
+      { name: "Vở màu hồng", color: "#ec4899", label: "Vở hồng" }
+    ],
+    supplies: [
+      { name: "Màu sáp, giấy màu, Đất nặn", icon: "🎨" }
+    ],
+    note: "LƯU Ý: Có GDTC ➔ HS mặc Áo thể dục!"
+  },
+  "5": {
+    dayLabel: "Thứ Năm",
+    themeColor: "#0ea5e9",
+    themeBg: "#f0f9ff",
+    themeBorder: "#bae6fd",
+    uniform: "Áo thể dục (Học môn GDTC)",
+    books: [
+      { name: "Sách Tiếng Việt", icon: "📖" },
+      { name: "VBT Tiếng Việt", icon: "📑" },
+      { name: "Sách Tiếng Anh", icon: "🇬🇧" },
+      { name: "VBT Tiếng Anh", icon: "📑" }
+    ],
+    notebooks: [
+      { name: "Vở màu xanh", color: "#3b82f6", label: "Vở xanh" },
+      { name: "Vở màu vàng", color: "#eab308", label: "Vở vàng" },
+      { name: "Vở màu hồng", color: "#ec4899", label: "Vở hồng" },
+      { name: "Vở Tập Viết", color: "#8b5cf6", label: "Vở Tập Viết" }
+    ],
+    supplies: [
+      { name: "Màu sáp", icon: "🖍️" }
+    ],
+    note: "LƯU Ý: Có GDTC ➔ HS mặc Áo thể dục!"
+  },
+  "6": {
+    dayLabel: "Thứ Sáu",
+    themeColor: "#6366f1",
+    themeBg: "#eef2ff",
+    themeBorder: "#c7d2fe",
+    uniform: null,
+    books: [
+      { name: "Sách Toán", icon: "📘" },
+      { name: "Sách Tiếng Việt", icon: "📖" },
+      { name: "Sách HĐTN", icon: "🌟" }
+    ],
+    notebooks: [
+      { name: "Vở màu xanh", color: "#3b82f6", label: "Vở xanh" },
+      { name: "Vở màu đỏ", color: "#ef4444", label: "Vở đỏ" },
+      { name: "Vở màu vàng", color: "#eab308", label: "Vở vàng" }
+    ],
+    supplies: [],
+    note: "Chiều Thứ Sáu NGHỈ - Hoàn thành bài tập tuần"
+  }
 };
 
 
@@ -944,7 +1065,10 @@ function loadData(){
       }
       if(!Array.isArray(c.achievements))c.achievements=oldAchievements.map(a=>({...a,id:a.id||uid('a')}));
       if(!Array.isArray(c.earnedAchievements))c.earnedAchievements=[];
-      if(!c.timetable || typeof c.timetable !== 'object' || !Object.keys(c.timetable).length) c.timetable=structuredClone(DEFAULT_GRADE1_TIMETABLE);
+      if(!c.timetable || typeof c.timetable !== 'object' || !Object.keys(c.timetable).length || c.timetableVersion !== '1a4_2026') {
+        c.timetable=structuredClone(DEFAULT_GRADE1_TIMETABLE);
+        c.timetableVersion='1a4_2026';
+      }
       if(!c.schoolBagPackedDate) c.schoolBagPackedDate='';
 
       c.rewards=c.rewards.map(r=>({
@@ -3609,13 +3733,16 @@ function getSubjectMeta(name){
 }
 
 function switchTimetableTab(tabName){
-  const tabs=['timetable','bag','bee','calendar'];
+  const tabs=['timetable','bag','guide','bee','calendar'];
   tabs.forEach(t=>{
     const btn=document.getElementById('ttView' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
     const wrap=document.getElementById('tt' + t.charAt(0).toUpperCase() + t.slice(1) + 'TabWrap');
     if(btn) btn.classList.toggle('active', t===tabName);
     if(wrap) wrap.style.display=(t===tabName)?'block':'none';
   });
+  if(tabName==='guide' && typeof renderBagGuideTable==='function'){
+    renderBagGuideTable();
+  }
 }
 
 function setTimetableDayFilter(day, btnEl){
@@ -3923,19 +4050,22 @@ function renderTimetable(){
 
   renderTimetablePalette();
   renderTimetableTable();
+  if(typeof renderBagGuideTable==='function') renderBagGuideTable();
 }
 
 function loadGrade1DefaultTimetable(){
   const c=child();
   if(!c) return alert('Chưa có hồ sơ bé.');
-  askConfirm('Nạp Thời khóa biểu Lớp 1 chuẩn', 'Bạn muốn nạp Mẫu Thời khóa biểu Lớp 1 chuẩn của Bộ Giáo dục & Đào tạo cho bé? (Các tiết học hiện tại sẽ được cập nhật)', ()=>{
+  askConfirm('Nạp Thời khóa biểu Lớp 1A4 chuẩn', 'Bạn muốn nạp Mẫu Thời khóa biểu Lớp 1A4 chuẩn (áp dụng từ 07/09/2026) cho bé? (Các tiết học hiện tại sẽ được cập nhật đồng bộ)', ()=>{
     c.timetable=structuredClone(DEFAULT_GRADE1_TIMETABLE);
+    c.timetableVersion='1a4_2026';
     save();
     renderTimetable();
     renderSchoolBagChecklist();
+    if(typeof renderBagGuideTable==='function') renderBagGuideTable();
     playChime('success');
-    showToast('🎉 Đã nạp thành công Thời khóa biểu Lớp 1 chuẩn!');
-  },{yesText:'Nạp mẫu chuẩn'});
+    showToast('🎉 Đã nạp thành công Thời khóa biểu Lớp 1A4 chuẩn!');
+  },{yesText:'Nạp TKB Lớp 1A4'});
 }
 
 function confirmClearTimetable(){
@@ -3993,55 +4123,75 @@ function getTomorrowDayNumber(){
     targetDate.setDate(targetDate.getDate()+1);
   }
   const day=targetDate.getDay();
-  if(day===0) return '2';
-  if(day===6) return '7';
+  // Nếu là Thứ 7 (6) hoặc Chủ Nhật (0) -> Chuẩn bị cho Thứ Hai (2)
+  if(day===0 || day===6) return '2';
   return String(day+1);
 }
 
 function renderSchoolBagChecklist(){
-  if(!document.getElementById("scheduleSection")) return;
+  const todayContainer = document.getElementById('todaySchoolBagCard');
+  const scheduleContainer = document.getElementById('scheduleSchoolBagCard');
+  if(!todayContainer && !scheduleContainer) return;
+
   const c=child();
   const targetDay=getTomorrowDayNumber();
   const dayLabels={'2':'Thứ 2','3':'Thứ 3','4':'Thứ 4','5':'Thứ 5','6':'Thứ 6','7':'Thứ 7'};
   const dayName=dayLabels[targetDay]||'Ngày mai';
 
-  const tt=c?.timetable||{};
-  const subjectsInDay=new Set();
-  [1,2,3,4,5,6,7].forEach(p=>{
-    const entry=tt[targetDay + '_' + p];
-    if(entry && entry.subject && entry.subject!=='Bán trú / Nghỉ'){
-      subjectsInDay.add(entry.subject);
-    }
-  });
+  const guide=GRADE1_BAG_GUIDE[targetDay];
+  const items=[];
 
-  const subjectArr=Array.from(subjectsInDay);
+  // 1. Áo thể dục / Đồng phục
+  if(guide && guide.uniform){
+    items.push({
+      id: 'uniform_' + targetDay,
+      icon: '👕',
+      text: '<b>ĐỒNG PHỤC:</b> ' + guide.uniform,
+      isUniform: true
+    });
+  }
 
-  const items=[
-    { id:'pencil_case', text:'Hộp bút chì 2B (đã gọt nhọn 3 cây, gôm tẩy sạch, thước kẻ 20cm)' },
-    { id:'water_bottle', text:'Bình nước uống cá nhân & Khăn tay nhỏ' },
-    { id:'hat_badge', text:'Mũ che nắng & Thẻ học sinh đeo cổ' }
-  ];
+  // 2. Sách giáo khoa & Vở bài tập theo ngày
+  if(guide && Array.isArray(guide.books)){
+    guide.books.forEach((b, idx)=>{
+      items.push({
+        id: 'book_' + targetDay + '_' + idx,
+        icon: b.icon || '📖',
+        text: b.name
+      });
+    });
+  }
 
-  subjectArr.forEach(sub=>{
-    const lower=sub.toLowerCase();
-    if(lower.includes('toán')){
-      items.push({ id:'book_math', text:'Sách Toán Lớp 1, Vở bài tập Toán & Bảng con, phấn trắng, que tính' });
-    }else if(lower.includes('tiếng việt')){
-      items.push({ id:'book_viet', text:'Sách Tiếng Việt Tập 1 & Vở ô ly tập viết chữ nắn nót' });
-    }else if(lower.includes('tiếng anh')){
-      items.push({ id:'book_english', text:'Sách Tiếng Anh & Thẻ học từ vựng' });
-    }else if(lower.includes('mỹ thuật')||lower.includes('vẽ')){
-      items.push({ id:'art_kit', text:'Hộp bút sáp màu 12 màu, Giấy vẽ A4 & Kéo thủ công an toàn' });
-    }else if(lower.includes('thể chất')||lower.includes('thể dục')){
-      items.push({ id:'pe_kit', text:'Đi giày thể thao êm chân & Mặc trang phục thể dục thoáng mát' });
-    }else if(lower.includes('âm nhạc')){
-      items.push({ id:'music_kit', text:'Thanh phách âm nhạc / Trống gõ' });
-    }else if(lower.includes('tự nhiên')||lower.includes('tn & xh')){
-      items.push({ id:'science_kit', text:'Sách Tự nhiên và Xã hội Lớp 1' });
-    }else{
-      items.push({ id:'sub_' + sub, text:'Sách vở & Đồ dùng môn ' + sub });
-    }
-  });
+  // 3. Vở theo màu sắc
+  if(guide && Array.isArray(guide.notebooks)){
+    guide.notebooks.forEach((nb, idx)=>{
+      items.push({
+        id: 'nb_' + targetDay + '_' + idx,
+        icon: '📓',
+        text: nb.name + (nb.label ? ' (' + nb.label + ')' : ''),
+        color: nb.color
+      });
+    });
+  }
+
+  // 4. Dụng cụ theo ngày
+  if(guide && Array.isArray(guide.supplies)){
+    guide.supplies.forEach((sp, idx)=>{
+      items.push({
+        id: 'sp_' + targetDay + '_' + idx,
+        icon: sp.icon || '🎨',
+        text: sp.name
+      });
+    });
+  }
+
+  // 5. Đồ dùng học tập mang theo mỗi ngày
+  items.push(
+    { id: 'daily_pencil_case', icon: '✏️', text: 'Hộp bút: Bút chì (chuốt sẵn 3 cây), gôm tẩy, chuốt bút, thước kẻ 20cm' },
+    { id: 'daily_slate', icon: '📋', text: 'Bảng con + phấn + đồ lau bảng' },
+    { id: 'daily_water', icon: '💧', text: 'Bình nước cá nhân & Khăn tay sạch' },
+    { id: 'daily_hat_badge', icon: '🧢', text: 'Mũ che nắng & Thẻ học sinh đeo cổ' }
+  );
 
   const storageKey='bag_' + (c?.id||'c') + '_' + todayISO();
   if(!bagCheckedItems[storageKey]) bagCheckedItems[storageKey]={};
@@ -4052,14 +4202,35 @@ function renderSchoolBagChecklist(){
   const pct=items.length?Math.round((checkedCount/items.length)*100):0;
   const isAllDone=(items.length>0 && checkedCount===items.length);
 
+  // Môn trong TKB thực tế của ngày đó
+  const tt=c?.timetable||{};
+  const subjectsInDay=new Set();
+  [1,2,3,4,5,6,7].forEach(p=>{
+    const entry=tt[targetDay + '_' + p];
+    if(entry && entry.subject && entry.subject!=='Nghỉ' && entry.subject!=='Bán trú / Nghỉ'){
+      subjectsInDay.add(entry.subject);
+    }
+  });
+  const subjectArr=Array.from(subjectsInDay);
   const subjectBadges=subjectArr.length
     ? subjectArr.map(s=>'<span style="background:#e0f2fe;color:#0369a1;padding:2px 8px;border-radius:12px;font-size:11.5px;font-weight:800;margin-right:4px">' + s + '</span>').join('')
-    : '<span style="color:#64748b;font-size:12px">Chưa có môn trong TKB</span>';
+    : '<span style="color:#64748b;font-size:12px">Lớp 1A4</span>';
 
   let checklistHtml=items.map(it=>{
     const checked=!!checkedMap[it.id];
-    return '<div class="bag-item ' + (checked?'checked':'') + '" onclick="toggleBagItem(\'' + storageKey + '\',\'' + it.id + '\')"><div class="bag-check-circle">' + (checked?'✓':'') + '</div><div class="bag-item-text">' + it.text + '</div></div>';
+    const swatchHtml = it.color ? '<span class="nb-swatch" style="background:' + it.color + ';margin-right:6px"></span>' : '';
+    const uniformStyle = it.isUniform ? 'style="border-color:#10b981;background:#ecfdf5"' : '';
+    return '<div class="bag-item ' + (checked?'checked':'') + '" ' + uniformStyle + ' onclick="toggleBagItem(\'' + storageKey + '\',\'' + it.id + '\')">'
+      + '<div class="bag-check-circle">' + (checked?'✓':'') + '</div>'
+      + '<div class="bag-item-text" style="display:flex;align-items:center;gap:4px">'
+      + swatchHtml
+      + '<span>' + (it.icon ? it.icon + ' ' : '') + it.text + '</span>'
+      + '</div></div>';
   }).join('');
+
+  const uniformAlertHtml = (guide && guide.uniform)
+    ? '<div class="uniform-tomorrow-alert"><span>👕</span><span><b>LƯU Ý ĐỒNG PHỤC (' + dayName + '):</b> Ngày mai có môn GDTC, bé nhớ mặc <b>ÁO THỂ DỤC</b> nhé!</span></div>'
+    : '';
 
   const html=`
     <div class="bag-card-head">
@@ -4070,7 +4241,7 @@ function renderSchoolBagChecklist(){
           <span class="bag-reward-pill">+5 ⭐ Thưởng tự giác</span>
         </div>
         <div style="font-size:12.5px;color:#047857;margin-top:2px">
-          Các môn học trong TKB: ${subjectBadges}
+          Các môn Lớp 1A4 trong ngày: ${subjectBadges}
         </div>
       </div>
       <div class="bag-progress-wrap">
@@ -4078,14 +4249,16 @@ function renderSchoolBagChecklist(){
         <div class="bag-progress-bar"><i style="width:${pct}%"></i></div>
       </div>
     </div>
+    ${uniformAlertHtml}
     <div class="bag-checklist">${checklistHtml}</div>
+    <div style="margin-top:10px;font-size:12px;color:#64748b;line-height:1.4">
+      💡 <b>Lời dặn cô giáo:</b> Bộ ghép chữ, bảng con sẽ để lại lớp cho gọn, nhẹ. Bút mực sẽ đem theo khi có thông báo của GV.
+    </div>
     ${isAllDone ? '<div style="margin-top:12px;background:#d1fae5;border:1.5px dashed #10b981;border-radius:var(--radius-sm);padding:10px 14px;text-align:center;font-weight:800;color:#065f46">🎉 Hoan hô bé đã soạn cặp sách đầy đủ và ngăn nắp! Cặp sách đã sẵn sàng cho ngày mai rồi!</div>' : ''}
   `;
 
-  ['todaySchoolBagCard','scheduleSchoolBagCard'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el) el.innerHTML=html;
-  });
+  if(todayContainer) todayContainer.innerHTML=html;
+  if(scheduleContainer) scheduleContainer.innerHTML=html;
 }
 
 function toggleBagItem(storageKey, itemId){
@@ -4121,6 +4294,98 @@ function toggleBagItem(storageKey, itemId){
   }
 
   renderSchoolBagChecklist();
+}
+
+// 📖 BẢNG HƯỚNG DẪN SOẠN SÁCH VỞ THEO TỪNG NGÀY (LỚP 1A4)
+function renderBagGuideTable(){
+  const container=document.getElementById('scheduleBagGuideContainer');
+  if(!container) return;
+
+  const days=['2','3','4','5','6'];
+  let colsHtml='';
+
+  days.forEach(d=>{
+    const g=GRADE1_BAG_GUIDE[d];
+    if(!g) return;
+
+    let booksHtml='';
+    g.books.forEach(b=>{
+      booksHtml+='<li><span>' + (b.icon||'📖') + '</span><span>' + safe(b.name) + '</span></li>';
+    });
+
+    let notebooksHtml='';
+    g.notebooks.forEach(nb=>{
+      notebooksHtml+='<li><span class="nb-swatch" style="background:' + nb.color + '"></span><span>' + safe(nb.name) + '</span></li>';
+    });
+
+    let suppliesHtml='';
+    if(g.supplies && g.supplies.length){
+      g.supplies.forEach(sp=>{
+        suppliesHtml+='<li><span>' + (sp.icon||'🎨') + '</span><span>' + safe(sp.name) + '</span></li>';
+      });
+    }
+
+    colsHtml+=`
+      <div class="guide-day-col" style="border-top:4px solid ${g.themeColor}">
+        <div class="guide-day-head" style="background:${g.themeColor}">
+          <div>${g.dayLabel}</div>
+          ${g.uniform ? '<span class="guide-uniform-badge">👕 Áo thể dục</span>' : ''}
+        </div>
+        <div class="guide-day-body">
+          <div>
+            <div class="guide-section-label">📚 Sách &amp; VBT</div>
+            <ul class="guide-item-list">${booksHtml}</ul>
+          </div>
+          <div>
+            <div class="guide-section-label">📓 Vở theo màu</div>
+            <ul class="guide-item-list">${notebooksHtml}</ul>
+          </div>
+          ${suppliesHtml ? `
+            <div>
+              <div class="guide-section-label">🎨 Dụng cụ</div>
+              <ul class="guide-item-list">${suppliesHtml}</ul>
+            </div>
+          ` : ''}
+        </div>
+        <div class="guide-day-footer">💡 ${safe(g.note)}</div>
+      </div>
+    `;
+  });
+
+  const fullHtml=`
+    <div class="bag-guide-card">
+      <div class="bag-guide-header">
+        <div class="bag-guide-title">
+          <span style="font-size:26px">🌈🎒</span>
+          <div>
+            <h3>HƯỚNG DẪN CÁCH SOẠN SÁCH VỞ THEO THỜI KHÓA BIỂU</h3>
+            <div class="note" style="margin-top:2px;color:#475569">Áp dụng cho học sinh Lớp 1A4 • Chuẩn bảng dặn dò của cô giáo</div>
+          </div>
+        </div>
+        <button class="btn" style="padding:8px 12px;font-size:13px;background:#f8fafc;border:1px solid var(--line)" onclick="window.print()">
+          <span>🖨️</span>
+          <span>In Bảng Hướng Dẫn</span>
+        </button>
+      </div>
+
+      <div class="bag-guide-grid">
+        ${colsHtml}
+      </div>
+
+      <div class="guide-notes-banner">
+        <div style="font-size:14.5px;font-weight:900;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+          <span>📌</span> <span>LƯU Ý CHUNG CHO HỌC SINH LỚP 1A4:</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;font-size:13px">
+          <div>• 👕 <b>Thứ Tư và Thứ Năm:</b> Có tiết GDTC (Giáo dục thể chất), học sinh mặc <b>đồng phục thể dục (áo thể dục)</b>.</div>
+          <div>• 🎒 <b>Dụng cụ học tập luôn mang theo:</b> Bảng con + phấn + đồ lau, bút chì (đã gọt nhọn 3 cây), cục tẩy, đồ chuốt, thước kẻ 20cm... <i>(Riêng bút mực, sẽ đem theo khi có thông báo của GV)</i>.</div>
+          <div>• 🏫 <b>Đồ để lại lớp:</b> Bộ ghép chữ, bảng con sẽ để lại lớp cho gọn, nhẹ.</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  container.innerHTML=fullHtml;
 }
 
 // 5. 🐝 ĐỒNG HỒ CON ONG 15 PHÚT TẬP TRUNG (KIDS FOCUS TIMER)
