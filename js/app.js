@@ -1714,97 +1714,120 @@ function renderToday(){
   renderTodayCategories();
 }
 
+function submitTodayManualTask(){
+  const c = child();
+  if(!c) return alert('Chưa có hồ sơ bé.');
+  const nameInp = document.getElementById('todayManualTaskInput');
+  const ptsInp = document.getElementById('todayManualPointsInput');
+  const name = (nameInp ? nameInp.value : '').trim();
+  if(!name){
+    if(nameInp) nameInp.focus();
+    showToast('✍️ Hãy nhập tên việc vừa làm để cộng sao nhé!');
+    return;
+  }
+  const pts = Math.max(1, Math.min(500, Math.round(Number(ptsInp?.value || 10))));
+  const today = todayISO();
+
+  const newTask = {
+    id: uid('t'),
+    seriesId: null,
+    name,
+    subject: '',
+    category: 'home_study',
+    date: today,
+    points: pts,
+    duration: '',
+    link: '',
+    instruction: '',
+    done: true,
+    awardedPoints: pts,
+    completedAt: new Date().toISOString()
+  };
+
+  c.tasks.push(newTask);
+  c.score = (c.score || 0) + pts;
+  c.highestScore = Math.max(c.highestScore || 0, c.score);
+  logPoint(c, 'task', pts, 'Hoàn thành: ' + name);
+  boostPiggyOnGoodDeed(c, 'Hoàn thành: ' + name, 15, 0.1);
+  updateEarnedAchievements(c);
+
+  if(nameInp) nameInp.value = '';
+  save();
+  render();
+  playChime('success');
+  triggerConfetti();
+  showToast(`🎉 Đã cộng +${pts} ⭐ cho việc "${name}"!`);
+}
+
 function renderTodayCategories(){
   const container = document.getElementById('todayCategoriesContainer');
   if(!container) return;
   const c = child();
   if(!c) {
-    container.innerHTML = '<div class="empty">Chưa có hồ sơ bé nào. Vui lòng vào khu vực Phụ huynh để thêm hồ sơ bé!</div>';
+    container.innerHTML = '<div class="empty">Chưa có hồ sơ bé nào.</div>';
     return;
   }
   const today = todayISO();
   const tasks = c.tasks.filter(t => t.date === today);
+  const doneCount = tasks.filter(t => t.done).length;
 
-  // Phân loại các nhiệm vụ vào 3 nhóm
-  const catKeys = ['home_study', 'school_study', 'parent_help'];
-  const grouped = { home_study: [], school_study: [], parent_help: [] };
-
-  tasks.forEach(t => {
-    let cat = t.category;
-    if(!cat || !grouped[cat]) {
-      const s = ((t.name||'') + ' ' + (t.instruction||'') + ' ' + (t.subject||'')).toLowerCase();
-      if(s.includes('cô') || s.includes('trường') || s.includes('lớp') || s.includes('thi') || s.includes('phát biểu') || s.includes('giảng')) {
-        cat = 'school_study';
-      } else if(s.includes('bố') || s.includes('mẹ') || s.includes('bà') || s.includes('nhà') || s.includes('dọn') || s.includes('đồ chơi') || s.includes('ngủ') || s.includes('ăn')) {
-        cat = 'parent_help';
-      } else {
-        cat = 'home_study';
-      }
-      t.category = cat;
-    }
-    grouped[cat].push(t);
-  });
+  const badgeEl = document.getElementById('todayMinimalTaskCountBadge');
+  if(badgeEl) {
+    badgeEl.textContent = `${doneCount}/${tasks.length} đã xong`;
+  }
 
   container.innerHTML = '';
 
-  catKeys.forEach(key => {
-    if(currentTodayCategoryFilter !== 'all' && currentTodayCategoryFilter !== key) return;
+  if(!tasks.length) {
+    container.innerHTML = `<div class="today-minimal-empty">✨ Chưa có việc nhắc sẵn hôm nay — nhập tay việc vừa làm ở trên để cộng sao ngay nhé!</div>`;
+    return;
+  }
 
-    const catMeta = TODAY_CATEGORIES[key];
-    const catTasks = grouped[key] || [];
-    const doneCount = catTasks.filter(t => t.done).length;
+  // Sắp xếp việc chưa xong lên đầu, việc đã xong xuống dưới
+  const sorted = tasks.slice().sort((a, b) => Number(Boolean(a.done)) - Number(Boolean(b.done)));
+  const listWrap = document.createElement('div');
+  listWrap.className = 'today-minimal-list';
 
-    const card = document.createElement('div');
-    card.className = 'today-cat-card ' + key;
+  sorted.forEach(t => {
+    const isPenalty = Number(t.points) < 0;
+    const row = document.createElement('div');
+    row.className = 'today-minimal-row ' + (t.done ? 'is-done' : '');
 
-    // Header nhóm gọn gàng cho bé
-    const head = document.createElement('div');
-    head.className = 'today-cat-card-head';
-    head.innerHTML = `
-      <div class="today-cat-title-wrap">
-        <span style="font-size:22px">${catMeta.icon}</span>
-        <div class="today-cat-badge">${catMeta.name}</div>
-        <span class="today-cat-count">${doneCount}/${catTasks.length} việc đã xong</span>
-      </div>
-    `;
-    card.appendChild(head);
+    const metaParts = [];
+    if(t.subject) metaParts.push(safe(t.subject));
+    if(t.duration) metaParts.push(safe(t.duration));
+    if(t.instruction) metaParts.push(safe(t.instruction));
+    const metaText = metaParts.length ? `<span class="today-minimal-meta">• ${metaParts.join(' • ')}</span>` : '';
 
-    // Danh sách nhiệm vụ nhắc việc của nhóm
-    const listWrap = document.createElement('div');
-    if(!catTasks.length) {
-      listWrap.innerHTML = `<div class="note" style="color:#94a3b8;padding:8px 2px;font-size:12.5px">Hôm nay chưa có việc cần nhắc trong mục <b>${catMeta.name}</b>.</div>`;
+    let actionHtml = '';
+    if(t.done) {
+      const awarded = Number(t.awardedPoints ?? t.points ?? 0);
+      actionHtml = `
+        <div class="today-minimal-done-group">
+          <span class="today-minimal-pts-done">${awarded >= 0 ? '+' + awarded : awarded} ⭐</span>
+          <button type="button" class="today-minimal-undo-btn" title="Hoàn tác" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">↩</button>
+        </div>
+      `;
     } else {
-      catTasks.forEach(t => {
-        const isPenalty = Number(t.points) < 0;
-        const row = document.createElement('div');
-        row.className = 'today-task-row ' + (t.done ? 'done' : '') + ' ' + (isPenalty ? 'penalty-task' : '');
-
-        let btnHtml = '';
-        if(t.done) {
-          btnHtml = `<button type="button" class="today-task-btn is-done" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">✓ Đã xong</button>`;
-        } else if(isPenalty) {
-          btnHtml = `<button type="button" class="today-task-btn finish-penalty" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">${t.points} ⭐</button>`;
-        } else {
-          btnHtml = `<button type="button" class="today-task-btn finish-praise" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">+${t.points} ⭐ Hoàn thành</button>`;
-        }
-
-        row.innerHTML = `
-          <div class="today-task-info">
-            <div class="today-task-name">${safe(t.name)}</div>
-            <div class="today-task-meta">
-              ${t.subject ? `<span class="today-task-chip">📘 ${safe(t.subject)}</span>` : ''}
-              ${t.duration ? `<span class="today-task-chip">⏱ ${safe(t.duration)}</span>` : ''}
-              ${t.instruction ? `<span class="note" style="font-size:11.5px;color:#64748b">${safe(t.instruction)}</span>` : ''}
-            </div>
-          </div>
-          <div>${btnHtml}</div>
-        `;
-        listWrap.appendChild(row);
-      });
+      actionHtml = `
+        <button type="button" class="today-minimal-finish-btn ${isPenalty ? 'penalty' : ''}" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">
+          ${isPenalty ? t.points + ' ⭐' : '+' + t.points + ' ⭐ Xong'}
+        </button>
+      `;
     }
-    card.appendChild(listWrap);
-    container.appendChild(card);
+
+    row.innerHTML = `
+      <div class="today-minimal-left" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">
+        <span class="today-minimal-check">${t.done ? '✅' : '⬜'}</span>
+        <span class="today-minimal-title">${safe(t.name)}</span>
+        ${metaText}
+      </div>
+      <div class="today-minimal-right">${actionHtml}</div>
+    `;
+    listWrap.appendChild(row);
   });
+
+  container.appendChild(listWrap);
 }
 
 function applyQuickPresetPoint(catKey, name, points, mode){
@@ -2448,8 +2471,7 @@ function createStudyToolCard(t){
       <div class="tool-card-desc">${safe(t.desc||'')}</div>
     </div>
     <div class="tool-card-actions">
-      <a class="tool-btn-open" href="${safe(t.url)}" target="_blank" rel="noopener">Mở học ngay ↗</a>
-      <button class="tool-btn-assign" onclick="assignTaskFromTool('${safe(t.id)}')">Giao bài 📝</button>
+      <a class="tool-btn-open" style="width:100%;text-align:center" href="${safe(t.url)}" target="_blank" rel="noopener">Mở học ngay ↗</a>
     </div>
   `;
   return card;
@@ -2517,7 +2539,7 @@ function assignTaskFromTool(toolId){
   const tools=Array.isArray(data.studyTools)&&data.studyTools.length?data.studyTools:DEFAULT_STUDY_TOOLS;
   const tool=tools.find(t=>t.id===toolId);
   if(!tool)return;
-  openParentModal();
+  openParentModal('tasks');
   setTimeout(()=>{
     const quickSel=document.getElementById('taskQuickToolSelect');
     if(quickSel) quickSel.value=tool.id;

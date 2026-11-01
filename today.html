@@ -95,42 +95,33 @@
       <!-- 🐷 NGÔI NHÀ THÚ CƯNG: HEO ĐẤT ỤT ỊT (TRUNG TÂM CHĂM SÓC CỦA BÉ) -->
       <div id="todayPiggyWidget" style="margin-bottom:16px"></div>
 
-      <!-- 📋 KHU VỰC NHẮC VIỆC HÔM NAY CHO BÉ -->
-      <div class="card" style="padding:16px;margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+      <!-- 📋 KHU VỰC NHẮC VIỆC HÔM NAY CHO BÉ (THIẾT KẾ TỐI GIẢN + NHẬP TAY CỘNG SAO) -->
+      <div class="card today-minimal-tasks-card" style="padding:14px 16px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px">
           <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-size:22px">📋</span>
-            <div>
-              <h3 style="margin:0;font-size:17px;color:#1e293b">Nhắc Việc Hôm Nay Của Bé</h3>
-              <div class="note">Bé kiểm tra các việc cần làm và bấm hoàn thành khi làm xong nhé!</div>
-            </div>
+            <span style="font-size:20px">📋</span>
+            <h3 style="margin:0;font-size:16px;color:#1e293b">Nhắc Việc Hôm Nay Của Bé</h3>
           </div>
-          <button type="button" class="secondary" style="padding:6px 12px;font-size:12px" onclick="openParentModal('tasks')">
-            📝 Phụ huynh giao việc
-          </button>
+          <span id="todayMinimalTaskCountBadge" style="font-size:12px;font-weight:800;color:#059669;background:#ecfdf5;border:1px solid #a7f3d0;padding:3px 10px;border-radius:999px">0/0 đã xong</span>
         </div>
 
-        <!-- 🏷️ THANH LỌC 3 NHÓM (HỌC Ở NHÀ - TRÊN LỚP - PHỤ BỐ MẸ) -->
-        <div class="today-cat-filter-bar" id="todayCatFilterBar">
-          <button type="button" class="today-cat-pill active" onclick="setTodayCategoryFilter('all')">
-            <span>🌟</span> <span>Tất cả việc</span>
-          </button>
-          <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('home_study')">
-            <span>🏠</span> <span>Học ở nhà</span>
-          </button>
-          <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('school_study')">
-            <span>🏫</span> <span>Trên lớp</span>
-          </button>
-          <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('parent_help')">
-            <span>🧹</span> <span>Phụ bố mẹ</span>
-          </button>
+        <!-- ✍️ KHUNG NHẬP TAY ĐỂ CỘNG SAO NGAY -->
+        <div class="today-manual-entry-bar">
+          <input id="todayManualTaskInput" type="text" placeholder="✍️ Nhập tay việc vừa làm để cộng sao (VD: Đọc sách, học bài, phụ mẹ...)" onkeydown="if(event.key==='Enter') submitTodayManualTask()">
+          <div class="today-manual-pts-group">
+            <input id="todayManualPointsInput" type="number" min="1" max="500" value="10" title="Số sao cộng thêm">
+            <span class="pts-unit">⭐</span>
+          </div>
+          <button type="button" class="today-manual-add-btn" onclick="submitTodayManualTask()">➕ Cộng</button>
         </div>
 
+        <!-- Danh sách việc tối giản trong ngày -->
         <div class="today-categories-container" id="todayCategoriesContainer"></div>
       </div>
 
       <!-- Các phần tử ẩn để tương thích code cũ -->
       <div style="display:none !important">
+        <div id="todayCatFilterBar"></div>
         <span id="goalName">bé</span>
         <div id="rewardShopToday"></div>
         <div id="heroText"></div>
