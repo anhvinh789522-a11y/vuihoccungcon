@@ -1477,6 +1477,21 @@
         </div>
         <div class="note" style="margin-top:8px" id="syncStatus">Chưa cấu hình đồng bộ.</div>
         <div class="note">Thiết bị nào lưu sau cùng sẽ thắng. Mã gia đình càng dài càng khó đoán — đừng chia sẻ cho người ngoài.</div>
+
+        <!-- 💾 SAO LƯU & XUẤT/NHẬP DỮ LIỆU FILE JSON TOÀN BỘ DỰ ÁN -->
+        <div style="margin-top:14px;padding-top:12px;border-top:1px dashed #cbd5e1">
+          <div style="font-size:13px;font-weight:800;color:#1e293b;margin-bottom:6px">💾 Sao lưu &amp; Khôi phục dữ liệu toàn bộ dự án</div>
+          <div class="note" style="margin-bottom:8px">Xuất toàn bộ lịch học, điểm thưởng, heo đất, quà tặng ra file JSON để lưu giữ an toàn hoặc chuyển sang máy khác.</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="secondary" style="padding:8px 12px;font-size:12px" onclick="exportProjectDataJSON()">
+              📥 Xuất file sao lưu (JSON)
+            </button>
+            <button type="button" class="secondary" style="padding:8px 12px;font-size:12px" onclick="triggerImportProjectData()">
+              📤 Nạp file khôi phục (JSON)
+            </button>
+            <input type="file" id="projectDataFileInput" accept=".json" style="display:none" onchange="handleImportProjectData(event)">
+          </div>
+        </div>
       </div>
     </div>
   </div>

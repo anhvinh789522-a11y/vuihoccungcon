@@ -5285,3 +5285,80 @@ function applyInitialHash() {
 }
 applyInitialHash();
 window.addEventListener('hashchange', applyInitialHash);
+
+
+/* ============================================================
+   💾 SAO LƯU & ĐỒNG BỘ DỮ LIỆU FILE JSON TOÀN BỘ DỰ ÁN
+   ============================================================ */
+function exportProjectDataJSON() {
+  try {
+    const backupObj = {
+      version: '2.0',
+      exportedAt: new Date().toISOString(),
+      appName: 'Vui Học Cùng Con - Bảo Nhi',
+      data: data
+    };
+    const jsonStr = JSON.stringify(backupObj, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `vuihoc_dulieu_${todayISO()}_baonhi.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('💾 Đã xuất file sao lưu dữ liệu toàn bộ dự án thành công!');
+  } catch(e) {
+    alert('Xuất dữ liệu thất bại: ' + e.message);
+  }
+}
+
+function triggerImportProjectData() {
+  const fileInp = document.getElementById('projectDataFileInput');
+  if (fileInp) fileInp.click();
+}
+
+function handleImportProjectData(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      const importedData = parsed.data || parsed;
+      if (!importedData || !Array.isArray(importedData.children)) {
+        throw new Error('File không đúng cấu trúc dữ liệu dự án Vui Học Cùng Con.');
+      }
+
+      askConfirm(
+        'Khôi phục dữ liệu toàn bộ dự án',
+        `Bạn có chắc muốn nạp dữ liệu từ file "${file.name}" không?\n\nDữ liệu hiện tại trên máy sẽ được cập nhật đồng bộ với file này.`,
+        () => {
+          try {
+            localStorage.setItem(STORAGE_KEY + '.backup_before_import', JSON.stringify(data));
+          } catch(err) {}
+
+          data = importedData;
+          if (!data.exchangeRate || data.exchangeRate.vnd === 5000) data.exchangeRate = { stars: 100, vnd: 10000 };
+          data.children.forEach(c => {
+            if (typeof ensurePiggyPet === 'function') ensurePiggyPet(c);
+            updateEarnedAchievements(c);
+          });
+          save();
+          render();
+          playChime('success');
+          triggerConfetti();
+          showToast('🎉 Đã đồng bộ và khôi phục toàn bộ dữ liệu dự án thành công!');
+        },
+        { yesText: 'Đồng ý nạp dữ liệu', icon: '📥' }
+      );
+    } catch(err) {
+      alert('Đọc file sao lưu thất bại: ' + err.message);
+    } finally {
+      event.target.value = '';
+    }
+  };
+  reader.readAsText(file);
+}

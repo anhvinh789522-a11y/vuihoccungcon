@@ -65,12 +65,12 @@ async function syncPull(silent){
     if(!rows.length){if(!silent)setSyncStatus('Đám mây chưa có dữ liệu cho mã này. Bấm Đẩy lên để lưu.');return false}
     try{localStorage.setItem(STORAGE_KEY+'.backup',JSON.stringify(data))}catch(e){}
     data=rows[0].data||data;
-    if(!data.exchangeRate)data.exchangeRate={stars:100,vnd:5000};
+    if(!data.exchangeRate || data.exchangeRate.vnd === 5000) data.exchangeRate = {stars: 100, vnd: 10000};
     if(!Array.isArray(data.children))data.children=[];
     if(!Array.isArray(data.subjects))data.subjects=[];
     if(!Array.isArray(data.studyTools))data.studyTools=(typeof DEFAULT_STUDY_TOOLS!=='undefined'?structuredClone(DEFAULT_STUDY_TOOLS):[]);
     if(!data.parentPassword)data.parentPassword='1234';
-    data.children.forEach(c=>{updateEarnedAchievements(c)});
+    data.children.forEach(c=>{if(typeof ensurePiggyPet==="function") ensurePiggyPet(c); updateEarnedAchievements(c);});
     _localSave();
     syncCfg.updatedAt=rows[0].updated_at;persistSync();
     render();
