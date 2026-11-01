@@ -789,12 +789,28 @@
       </div>
 
       <div class="parent-section">
-        <h3>☁️ Đồng bộ đa thiết bị</h3>
+        <h3>☁️ Đồng bộ đa thiết bị (Google Trang tính hoặc Supabase)</h3>
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:9px 12px;margin-bottom:10px;font-size:11.5px;color:#166534;line-height:1.4">
+          📊 <b>Khuyên dùng Google Trang tính (Dễ nhất):</b> Chỉ cần dán <b>Link Web App Google Trang tính</b> vào ô đầu tiên là đồng bộ tức thì, không cần Anon Key phức tạp!
+        </div>
         <div class="formgrid">
-          <div style="grid-column:1/-1"><div class="note">Supabase URL</div><input id="syncUrl" placeholder="https://xyzcompany.supabase.co"></div>
-          <div style="grid-column:1/-1"><div class="note">Anon key</div><input id="syncKey" placeholder="Dán anon key trong Supabase → Project Settings → API"></div>
-          <div><div class="note">Mã gia đình (nhập giống nhau trên mọi máy)</div><input id="syncCode" placeholder="VD: baonhi-2026"></div>
-          <div style="display:flex;align-items:end"><label class="note" style="display:flex;gap:6px;align-items:center"><input id="syncAuto" type="checkbox" checked style="width:auto"> Tự động đồng bộ</label></div>
+          <div style="grid-column:1/-1">
+            <div class="note">Link Web App Google Trang tính (hoặc Supabase URL)</div>
+            <input id="syncUrl" placeholder="VD: https://script.google.com/macros/s/.../exec">
+          </div>
+          <div style="grid-column:1/-1">
+            <div class="note">Anon key (Chỉ cần nếu dùng Supabase, dùng Google Trang tính thì bỏ trống)</div>
+            <input id="syncKey" placeholder="Bỏ trống nếu dùng Google Trang tính">
+          </div>
+          <div>
+            <div class="note">Mã gia đình (tùy chọn)</div>
+            <input id="syncCode" placeholder="VD: baonhi-2026">
+          </div>
+          <div style="display:flex;align-items:end">
+            <label class="note" style="display:flex;gap:6px;align-items:center">
+              <input id="syncAuto" type="checkbox" checked style="width:auto"> Tự động đồng bộ
+            </label>
+          </div>
         </div>
         <div class="actions" style="margin-top:10px">
           <button class="primary" onclick="connectSync()">Kết nối & đồng bộ</button>

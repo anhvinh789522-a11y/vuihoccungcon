@@ -1317,9 +1317,13 @@ function render(){
 function updateCloudStatusPill(){
   const pill=document.getElementById('cloudStatusPill'),txt=document.getElementById('cloudStatusText');
   if(!pill||!txt)return;
-  if(typeof syncCfg!=='undefined' && syncCfg && syncCfg.url && syncCfg.code){
+  if(typeof syncCfg!=='undefined' && syncCfg && syncCfg.url && (syncCfg.provider==='sheets' || syncCfg.code)){
     pill.classList.add('synced');
-    txt.textContent='Đám mây ('+syncCfg.code+')';
+    if(syncCfg.provider==='sheets' || String(syncCfg.url).includes('script.google.com')){
+      txt.textContent='📊 Google Trang tính';
+    } else {
+      txt.textContent='☁️ Đám mây ('+(syncCfg.code||'Supabase')+')';
+    }
   }else{
     pill.classList.remove('synced');
     txt.textContent='Dữ liệu trên máy';

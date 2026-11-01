@@ -1,4 +1,4 @@
-// ☁️ Đồng bộ đa thiết bị qua Supabase (dùng REST API trực tiếp, không cần thư viện).
+// ☁️ Đồng bộ đa thiết bị qua Google Trang Tính (Google Sheets) hoặc Supabase.
 // Thiết bị nào lưu sau cùng sẽ thắng. Tải về sẽ tự sao lưu bản trên máy trước khi ghi đè.
 const SYNC_KEY='vuihoc_baonhi_sync_v1';
 let syncCfg=null;
@@ -9,16 +9,23 @@ let _pushTimer=null;
 const _localSave=save;
 save=function(){_localSave();schedulePush();};
 
+function isGoogleSheets(u){
+  return String(u||'').includes('script.google.com');
+}
+
 function persistSync(){
   localStorage.setItem(SYNC_KEY,JSON.stringify(syncCfg));
   if(typeof updateCloudStatusPill==='function') updateCloudStatusPill();
 }
-function syncBase(){return String(syncCfg.url||'').replace(/\/+$/,'')}
-function syncHeaders(){return {'apikey':syncCfg.anon,'Authorization':'Bearer '+syncCfg.anon,'Content-Type':'application/json'}}
+
+function syncBase(){return String(syncCfg?.url||'').replace(/\/+$/,'')}
+function syncHeaders(){return {'apikey':syncCfg?.anon||'','Authorization':'Bearer '+(syncCfg?.anon||''),'Content-Type':'application/json'}}
+
 function setSyncStatus(msg){
   const el=document.getElementById('syncStatus');if(el)el.textContent=msg;
   if(typeof updateCloudStatusPill==='function') updateCloudStatusPill();
 }
+
 function fillSyncForm(){
   if(!syncCfg)return;
   const u=document.getElementById('syncUrl'),k=document.getElementById('syncKey'),cd=document.getElementById('syncCode'),a=document.getElementById('syncAuto');
@@ -27,7 +34,12 @@ function fillSyncForm(){
   if(cd)cd.value=syncCfg.code||'';
   if(a)a.checked=syncCfg.auto!==false;
 }
-function syncReady(){return syncCfg&&syncCfg.url&&syncCfg.anon&&syncCfg.code}
+
+function syncReady(){
+  if(!syncCfg || !syncCfg.url) return false;
+  if(isGoogleSheets(syncCfg.url)) return true; // Google Sheets chỉ cần link Web App
+  return Boolean(syncCfg.anon && syncCfg.code); // Supabase cần đủ URL, Key, Code
+}
 
 function schedulePush(){
   if(!syncReady()||syncCfg.auto===false)return;
@@ -35,36 +47,83 @@ function schedulePush(){
   _pushTimer=setTimeout(()=>syncPush(true),2000);
 }
 
+// 📤 Đẩy dữ liệu lên Cloud (Google Sheets hoặc Supabase)
 async function syncPush(silent){
   if(!syncReady()){if(!silent)setSyncStatus('Chưa cấu hình đồng bộ.');return false}
   try{
     if(!silent)setSyncStatus('Đang đẩy lên…');
     const now=new Date().toISOString();
-    const res=await fetch(syncBase()+'/rest/v1/family_state',{
-      method:'POST',
-      headers:Object.assign({},syncHeaders(),{'Prefer':'resolution=merge-duplicates'}),
-      body:JSON.stringify([{code:syncCfg.code,data:data,updated_at:now}])
-    });
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    syncCfg.updatedAt=now;persistSync();
-    setSyncStatus('Đã đẩy lên lúc '+new Date().toLocaleString('vi-VN')+'.');
-    return true;
+
+    if(isGoogleSheets(syncCfg.url)){
+      // 📊 ĐỒNG BỘ GOOGLE TRANG TÍNH (GOOGLE APPS SCRIPT WEB APP)
+      const res=await fetch(syncCfg.url,{
+        method:'POST',
+        body:JSON.stringify({
+          action:'save',
+          code:syncCfg.code||'baonhi',
+          data:data,
+          updated_at:now
+        })
+      });
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      syncCfg.updatedAt=now;
+      syncCfg.provider='sheets';
+      persistSync();
+      setSyncStatus('Đã đồng bộ lên Google Trang tính lúc '+new Date().toLocaleString('vi-VN')+'.');
+      return true;
+    } else {
+      // ⚡ ĐỒNG BỘ SUPABASE
+      const res=await fetch(syncBase()+'/rest/v1/family_state',{
+        method:'POST',
+        headers:Object.assign({},syncHeaders(),{'Prefer':'resolution=merge-duplicates'}),
+        body:JSON.stringify([{code:syncCfg.code,data:data,updated_at:now}])
+      });
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      syncCfg.updatedAt=now;
+      syncCfg.provider='supabase';
+      persistSync();
+      setSyncStatus('Đã đẩy lên Supabase lúc '+new Date().toLocaleString('vi-VN')+'.');
+      return true;
+    }
   }catch(e){
     setSyncStatus('Đẩy lên thất bại: '+e.message+(navigator.onLine?'':' (mất mạng?)'));
     return false;
   }
 }
 
+// 📥 Tải dữ liệu về từ Cloud (Google Sheets hoặc Supabase)
 async function syncPull(silent){
   if(!syncReady()){if(!silent)setSyncStatus('Chưa cấu hình đồng bộ.');return false}
   try{
     if(!silent)setSyncStatus('Đang tải về…');
-    const res=await fetch(syncBase()+'/rest/v1/family_state?code=eq.'+encodeURIComponent(syncCfg.code)+'&select=data,updated_at',{headers:syncHeaders()});
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    const rows=await res.json();
-    if(!rows.length){if(!silent)setSyncStatus('Đám mây chưa có dữ liệu cho mã này. Bấm Đẩy lên để lưu.');return false}
+
+    let remoteData=null;
+    let remoteUpdatedAt=null;
+
+    if(isGoogleSheets(syncCfg.url)){
+      // 📊 TẢI TỪ GOOGLE TRANG TÍNH
+      const getUrl=syncCfg.url+(syncCfg.url.includes('?')?'&':'?')+'action=get&code='+encodeURIComponent(syncCfg.code||'baonhi');
+      const res=await fetch(getUrl);
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      const json=await res.json();
+      if(!json || !json.data){
+        if(!silent)setSyncStatus('Google Trang tính chưa có dữ liệu. Bấm Đẩy lên để lưu bản đầu tiên.');
+        return false;
+      }
+      remoteData=json.data;
+      remoteUpdatedAt=json.updated_at||new Date().toISOString();
+    } else {
+      // ⚡ TẢI TỪ SUPABASE
+      const res=await fetch(syncBase()+'/rest/v1/family_state?code=eq.'+encodeURIComponent(syncCfg.code)+'&select=data,updated_at',{headers:syncHeaders()});
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      const rows=await res.json();
+      if(!rows.length){if(!silent)setSyncStatus('Đám mây chưa có dữ liệu cho mã này. Bấm Đẩy lên để lưu.');return false}
+      remoteData=rows[0].data;
+      remoteUpdatedAt=rows[0].updated_at;
+    }
+
     try{localStorage.setItem(STORAGE_KEY+'.backup',JSON.stringify(data))}catch(e){}
-    data=rows[0].data||data;
+    data=remoteData||data;
     if(!data.exchangeRate || data.exchangeRate.vnd === 5000) data.exchangeRate = {stars: 100, vnd: 10000};
     if(!Array.isArray(data.children))data.children=[];
     if(!Array.isArray(data.subjects))data.subjects=[];
@@ -72,9 +131,13 @@ async function syncPull(silent){
     if(!data.parentPassword)data.parentPassword='1234';
     data.children.forEach(c=>{if(typeof ensurePiggyPet==="function") ensurePiggyPet(c); updateEarnedAchievements(c);});
     _localSave();
-    syncCfg.updatedAt=rows[0].updated_at;persistSync();
+
+    syncCfg.updatedAt=remoteUpdatedAt;
+    syncCfg.provider=isGoogleSheets(syncCfg.url)?'sheets':'supabase';
+    persistSync();
     render();
-    setSyncStatus('Đã tải về lúc '+new Date().toLocaleString('vi-VN')+'.');
+    const providerName=syncCfg.provider==='sheets'?'Google Trang tính':'Supabase';
+    setSyncStatus('Đã tải về từ '+providerName+' lúc '+new Date().toLocaleString('vi-VN')+'.');
     return true;
   }catch(e){
     if(!silent)setSyncStatus('Tải về thất bại: '+e.message+(navigator.onLine?'':' (mất mạng?)'));
@@ -90,11 +153,20 @@ function confirmPull(){
 
 async function connectSync(){
   const u=document.getElementById('syncUrl').value.trim().replace(/\/+$/,''),
-        k=document.getElementById('syncKey').value.trim(),
-        cd=document.getElementById('syncCode').value.trim(),
-        a=document.getElementById('syncAuto').checked;
-  if(!u||!k||!cd)return alert('Hãy nhập đủ Supabase URL, Anon key và Mã gia đình.');
-  syncCfg={url:u,anon:k,code:cd,auto:a,updatedAt:null};persistSync();
+        k=document.getElementById('syncKey')?document.getElementById('syncKey').value.trim():'',
+        cd=document.getElementById('syncCode')?document.getElementById('syncCode').value.trim():'baonhi',
+        a=document.getElementById('syncAuto')?document.getElementById('syncAuto').checked:true;
+
+  if(!u) return alert('Hãy dán link Web App Google Trang tính hoặc Supabase URL.');
+
+  if(isGoogleSheets(u)){
+    syncCfg={url:u,anon:'',code:cd||'baonhi',auto:a,provider:'sheets',updatedAt:null};
+  } else {
+    if(!k||!cd) return alert('Dùng Supabase thì hãy nhập đủ URL, Anon key và Mã gia đình.');
+    syncCfg={url:u,anon:k,code:cd,auto:a,provider:'supabase',updatedAt:null};
+  }
+
+  persistSync();
   setSyncStatus('Đang kết nối…');
   const hasRemote=await syncPull(false);
   if(!hasRemote)await syncPush(false);
@@ -112,7 +184,8 @@ function disconnectSync(){
   if(syncReady()&&syncCfg.auto!==false){
     setSyncStatus('Đang đồng bộ…');
     await syncPull(true);
-    setSyncStatus(syncCfg.updatedAt?('Đã đồng bộ lúc '+new Date().toLocaleString('vi-VN')+'.'):'Chưa có dữ liệu đám mây.');
+    const providerName=syncCfg.provider==='sheets'?'Google Trang tính':'Đám mây';
+    setSyncStatus(syncCfg.updatedAt?('Đã đồng bộ ('+providerName+') lúc '+new Date().toLocaleString('vi-VN')+'.'):'Chưa có dữ liệu đám mây.');
   }else{
     setSyncStatus(syncCfg?'Chưa bật tự động.':'Chưa cấu hình đồng bộ.');
   }
