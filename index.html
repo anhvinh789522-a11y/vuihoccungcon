@@ -50,80 +50,98 @@
       </div>
     </div>
 
-    <!-- 1. MÀN HÌNH HÔM NAY -->
+    <!-- 1. MÀN HÌNH HÔM NAY (THIẾT KẾ GỌN GÀNG: HỌC Ở NHÀ - TRÊN LỚP - PHỤ BỐ MẸ, DỄ CỘNG & NHẬP ĐIỂM TRỪ) -->
     <section id="todaySection" class="app-section active">
-      <section class="top">
-        <div class="hero">
-          <div class="hero-tag">Học mỗi ngày một chút</div>
-          <h1 id="hello">Chào con 👋</h1>
-          <p id="heroText">Phụ huynh chưa tạo hồ sơ cho bé.</p>
-          <div><span id="heroTitle" class="hero-title" style="display:none"></span></div>
-        </div>
-        <div class="score">
-          <div class="note">⭐ Điểm sao hiện có</div>
-          <div class="big" id="score">0</div>
-          <div class="note" style="margin-top:6px">Tiến độ hôm nay: <b id="count">0/0</b></div>
-          <div class="progress"><i id="bar" style="width:0%"></i></div>
-        </div>
-      </section>
-
-      <!-- 🎯 Mục tiêu quà đang phấn đấu (hiển thị trên màn hình chính) -->
-      <div id="todayTargetGoalCard" style="display:none"></div>
-
-      <!-- 🛵 BANNER NHẮC BÁO GIỜ CHỞ CON ĐI HỌC (TRƯỚC 10 PHÚT) -->
-      <div id="todayRideReminderCard" class="ride-card" style="margin-bottom:16px"></div>
-
-      <!-- 🎒 SOẠN CẶP SÁCH ĐẾN TRƯỜNG THEO THỜI KHÓA BIỂU -->
-      <div id="todaySchoolBagCard" class="bag-card" style="margin-bottom:16px"></div>
-
-      <!-- 📚 KHU VỰC CỘNG ĐIỂM HỌC TẬP CHO CON -->
-      <div class="study-score-card">
-        <div class="study-score-head">
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="study-badge">📚 Học tập</span>
-            <span class="study-title">Ghi nhận &amp; Cộng điểm học tập</span>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span class="note" style="color:#1e40af">Khích lệ bài thi, điểm 10 &amp; bài học ⭐</span>
-            <button class="study-open-modal-btn" onclick="openStudyScoreModal()">➕ Chấm điểm bài học...</button>
-          </div>
-        </div>
-        <div class="study-preset-grid" id="studyPresetList"></div>
-      </div>
-
-      <!-- ⚡ KHU VỰC THƯỞNG NÓNG & KHÍCH LỆ CON TRỰC TIẾP -->
-      <div class="quick-praise-card">
-        <div class="quick-praise-head">
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="praise-badge">⚡ Thưởng nóng</span>
-            <span style="font-weight:800;font-size:15px;color:#92400e">Khen thưởng &amp; Khích lệ con</span>
-          </div>
-          <span class="note" style="color:#b45309">Chạm 1 lần để cộng điểm khích lệ ngay ⭐</span>
-        </div>
-        <div class="quick-praise-grid" id="quickPraiseList"></div>
-      </div>
-
-      <section class="grid">
-        <div class="card">
-          <h2 id="taskTitle">📚 Nhiệm vụ hôm nay</h2>
-          <div id="taskList" class="empty">Chưa có nhiệm vụ nào.</div>
-        </div>
-        <div>
-          <div class="card">
-            <h2>⭐ Điểm của <span id="goalName">bé</span></h2>
-            <div class="big" id="goalScore">0</div>
-            <p class="note">💱 Quy đổi: <b id="moneyEquiv">0 đ</b></p>
-            <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-              <button class="primary" style="flex:1;padding:9px 12px;font-size:13px" onclick="openFlexibleMoneyModal()">💱 Đổi tiền mặt</button>
-              <button class="secondary" style="flex:1;padding:9px 12px;font-size:13px" onclick="openCustomRewardModal()">⚡ Thỏa thuận quà</button>
+      <!-- 🌟 THẺ ĐIỂM & CHÀO BÉ GỌN GÀNG (COMPACT HERO & QUICK SCORE) -->
+      <div class="today-compact-hero">
+        <div class="today-hero-top-row">
+          <div class="today-hero-profile">
+            <div class="today-hero-avatar" id="todayHeroAvatar">👧</div>
+            <div class="today-hero-info">
+              <div class="today-hero-greeting" id="hello">Chào con 👋</div>
+              <div><span class="today-hero-title-badge" id="heroTitle">🌱 Chưa có danh hiệu</span></div>
             </div>
           </div>
-          <div class="card" style="margin-top:20px">
-            <h2>🎁 Quà có thể đổi ngay</h2>
-            <div id="rewardShopToday"></div>
+          <div class="today-hero-score-box">
+            <div class="today-score-label">⭐ ĐIỂM SAO</div>
+            <div class="today-score-number" id="score">0</div>
           </div>
         </div>
-      </section>
+
+        <div class="today-hero-bottom-row">
+          <div class="today-hero-meta">
+            <span>Tiến độ: <b id="count">0/0</b> việc</span>
+            <span class="meta-sep">•</span>
+            <span>Quy đổi: <b id="moneyEquiv" style="color:#059669">0 đ</b></span>
+          </div>
+          <div class="today-hero-quick-actions">
+            <button class="today-score-quick-btn praise" onclick="openPointAdjustModal('praise')" title="Cộng điểm thưởng sao">
+              <span>➕ Thưởng</span>
+            </button>
+            <button class="today-score-quick-btn penalty" onclick="openPointAdjustModal('penalty')" title="Trừ điểm vi phạm">
+              <span>➖ Điểm trừ</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- THANH TIẾN ĐỘ GỌN -->
+      <div class="today-progress-bar-wrap">
+        <div class="progress" style="height:7px;margin:0"><i id="bar" style="width:0%"></i></div>
+      </div>
+
+      <!-- 🎯 MỤC TIÊU QUÀ ĐANG PHẤN ĐẤU (HIỂN THỊ TRÊN MÀN HÌNH CHÍNH) -->
+      <div id="todayTargetGoalCard" style="display:none"></div>
+
+      <!-- 🛵 BANNER NHẮC BÁO GIỜ CHỞ CON ĐI HỌC (TRƯỚC 10 PHÚT) - GỌN GÀNG -->
+      <div id="todayRideReminderCard" class="ride-card ride-card-compact" style="margin-bottom:12px"></div>
+
+      <!-- 🏷️ THANH LỌC 3 NHÓM (HỌC Ở NHÀ - TRÊN LỚP - PHỤ BỐ MẸ) -->
+      <div class="today-cat-filter-bar" id="todayCatFilterBar">
+        <button type="button" class="today-cat-pill active" onclick="setTodayCategoryFilter('all')">
+          <span>🌟</span> <span>Tất cả</span>
+        </button>
+        <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('home_study')">
+          <span>🏠</span> <span>Học ở nhà</span>
+        </button>
+        <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('school_study')">
+          <span>🏫</span> <span>Trên lớp</span>
+        </button>
+        <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('parent_help')">
+          <span>🧹</span> <span>Phụ bố mẹ</span>
+        </button>
+      </div>
+
+      <!-- 📋 KHU VỰC 3 KHỐI NHIỆM VỤ & HÀNH VI DỄ CỘNG & CÓ ĐIỂM TRỪ -->
+      <div class="today-categories-container" id="todayCategoriesContainer">
+        <!-- Render động 3 nhóm: Học ở nhà, Học tập trên lớp, Phụ bố mẹ -->
+      </div>
+
+      <!-- 🎁 KHU VỰC ĐỔI QUÀ VÀ TÍCH ĐIỂM GỌN GÀNG -->
+      <div class="today-bottom-rewards-card card" style="margin-top:16px;padding:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:18px">🎁</span>
+            <span style="font-weight:800;font-size:14px;color:#1e293b">Đổi quà cho <span id="goalName">bé</span></span>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="primary" style="padding:6px 10px;font-size:11.5px" onclick="openFlexibleMoneyModal()">💱 Đổi tiền mặt</button>
+            <button class="secondary" style="padding:6px 10px;font-size:11.5px" onclick="openCustomRewardModal()">⚡ Thỏa thuận quà</button>
+          </div>
+        </div>
+        <div id="rewardShopToday"></div>
+      </div>
+
+      <!-- Các phần tử ẩn để tương thích code cũ -->
+      <div style="display:none !important">
+        <div id="heroText"></div>
+        <div id="taskTitle"></div>
+        <div id="taskList"></div>
+        <div id="goalScore">0</div>
+        <div id="todaySchoolBagCard"></div>
+        <div id="studyPresetList"></div>
+        <div id="quickPraiseList"></div>
+      </div>
     </section>
 
     <!-- 1B. MÀN HÌNH LẬT THẺ & ĐỌC TIẾNG ANH (Ẩn) -->
@@ -836,6 +854,81 @@
   </div>
 </div>
 
+<!-- Modal Cộng & Trừ Điểm Sao Linh Hoạt (Dễ cộng & Nhập điểm trừ) -->
+<div id="pointAdjustModal" class="modal-backdrop" onclick="if(event.target===this) closePointAdjustModal()">
+  <div class="modal-card modal-small" style="max-width:480px;text-align:left">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:32px" id="pointAdjustHeaderIcon">⭐</span>
+        <div>
+          <h2 style="margin:0;font-size:18px" id="pointAdjustTitle">Cộng / Trừ điểm sao</h2>
+          <div class="note" id="pointAdjustSubtitle">Dành cho bé</div>
+        </div>
+      </div>
+      <button class="close" onclick="closePointAdjustModal()">✕</button>
+    </div>
+
+    <!-- Tab chuyển đổi: Thưởng sao (+) hoặc Điểm trừ (-) -->
+    <div class="point-adjust-type-tabs">
+      <button type="button" class="point-type-btn active praise" id="pointTypePraiseBtn" onclick="setPointAdjustMode('praise')">
+        <span>➕ Thưởng sao</span>
+      </button>
+      <button type="button" class="point-type-btn penalty" id="pointTypePenaltyBtn" onclick="setPointAdjustMode('penalty')">
+        <span>➖ Điểm trừ (Vi phạm)</span>
+      </button>
+    </div>
+
+    <!-- Chọn bé -->
+    <div style="margin-bottom:10px">
+      <div class="note" style="margin-bottom:4px;font-weight:700">Dành cho bé:</div>
+      <select id="pointAdjustChild" style="padding:8px 12px;border-radius:10px;width:100%"></select>
+    </div>
+
+    <!-- Chọn nhóm: Học ở nhà / Trên lớp / Phụ bố mẹ -->
+    <div style="margin-bottom:10px">
+      <div class="note" style="margin-bottom:4px;font-weight:700">Nhóm hoạt động:</div>
+      <div class="point-cat-selector">
+        <button type="button" class="point-cat-opt active" id="pointCatHomeBtn" onclick="selectPointAdjustCat('home_study')">🏠 Học ở nhà</button>
+        <button type="button" class="point-cat-opt" id="pointCatSchoolBtn" onclick="selectPointAdjustCat('school_study')">🏫 Trên lớp</button>
+        <button type="button" class="point-cat-opt" id="pointCatParentBtn" onclick="selectPointAdjustCat('parent_help')">🧹 Phụ bố mẹ</button>
+      </div>
+    </div>
+
+    <!-- Số điểm sao: Nút bấm nhanh + Ô nhập số tự do -->
+    <div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <div class="note" style="font-weight:700">Số điểm sao:</div>
+        <div class="note" id="pointAdjustSignHint" style="color:#10b981;font-weight:700">Sẽ cộng vào điểm bé</div>
+      </div>
+
+      <!-- Quick chips -->
+      <div class="point-chips-row" id="pointAdjustQuickChips"></div>
+
+      <!-- Input nhập số tự do -->
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+        <div class="point-input-prefix praise" id="pointInputPrefix">+</div>
+        <input id="pointAdjustAmount" type="number" min="1" max="999" value="5" placeholder="Nhập số điểm..." style="font-size:18px;font-weight:800;padding:8px 12px;border-radius:12px;flex:1">
+        <span style="font-size:18px;font-weight:800;color:#f59e0b">⭐</span>
+      </div>
+    </div>
+
+    <!-- Lý do / Hành vi: Gợi ý 1 chạm + Ô nhập -->
+    <div style="margin-bottom:16px">
+      <div class="note" style="margin-bottom:6px;font-weight:700">Lý do / Hành vi của con:</div>
+      <div class="point-reasons-suggestions" id="pointReasonSuggestions"></div>
+      <input id="pointAdjustReason" placeholder="Nhập lý do cụ thể..." style="margin-top:8px;padding:9px 12px;border-radius:10px;width:100%">
+    </div>
+
+    <!-- Nút hành động -->
+    <div class="confirm-actions" style="justify-content:flex-end;gap:10px">
+      <button class="confirm-no" onclick="closePointAdjustModal()">Hủy</button>
+      <button class="primary" id="pointAdjustSubmitBtn" onclick="submitPointAdjust()" style="padding:10px 24px;font-size:14px;font-weight:800">
+        🌟 Xác nhận thưởng
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal Thưởng nóng tuỳ chọn lý do & điểm -->
 <div id="customPraiseModal" class="modal-backdrop" onclick="if(event.target===this) closeCustomPraiseModal()">
   <div class="modal-card modal-small">
@@ -1094,6 +1187,14 @@
         <div class="formgrid">
           <div><div class="note">Giao cho</div><select id="assignTo"></select><div class="note" style="margin-top:6px">Có thể chọn từng bé hoặc giao cùng một nhiệm vụ cho tất cả các con.</div></div>
           <div><div class="note">Tên nhiệm vụ (tự điền)</div><input id="taskName" placeholder="VD: Học bài 15 phút"></div>
+          <div>
+            <div class="note">Nhóm hoạt động</div>
+            <select id="taskCategory">
+              <option value="home_study">🏠 Học ở nhà</option>
+              <option value="school_study">🏫 Học tập trên lớp</option>
+              <option value="parent_help">🧹 Phụ bố mẹ</option>
+            </select>
+          </div>
           <div><div class="note">Môn học</div><select id="subject"></select></div>
           <div><div class="note">Điểm khi hoàn thành</div><input id="taskPoints" type="number" placeholder="VD: 10">
             <div style="display:flex;gap:6px;margin-top:6px">

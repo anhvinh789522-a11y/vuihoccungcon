@@ -141,6 +141,92 @@ const DEFAULT_GRADE1_TIMETABLE = {
   "6_7": { subject: "Tổng kết tuần", note: "Khen thưởng cuối tuần" }
 };
 
+
+/* ============================================================
+   🌟 ĐỊNH NGHĨA 3 NHÓM HÔM NAY: HỌC Ở NHÀ - TRÊN LỚP - PHỤ BỐ MẸ
+   DỄ CỘNG & CÓ ĐIỂM TRỪ NHẬP ĐƯỢC
+   ============================================================ */
+const TODAY_CATEGORIES = {
+  home_study: {
+    id: 'home_study',
+    name: 'Học ở nhà',
+    icon: '🏠',
+    color: '#10b981',
+    bgColor: '#ecfdf5',
+    praises: [
+      { name: 'Xong bài tập cô giao', points: 10, icon: '✍️' },
+      { name: 'Luyện viết chữ đẹp', points: 10, icon: '📝' },
+      { name: 'Đọc sách 15 phút', points: 10, icon: '📖' },
+      { name: 'Học Tiếng Anh / Duolingo', points: 10, icon: '🦉' },
+      { name: 'Tập trung 15p (Con Ong)', points: 5, icon: '🐝' }
+    ],
+    penalties: [
+      { name: 'Chưa làm bài tập / Lười học', points: -5, icon: '⚠️' },
+      { name: 'Viết nguệch ngoạc, cẩu thả', points: -3, icon: '✏️' }
+    ]
+  },
+  school_study: {
+    id: 'school_study',
+    name: 'Học tập trên lớp',
+    icon: '🏫',
+    color: '#6366f1',
+    bgColor: '#eef2ff',
+    praises: [
+      { name: 'Điểm 10 kiểm tra / thi', points: 20, icon: '💯' },
+      { name: 'Điểm 9 kiểm tra', points: 15, icon: '🌟' },
+      { name: 'Cô giáo khen / Hoa điểm tốt', points: 15, icon: '🌸' },
+      { name: 'Hăng hái phát biểu xây dựng bài', points: 5, icon: '🙋' },
+      { name: 'Chú ý nghe giảng, giữ trật tự', points: 5, icon: '👂' }
+    ],
+    penalties: [
+      { name: 'Bị cô giáo nhắc nhở', points: -5, icon: '⚠️' },
+      { name: 'Mất trật tự trong lớp', points: -5, icon: '📢' },
+      { name: 'Quên mang sách vở / đồ dùng', points: -3, icon: '🎒' }
+    ]
+  },
+  parent_help: {
+    id: 'parent_help',
+    name: 'Phụ bố mẹ',
+    icon: '🧹',
+    color: '#f59e0b',
+    bgColor: '#fffbeb',
+    praises: [
+      { name: 'Tự dọn đồ chơi gọn gàng', points: 5, icon: '🧸' },
+      { name: 'Cất cặp sách & góc học tập', points: 5, icon: '🎒' },
+      { name: 'Ăn ngoan, không rơi vãi', points: 5, icon: '🥣' },
+      { name: 'Phụ gấp quần áo / quét nhà', points: 5, icon: '👕' },
+      { name: 'Lễ phép, vâng lời người lớn', points: 5, icon: '💖' },
+      { name: 'Đi ngủ sớm đúng giờ', points: 5, icon: '🌙' }
+    ],
+    penalties: [
+      { name: 'Mè nheo, không nghe lời', points: -5, icon: '😠' },
+      { name: 'Xem tivi / iPad quá giờ', points: -5, icon: '📺' },
+      { name: 'Bừa bãi đồ chơi không dọn', points: -3, icon: '🧸' },
+      { name: 'Lười ăn, ngậm cơm lâu', points: -3, icon: '🍚' }
+    ]
+  }
+};
+
+function playPenaltySound(){
+  try{
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx) return;
+    const ctx=new AudioCtx();
+    const notes=[392, 329.63, 261.63];
+    notes.forEach((freq,i)=>{
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(freq,ctx.currentTime+i*0.12);
+      gain.gain.setValueAtTime(0.18,ctx.currentTime+i*0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.12+0.25);
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.start(ctx.currentTime+i*0.12);
+      osc.stop(ctx.currentTime+i*0.12+0.25);
+    });
+  }catch(e){}
+}
+
 function seedBaoNhi(){
   return {
     children:[{
@@ -472,35 +558,371 @@ function taskCard(c,t){
   return el;
 }
 
+
+let currentTodayCategoryFilter = 'all';
+function setTodayCategoryFilter(cat){
+  currentTodayCategoryFilter = cat;
+  document.querySelectorAll('.today-cat-pill').forEach(btn => {
+    const isAct = btn.getAttribute('onclick')?.includes("'" + cat + "'");
+    btn.classList.toggle('active', !!isAct);
+  });
+  renderTodayCategories();
+}
+
 function renderToday(){
-  const c=child(),list=document.getElementById('taskList');
+  const c=child();
+  const avatarEl=document.getElementById('todayHeroAvatar');
+  const helloEl=document.getElementById('hello');
+  const scoreEl=document.getElementById('score');
+  const countEl=document.getElementById('count');
+  const barEl=document.getElementById('bar');
+  const moneyEl=document.getElementById('moneyEquiv');
+  const ht=document.getElementById('heroTitle');
+  const goalNameEl=document.getElementById('goalName');
+
   if(!c){
-    document.getElementById('hello').textContent='Chào con 👋';
-    document.getElementById('heroText').textContent='Phụ huynh chưa tạo hồ sơ cho bé.';
-    document.getElementById('score').textContent='0';document.getElementById('count').textContent='0/0';
-    document.getElementById('bar').style.width='0%';document.getElementById('taskTitle').textContent='📚 Nhiệm vụ hôm nay';
-    document.getElementById('goalName').textContent='bé';document.getElementById('goalScore').textContent='0';document.getElementById('moneyEquiv').textContent='0 đ';document.getElementById('heroTitle').style.display='none';
-    list.innerHTML='<div class="empty">Chưa có hồ sơ bé nào. Vui lòng vào khu vực Phụ huynh để thêm hồ sơ bé!</div>';return;
+    if(helloEl) helloEl.textContent='Chào con 👋';
+    if(scoreEl) scoreEl.textContent='0';
+    if(countEl) countEl.textContent='0/0';
+    if(barEl) barEl.style.width='0%';
+    if(moneyEl) moneyEl.textContent='0 đ';
+    if(ht) ht.textContent='🌱 Chưa có hồ sơ bé';
+    const container = document.getElementById('todayCategoriesContainer');
+    if(container) container.innerHTML='<div class="empty">Chưa có hồ sơ bé nào. Vui lòng vào khu vực Phụ huynh để thêm hồ sơ bé!</div>';
+    return;
   }
+
   const today=todayISO();
   const tasks=c.tasks.filter(t=>t.date===today);
   const done=tasks.filter(t=>t.done).length;
-  document.getElementById('hello').textContent='Chào '+childIcon(c)+' '+c.name+' 👋';
-  document.getElementById('heroText').textContent=tasks.length?`Hôm nay con có ${tasks.length} nhiệm vụ. Cố gắng hoàn thành để nhận điểm sao nhé!`:'Hôm nay chưa có nhiệm vụ nào được giao.';
-  document.getElementById('score').textContent=c.score;
-  document.getElementById('count').textContent=done+'/'+tasks.length;
-  document.getElementById('bar').style.width=(tasks.length?done/tasks.length*100:0)+'%';
-  document.getElementById('taskTitle').textContent='📚 Nhiệm vụ hôm nay của '+childIcon(c)+' '+c.name;
-  document.getElementById('goalName').textContent=childIcon(c)+' '+c.name;document.getElementById('goalScore').textContent=c.score;document.getElementById('moneyEquiv').textContent=fmtVND(starsToVND(c.score));
-  const ht=document.getElementById('heroTitle'),ct=currentTitle(c);
-  if(ct){ht.style.display='inline-block';ht.textContent='🏅 Danh hiệu: '+ct.title;}
-  else{ht.style.display='inline-block';ht.textContent='🌱 Chưa có danh hiệu — tích lũy từ 100 ⭐ để nhận danh hiệu đầu tiên nhé!';}
-  list.innerHTML='';
-  if(!tasks.length){
-    list.innerHTML='<div class="empty">Hôm nay con chưa có nhiệm vụ nào. Bố mẹ có thể thưởng nóng khích lệ con ở mục phía trên!</div>';
+
+  if(avatarEl) avatarEl.textContent=childIcon(c);
+  if(helloEl) helloEl.textContent='Chào '+childIcon(c)+' '+c.name+' 👋';
+  if(scoreEl) scoreEl.textContent=c.score;
+  if(countEl) countEl.textContent=done+'/'+tasks.length;
+  if(barEl) barEl.style.width=(tasks.length?done/tasks.length*100:0)+'%';
+  if(moneyEl) moneyEl.textContent=fmtVND(starsToVND(c.score));
+  if(goalNameEl) goalNameEl.textContent=childIcon(c)+' '+c.name;
+
+  const ct=currentTitle(c);
+  if(ht){
+    ht.textContent=ct?('🏅 '+ct.title):'🌱 Chưa có danh hiệu — từ 100 ⭐';
+  }
+
+  renderTodayCategories();
+}
+
+function renderTodayCategories(){
+  const container = document.getElementById('todayCategoriesContainer');
+  if(!container) return;
+  const c = child();
+  if(!c) {
+    container.innerHTML = '<div class="empty">Chưa có hồ sơ bé nào. Vui lòng vào khu vực Phụ huynh để thêm hồ sơ bé!</div>';
     return;
   }
-  tasks.forEach(t=>list.appendChild(taskCard(c,t)));
+  const today = todayISO();
+  const tasks = c.tasks.filter(t => t.date === today);
+
+  // Phân loại các nhiệm vụ vào 3 nhóm
+  const catKeys = ['home_study', 'school_study', 'parent_help'];
+  const grouped = { home_study: [], school_study: [], parent_help: [] };
+
+  tasks.forEach(t => {
+    let cat = t.category;
+    if(!cat || !grouped[cat]) {
+      const s = ((t.name||'') + ' ' + (t.instruction||'') + ' ' + (t.subject||'')).toLowerCase();
+      if(s.includes('cô') || s.includes('trường') || s.includes('lớp') || s.includes('thi') || s.includes('phát biểu') || s.includes('giảng')) {
+        cat = 'school_study';
+      } else if(s.includes('bố') || s.includes('mẹ') || s.includes('bà') || s.includes('nhà') || s.includes('dọn') || s.includes('đồ chơi') || s.includes('ngủ') || s.includes('ăn')) {
+        cat = 'parent_help';
+      } else {
+        cat = 'home_study';
+      }
+      t.category = cat;
+    }
+    grouped[cat].push(t);
+  });
+
+  container.innerHTML = '';
+
+  catKeys.forEach(key => {
+    if(currentTodayCategoryFilter !== 'all' && currentTodayCategoryFilter !== key) return;
+
+    const catMeta = TODAY_CATEGORIES[key];
+    const catTasks = grouped[key] || [];
+    const doneCount = catTasks.filter(t => t.done).length;
+
+    const card = document.createElement('div');
+    card.className = 'today-cat-card ' + key;
+
+    // Header nhóm
+    const head = document.createElement('div');
+    head.className = 'today-cat-card-head';
+    head.innerHTML = `
+      <div class="today-cat-title-wrap">
+        <span style="font-size:22px">${catMeta.icon}</span>
+        <div class="today-cat-badge">${catMeta.name}</div>
+        <span class="today-cat-count">${doneCount}/${catTasks.length} việc</span>
+      </div>
+      <div class="today-cat-quick-actions">
+        <button type="button" class="today-cat-act-btn praise" onclick="openPointAdjustModal('praise', '${key}')" title="Thưởng sao nhanh cho ${catMeta.name}">
+          <span>➕ Thưởng</span>
+        </button>
+        <button type="button" class="today-cat-act-btn penalty" onclick="openPointAdjustModal('penalty', '${key}')" title="Trừ điểm vi phạm">
+          <span>➖ Trừ</span>
+        </button>
+      </div>
+    `;
+    card.appendChild(head);
+
+    // Danh sách nhiệm vụ của nhóm
+    const listWrap = document.createElement('div');
+    if(!catTasks.length) {
+      listWrap.innerHTML = `<div class="note" style="color:#94a3b8;padding:8px 2px;font-size:12.5px">Hôm nay chưa có việc nào trong mục <b>${catMeta.name}</b>. Bố mẹ có thể chạm <b>➕ Thưởng</b> ở trên hoặc chọn nhanh mẫu bên dưới!</div>`;
+    } else {
+      catTasks.forEach(t => {
+        const isPenalty = Number(t.points) < 0;
+        const row = document.createElement('div');
+        row.className = 'today-task-row ' + (t.done ? 'done' : '') + ' ' + (isPenalty ? 'penalty-task' : '');
+
+        let btnHtml = '';
+        if(t.done) {
+          btnHtml = `<button type="button" class="today-task-btn is-done" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">✓ Đã xong</button>`;
+        } else if(isPenalty) {
+          btnHtml = `<button type="button" class="today-task-btn finish-penalty" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">${t.points} ⭐ Phạt</button>`;
+        } else {
+          btnHtml = `<button type="button" class="today-task-btn finish-praise" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">+${t.points} ⭐ Xong</button>`;
+        }
+
+        row.innerHTML = `
+          <div class="today-task-info">
+            <div class="today-task-name">${safe(t.name)}</div>
+            <div class="today-task-meta">
+              ${t.subject ? `<span class="today-task-chip">📘 ${safe(t.subject)}</span>` : ''}
+              ${t.duration ? `<span class="today-task-chip">⏱ ${safe(t.duration)}</span>` : ''}
+              ${t.instruction ? `<span class="note" style="font-size:11.5px;color:#64748b">${safe(t.instruction)}</span>` : ''}
+            </div>
+          </div>
+          <div>${btnHtml}</div>
+        `;
+        listWrap.appendChild(row);
+      });
+    }
+    card.appendChild(listWrap);
+
+    // Mẫu chạm nhanh 1 lần (Praises & Penalties)
+    const presetsWrap = document.createElement('div');
+    presetsWrap.className = 'today-cat-presets-wrap';
+    
+    let pillsHtml = '';
+    catMeta.praises.slice(0, 3).forEach(p => {
+      pillsHtml += `<button type="button" class="today-preset-pill preset-praise" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'praise')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>+${p.points}⭐</b></button>`;
+    });
+    catMeta.penalties.slice(0, 2).forEach(p => {
+      pillsHtml += `<button type="button" class="today-preset-pill preset-penalty" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'penalty')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>${p.points}⭐</b></button>`;
+    });
+
+    presetsWrap.innerHTML = `
+      <div class="today-cat-presets-title">
+        <span>⚡ Chạm 1 lần để cộng / trừ nhanh:</span>
+      </div>
+      <div class="today-cat-presets-pills">
+        ${pillsHtml}
+      </div>
+    `;
+    card.appendChild(presetsWrap);
+
+    container.appendChild(card);
+  });
+}
+
+function applyQuickPresetPoint(catKey, name, points, mode){
+  const c = child();
+  if(!c) return alert('Chưa có hồ sơ bé.');
+  const pts = Number(points);
+  const isPenalty = (mode === 'penalty' || pts < 0);
+  const delta = isPenalty ? -Math.abs(pts) : Math.abs(pts);
+  const catName = TODAY_CATEGORIES[catKey]?.name || 'Hoạt động';
+
+  c.score = Math.max(0, c.score + delta);
+  if(delta > 0) c.highestScore = Math.max(c.highestScore, c.score);
+
+  logPoint(c, isPenalty ? 'penalty' : 'bonus', delta, `[${catName}] ${name}`);
+  updateEarnedAchievements(c);
+  save();
+  render();
+
+  if(delta > 0) {
+    playChime('success');
+    triggerConfetti();
+    showToast(`🎉 Đã thưởng +${Math.abs(delta)} ⭐ cho ${c.name}: ${name}!`);
+  } else {
+    playPenaltySound();
+    showToast(`⚠️ Đã trừ ${delta} ⭐ của ${c.name}: ${name}. Bé chú ý rút kinh nghiệm nhé!`);
+  }
+}
+
+/* ============================================================
+   ⭐ MODAL CHẤM & TRỪ ĐIỂM SAO LINH HOẠT
+   ============================================================ */
+let pointAdjustState = {
+  mode: 'praise',
+  cat: 'home_study',
+  amount: 5,
+  childId: ''
+};
+
+function openPointAdjustModal(mode = 'praise', defaultCat = 'home_study', defaultPoints = null, defaultReason = ''){
+  const c = child();
+  fillChildSelect(document.getElementById('pointAdjustChild'));
+  if(c) {
+    document.getElementById('pointAdjustChild').value = c.id;
+    document.getElementById('pointAdjustSubtitle').textContent = 'Dành cho ' + childIcon(c) + ' ' + c.name;
+  }
+  pointAdjustState.cat = defaultCat || 'home_study';
+  setPointAdjustMode(mode);
+
+  if(defaultPoints !== null) {
+    document.getElementById('pointAdjustAmount').value = Math.abs(defaultPoints);
+  } else {
+    document.getElementById('pointAdjustAmount').value = mode === 'penalty' ? 5 : 10;
+  }
+  if(defaultReason) {
+    document.getElementById('pointAdjustReason').value = defaultReason;
+  } else {
+    document.getElementById('pointAdjustReason').value = '';
+  }
+
+  selectPointAdjustCat(pointAdjustState.cat);
+  document.getElementById('pointAdjustModal').classList.add('show');
+}
+
+function closePointAdjustModal(){
+  document.getElementById('pointAdjustModal').classList.remove('show');
+}
+
+function setPointAdjustMode(mode){
+  pointAdjustState.mode = mode;
+  const isPraise = (mode === 'praise');
+
+  document.getElementById('pointTypePraiseBtn').classList.toggle('active', isPraise);
+  document.getElementById('pointTypePenaltyBtn').classList.toggle('active', !isPraise);
+
+  const icon = document.getElementById('pointAdjustHeaderIcon');
+  const title = document.getElementById('pointAdjustTitle');
+  const prefix = document.getElementById('pointInputPrefix');
+  const hint = document.getElementById('pointAdjustSignHint');
+  const subBtn = document.getElementById('pointAdjustSubmitBtn');
+
+  if(isPraise) {
+    icon.textContent = '🌟';
+    title.textContent = 'Thưởng sao cho bé';
+    prefix.textContent = '+';
+    prefix.className = 'point-input-prefix praise';
+    hint.textContent = 'Sẽ cộng thêm sao vào ví của bé';
+    hint.style.color = '#10b981';
+    subBtn.className = 'primary';
+    subBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+    subBtn.innerHTML = '🌟 Thưởng sao ngay';
+  } else {
+    icon.textContent = '⚠️';
+    title.textContent = 'Trừ điểm sao (Nhắc nhở vi phạm)';
+    prefix.textContent = '-';
+    prefix.className = 'point-input-prefix penalty';
+    hint.textContent = 'Sẽ trừ bớt điểm sao của bé';
+    hint.style.color = '#ef4444';
+    subBtn.className = 'btn delete';
+    subBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+    subBtn.innerHTML = '⚠️ Xác nhận trừ điểm';
+  }
+
+  renderPointQuickChips();
+  renderPointReasonSuggestions();
+}
+
+function selectPointAdjustCat(cat){
+  pointAdjustState.cat = cat;
+  document.getElementById('pointCatHomeBtn')?.classList.toggle('active', cat === 'home_study');
+  document.getElementById('pointCatSchoolBtn')?.classList.toggle('active', cat === 'school_study');
+  document.getElementById('pointCatParentBtn')?.classList.toggle('active', cat === 'parent_help');
+  renderPointReasonSuggestions();
+}
+
+function renderPointQuickChips(){
+  const box = document.getElementById('pointAdjustQuickChips');
+  if(!box) return;
+  box.innerHTML = '';
+  const isPraise = (pointAdjustState.mode === 'praise');
+  const list = isPraise ? [1, 2, 5, 10, 20] : [1, 2, 3, 5, 10];
+  const curVal = Number(document.getElementById('pointAdjustAmount')?.value || (isPraise ? 10 : 5));
+
+  list.forEach(val => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'point-quick-chip ' + (curVal === val ? 'active' : '');
+    chip.textContent = (isPraise ? '+' : '-') + val + ' ⭐';
+    chip.onclick = () => {
+      document.getElementById('pointAdjustAmount').value = val;
+      renderPointQuickChips();
+    };
+    box.appendChild(chip);
+  });
+}
+
+function renderPointReasonSuggestions(){
+  const box = document.getElementById('pointReasonSuggestions');
+  if(!box) return;
+  box.innerHTML = '';
+  const isPraise = (pointAdjustState.mode === 'praise');
+  const cat = pointAdjustState.cat || 'home_study';
+  const meta = TODAY_CATEGORIES[cat] || TODAY_CATEGORIES.home_study;
+  const items = isPraise ? meta.praises : meta.penalties;
+
+  items.forEach(item => {
+    const pill = document.createElement('button');
+    pill.type = 'button';
+    pill.className = 'point-reason-pill';
+    pill.innerHTML = `<span>${item.icon}</span> <span>${safe(item.name)}</span>`;
+    pill.onclick = () => {
+      document.getElementById('pointAdjustReason').value = item.name;
+      document.getElementById('pointAdjustAmount').value = Math.abs(item.points);
+      renderPointQuickChips();
+    };
+    box.appendChild(pill);
+  });
+}
+
+function submitPointAdjust(){
+  const childId = document.getElementById('pointAdjustChild')?.value;
+  const rawPts = Number(document.getElementById('pointAdjustAmount')?.value || 0);
+  const reason = document.getElementById('pointAdjustReason')?.value.trim();
+  const c = data.children.find(x => x.id === childId);
+
+  if(!c) return alert('Chưa chọn bé.');
+  if(rawPts <= 0) return alert('Vui lòng nhập số điểm lớn hơn 0.');
+  if(!reason) return alert('Vui lòng nhập lý do khen thưởng hoặc trừ điểm.');
+
+  const isPenalty = (pointAdjustState.mode === 'penalty');
+  const delta = isPenalty ? -Math.abs(rawPts) : Math.abs(rawPts);
+  const catName = TODAY_CATEGORIES[pointAdjustState.cat]?.name || 'Hoạt động';
+
+  c.score = Math.max(0, c.score + delta);
+  if(delta > 0) c.highestScore = Math.max(c.highestScore, c.score);
+
+  logPoint(c, isPenalty ? 'penalty' : 'bonus', delta, `[${catName}] ${reason}`);
+  updateEarnedAchievements(c);
+  save();
+  render();
+  closePointAdjustModal();
+
+  if(delta > 0) {
+    playChime('success');
+    triggerConfetti();
+    showToast(`🎉 Đã thưởng +${Math.abs(delta)} ⭐ cho ${c.name}: ${reason}!`);
+  } else {
+    playPenaltySound();
+    showToast(`⚠️ Đã trừ ${delta} ⭐ của ${c.name}: ${reason}. Bé hãy cố gắng rút kinh nghiệm nhé!`);
+  }
 }
 
 // ⚡ Thưởng nóng khích lệ
@@ -1934,13 +2356,13 @@ function addTask(){
   const target=document.getElementById('assignTo').value,name=document.getElementById('taskName').value.trim(),subject=document.getElementById('subject').value,
         start=String(document.getElementById('taskDate').value||todayISO()).slice(0,10),mode=document.getElementById('taskRepeat').value,
         end=String(document.getElementById('taskEndDate').value||start).slice(0,10),pts=Number(document.getElementById('taskPoints').value||0),
-        duration=document.getElementById('duration').value.trim(),link=document.getElementById('taskLink').value.trim(),instruction=document.getElementById('instruction').value.trim();
+        category=document.getElementById('taskCategory')?.value||'home_study',duration=document.getElementById('duration').value.trim(),link=document.getElementById('taskLink').value.trim(),instruction=document.getElementById('instruction').value.trim();
   if(!target)return alert('Chưa có bé để giao bài.');if(!name)return alert('Hãy nhập tên nhiệm vụ.');if(!subject)return alert('Hãy tạo môn học trước.');
   const dates=datesForAssignment(start,end,mode);if(!dates.length)return alert('Khoảng ngày chưa hợp lệ.');
   const targets=target==='all'?data.children:data.children.filter(c=>c.id===target);
   askConfirm('Giao nhiệm vụ',`Giao "${name}" cho ${target==='all'?'TẤT CẢ CÁC CON':targets[0]?.name} trong ${dates.length} ngày?`,()=>{
     const seriesId=mode==='once'?null:uid('series');
-    targets.forEach(c=>dates.forEach(date=>c.tasks.push({id:uid('t'),seriesId,name,subject,date,points:pts,duration,link,instruction,done:false,awardedPoints:0,completedAt:null})));
+    targets.forEach(c=>dates.forEach(date=>c.tasks.push({id:uid('t'),seriesId,name,subject,category,date,points:pts,duration,link,instruction,done:false,awardedPoints:0,completedAt:null})));
     save();render();document.getElementById('taskName').value='';document.getElementById('taskLink').value='';document.getElementById('instruction').value='';
     showToast('📝 Đã giao nhiệm vụ thành công!');
   },{yesText:'Có, giao nhiệm vụ',icon:'📝'});
@@ -2125,7 +2547,7 @@ function updateRideReminderTick(){
   ['todayRideReminderCard','scheduleRideReminderCard'].forEach(cardId=>{
     const card=document.getElementById(cardId);
     if(!card) return;
-    const cdEl=card.querySelector('.ride-countdown');
+    const cdEl=card.querySelector('.ride-countdown') || card.querySelector('.ride-compact-cd');
     if(cdEl) cdEl.innerHTML=cdText;
     card.classList.toggle('urgent', isUrgent);
   });
@@ -2184,13 +2606,33 @@ function renderRideReminder(){
     </div>
   `;
 
-  ['todayRideReminderCard','scheduleRideReminderCard'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el){
-      el.innerHTML=html;
-      el.classList.toggle('urgent', !!isUrgent);
-    }
-  });
+  const compactHtml=`
+    <div class="ride-compact-bar">
+      <div class="ride-compact-left">
+        <span class="ride-compact-icon">🛵</span>
+        <div class="ride-compact-text">
+          <div><b>Giờ chở đi học:</b> Vào lớp <b>${ev?ev.schoolTime:'07:15'}</b> ➔ Xuất phát <b style="color:#dc2626">${ev?ev.departTimeStr:'07:05'}</b></div>
+          <div style="font-size:11.5px;color:#b45309"><span class="ride-compact-cd">${cdText}</span> <span class="note" style="color:#b45309">(${ev?ev.label:'Hôm nay'})</span></div>
+        </div>
+      </div>
+      <div class="ride-compact-actions">
+        <button type="button" class="ride-compact-btn" onclick="testSchoolRideAlert()" title="Thử chuông báo 10 phút">🔔 Thử</button>
+        <button type="button" class="ride-compact-btn" onclick="openRideReminderModal()" title="Cài đặt giờ">⚙️ Đổi giờ</button>
+      </div>
+    </div>
+  `;
+
+  const todayEl = document.getElementById('todayRideReminderCard');
+  if(todayEl){
+    todayEl.innerHTML = compactHtml;
+    todayEl.classList.toggle('urgent', !!isUrgent);
+  }
+
+  const schEl = document.getElementById('scheduleRideReminderCard');
+  if(schEl){
+    schEl.innerHTML = html;
+    schEl.classList.toggle('urgent', !!isUrgent);
+  }
 }
 
 function toggleRideReminderEnabled(val){
@@ -2915,7 +3357,17 @@ function renderBeeTimer(){
 // Bắt đầu nhịp tick đếm ngược cho Nhắc báo giờ chở con đi học (mỗi 1 giây)
 setInterval(updateRideReminderTick, 1000);
 
-window.addEventListener('hashchange', () => {
-  const h = (location.hash || '').replace('#', '');
-  if (h && typeof showSection === 'function') showSection(h);
-});
+function applyInitialHash() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const secParam = urlParams.get('section');
+  const h = secParam || (location.hash || '').replace('#', '');
+  if (h && typeof showSection === 'function') {
+    showSection(h);
+  }
+  const tabParam = urlParams.get('tab');
+  if (tabParam && typeof switchTimetableTab === 'function') {
+    switchTimetableTab(tabParam);
+  }
+}
+applyInitialHash();
+window.addEventListener('hashchange', applyInitialHash);
