@@ -1387,6 +1387,16 @@ textarea{min-height:80px;resize:vertical}
   font-size:48px;font-weight:900;color:#854d0e;font-variant-numeric:tabular-nums;
   margin:10px 0;letter-spacing:-.03em;
 }
+
+.flying-bee-icon {
+  display: inline-block;
+  animation: bee-fly 1.8s infinite ease-in-out;
+}
+
+@keyframes bee-fly {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(6deg); }
+}
 .bee-timer-actions{
   display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px;
 }

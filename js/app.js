@@ -3733,15 +3733,25 @@ function getSubjectMeta(name){
 }
 
 function switchTimetableTab(tabName){
-  const tabs=['timetable','bag','guide','bee','calendar'];
+  const tabs=['bag','timetable','guide','bee','calendar'];
   tabs.forEach(t=>{
     const btn=document.getElementById('ttView' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
     const wrap=document.getElementById('tt' + t.charAt(0).toUpperCase() + t.slice(1) + 'TabWrap');
     if(btn) btn.classList.toggle('active', t===tabName);
     if(wrap) wrap.style.display=(t===tabName)?'block':'none';
   });
+  if(tabName==='bag' && typeof renderSchoolBagChecklist==='function'){
+    renderSchoolBagChecklist();
+  }
+  if(tabName==='timetable' && typeof renderTimetableTable==='function'){
+    renderTimetablePalette();
+    renderTimetableTable();
+  }
   if(tabName==='guide' && typeof renderBagGuideTable==='function'){
     renderBagGuideTable();
+  }
+  if(tabName==='bee' && typeof renderBeeTimer==='function'){
+    renderBeeTimer();
   }
 }
 
@@ -4389,132 +4399,205 @@ function renderBagGuideTable(){
 }
 
 // 5. 🐝 ĐỒNG HỒ CON ONG 15 PHÚT TẬP TRUNG (KIDS FOCUS TIMER)
-let beeTimerSeconds=15*60;
-let beeTimerTotalSeconds=15*60;
-let beeTimerInterval=null;
-let beeTimerRunning=false;
+let beeTimerSeconds = 15 * 60;
+let beeTimerTotalSeconds = 15 * 60;
+let beeTimerInterval = null;
+let beeTimerRunning = false;
 
-function openBeeTimerModal(){
-  updateBeeTimerDisplay();
-  document.getElementById('beeTimerModal').classList.add('show');
+function openBeeTimerModal(autoStart = false){
+  const modal = document.getElementById('beeTimerModal');
+  if(modal) modal.classList.add('show');
+  updateBeeTimerUI();
+  if(autoStart && !beeTimerRunning){
+    toggleBeeTimer();
+  }
 }
 
 function closeBeeTimerModal(){
-  document.getElementById('beeTimerModal').classList.remove('show');
+  const modal = document.getElementById('beeTimerModal');
+  if(modal) modal.classList.remove('show');
 }
 
 function setBeeTimerMinutes(mins){
-  if(beeTimerRunning) toggleBeeTimer();
-  beeTimerSeconds=mins*60;
-  beeTimerTotalSeconds=mins*60;
-  updateBeeTimerDisplay();
+  const wasRunning = beeTimerRunning;
+  if(beeTimerRunning){
+    clearInterval(beeTimerInterval);
+    beeTimerInterval = null;
+    beeTimerRunning = false;
+  }
+  beeTimerSeconds = mins * 60;
+  beeTimerTotalSeconds = mins * 60;
+  updateBeeTimerUI();
   playPopSound();
+  if(wasRunning){
+    toggleBeeTimer();
+  }
 }
 
 function toggleBeeTimer(){
-  const btnModal=document.getElementById('beeStartBtnModal');
-  const btnInline=document.getElementById('beeStartBtnInline');
-
   if(beeTimerRunning){
     clearInterval(beeTimerInterval);
-    beeTimerRunning=false;
-    if(btnModal) btnModal.textContent='▶ Tiếp tục';
-    if(btnInline) btnInline.textContent='▶ Tiếp tục';
-    showToast('⏸ Đã tạm dừng đồng hồ.');
-  }else{
-    beeTimerRunning=true;
-    if(btnModal) btnModal.textContent='⏸ Tạm dừng';
-    if(btnInline) btnInline.textContent='⏸ Tạm dừng';
-    playPopSound();
+    beeTimerInterval = null;
+    beeTimerRunning = false;
+    updateBeeTimerUI();
+    showToast('⏸️ Đã tạm dừng đồng hồ Con Ong.');
+  } else {
+    if(beeTimerSeconds <= 0){
+      beeTimerSeconds = beeTimerTotalSeconds;
+    }
+    beeTimerRunning = true;
+    if(beeTimerInterval) clearInterval(beeTimerInterval);
 
-    beeTimerInterval=setInterval(()=>{
+    playPopSound();
+    updateBeeTimerUI();
+
+    beeTimerInterval = setInterval(()=>{
       beeTimerSeconds--;
       updateBeeTimerDisplay();
 
-      if(beeTimerSeconds<=0){
+      if(beeTimerSeconds <= 0){
         clearInterval(beeTimerInterval);
-        beeTimerRunning=false;
-        if(btnModal) btnModal.textContent='🚀 Bắt đầu ngay';
-        if(btnInline) btnInline.textContent='🚀 Bắt đầu ngay';
+        beeTimerInterval = null;
+        beeTimerRunning = false;
+        updateBeeTimerUI();
         onBeeTimerFinished();
       }
-    },1000);
+    }, 1000);
+
+    showToast('🚀 Đồng hồ Con Ong đã bắt đầu đếm ngược!');
   }
 }
 
 function resetBeeTimer(){
-  if(beeTimerInterval) clearInterval(beeTimerInterval);
-  beeTimerRunning=false;
-  beeTimerSeconds=beeTimerTotalSeconds;
-  updateBeeTimerDisplay();
-  const btnModal=document.getElementById('beeStartBtnModal');
-  const btnInline=document.getElementById('beeStartBtnInline');
-  if(btnModal) btnModal.textContent='🚀 Bắt đầu ngay';
-  if(btnInline) btnInline.textContent='🚀 Bắt đầu ngay';
+  if(beeTimerInterval){
+    clearInterval(beeTimerInterval);
+    beeTimerInterval = null;
+  }
+  beeTimerRunning = false;
+  beeTimerSeconds = beeTimerTotalSeconds;
+  updateBeeTimerUI();
+  showToast('🔄 Đã cài lại thời gian: ' + Math.floor(beeTimerTotalSeconds/60) + ' phút.');
 }
 
 function updateBeeTimerDisplay(){
-  const m=Math.floor(beeTimerSeconds/60);
-  const s=beeTimerSeconds%60;
-  const str=String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  const m = Math.floor(beeTimerSeconds / 60);
+  const s = beeTimerSeconds % 60;
+  const str = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
 
-  const elModal=document.getElementById('beeTimerDisplayModal');
-  if(elModal) elModal.textContent=str;
+  const elModal = document.getElementById('beeTimerDisplayModal');
+  if(elModal) elModal.textContent = str;
 
-  const elInline=document.getElementById('beeTimerDisplayInline');
-  if(elInline) elInline.textContent=str;
+  const elInline = document.getElementById('beeTimerDisplayInline');
+  if(elInline) elInline.textContent = str;
+
+  const total = beeTimerTotalSeconds || 900;
+  const elapsed = total - beeTimerSeconds;
+  const pct = Math.min(100, Math.max(0, Math.round((elapsed / total) * 100)));
+
+  const barModal = document.getElementById('beeProgressFillModal');
+  if(barModal) barModal.style.width = pct + '%';
+
+  const barInline = document.getElementById('beeProgressFillInline');
+  if(barInline) barInline.style.width = pct + '%';
+}
+
+function updateBeeTimerUI(){
+  updateBeeTimerDisplay();
+
+  const total = beeTimerTotalSeconds || 900;
+  const text = beeTimerRunning ? '⏸️ Tạm dừng' : (beeTimerSeconds < total ? '▶️ Tiếp tục' : '🚀 Bắt đầu ngay');
+  const btnModal = document.getElementById('beeStartBtnModal');
+  if(btnModal) btnModal.innerHTML = text;
+
+  const btnInline = document.getElementById('beeStartBtnInline');
+  if(btnInline) btnInline.innerHTML = text;
+
+  let statusHtml = '';
+  if(beeTimerRunning){
+    statusHtml = '<span style="color:#059669;font-weight:900">🟢 ĐANG ĐẾM NGƯỢC... 🐝</span>';
+  } else if(beeTimerSeconds < total){
+    statusHtml = '<span style="color:#d97706;font-weight:800">⏸️ ĐÃ TẠM DỪNG</span>';
+  } else {
+    statusHtml = '<span style="color:#854d0e;font-weight:800">⏱️ SẴN SÀNG (' + Math.floor(total/60) + ' PHÚT)</span>';
+  }
+
+  const statusModal = document.getElementById('beeStatusModal');
+  if(statusModal) statusModal.innerHTML = statusHtml;
+
+  const statusInline = document.getElementById('beeStatusInline');
+  if(statusInline) statusInline.innerHTML = statusHtml;
+
+  ['10','15','20'].forEach(min => {
+    const isAct = (total === Number(min)*60);
+    document.querySelectorAll('.bee-preset-' + min).forEach(btn => btn.classList.toggle('active', isAct));
+  });
 }
 
 function onBeeTimerFinished(){
   playSchoolBell();
   triggerConfetti();
-  const c=child();
+  const c = child();
   if(c){
-    c.score+=5;
-    if(!Array.isArray(c.pointHistory)) c.pointHistory=[];
+    c.score += 5;
+    if(!Array.isArray(c.pointHistory)) c.pointHistory = [];
     c.pointHistory.push({
-      id:uid('bee'),
-      type:'study',
-      subject:'Kỹ năng sống',
-      topic:'Hoàn thành 15 phút tập trung học tập (Đồng hồ Con Ong)',
-      amount:5,
-      note:'Tập trung ngồi học nghiêm túc, không phân tâm!',
-      reason:'[Kỹ năng sống] 15 phút tập trung học ngoan (+5 ⭐)',
-      at:new Date().toISOString()
+      id: uid('bee'),
+      type: 'study',
+      subject: 'Kỹ năng sống',
+      topic: 'Hoàn thành 15 phút tập trung học tập (Đồng hồ Con Ong)',
+      amount: 5,
+      note: 'Tập trung ngồi học nghiêm túc, không phân tâm!',
+      reason: '[Kỹ năng sống] 15 phút tập trung học ngoan (+5 ⭐)',
+      at: new Date().toISOString()
     });
     updateEarnedAchievements(c);
     save();
     render();
   }
-  speakVietnamese('Hoan hô bé ' + (c?c.name:'con') + '! Đã hết 15 phút tập trung làm bài rất ngoan! Con đứng dậy vươn vai và uống một cốc nước nhé!');
+  speakVietnamese('Hoan hô bé ' + (c ? c.name : 'con') + '! Đã hoàn thành 15 phút tập trung học tập rất ngoan! Con đứng dậy vươn vai và uống một cốc nước nhé!');
   showToast('🎉 XUẤT SẮC! Hoàn thành 15 phút tập trung! +5 ⭐');
 }
 
 function renderBeeTimer(){
-  const wrap=document.getElementById('scheduleBeeTimerCard');
+  const wrap = document.getElementById('scheduleBeeTimerCard');
   if(!wrap) return;
 
-  const m=Math.floor(beeTimerSeconds/60);
-  const s=beeTimerSeconds%60;
-  const str=String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  const m = Math.floor(beeTimerSeconds / 60);
+  const s = beeTimerSeconds % 60;
+  const str = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  const total = beeTimerTotalSeconds || 900;
+  const elapsed = total - beeTimerSeconds;
+  const pct = Math.min(100, Math.max(0, Math.round((elapsed / total) * 100)));
 
-  wrap.innerHTML=`
+  wrap.innerHTML = `
     <div style="font-size:18px;font-weight:900;color:#854d0e;display:flex;align-items:center;justify-content:center;gap:8px">
-      <span>🐝⏰</span>
+      <span class="flying-bee-icon" style="font-size:26px">🐝</span>
       <span>Đồng hồ Con Ong 15 Phút Tập Trung</span>
     </div>
     <div style="font-size:13px;color:#a16207;margin-top:4px">Dành riêng cho học sinh Lớp 1: Rèn luyện tính tự giác ngồi học tập trung từng đợt ngắn 15 phút!</div>
+    
+    <div id="beeStatusInline" style="margin-top:8px;font-size:13px">
+      ${beeTimerRunning ? '<span style="color:#059669;font-weight:900">🟢 ĐANG ĐẾM NGƯỢC... 🐝</span>' : (beeTimerSeconds < total ? '<span style="color:#d97706;font-weight:800">⏸️ ĐÃ TẠM DỪNG</span>' : '<span style="color:#854d0e;font-weight:800">⏱️ SẴN SÀNG (' + Math.floor(total/60) + ' PHÚT)</span>')}
+    </div>
+
     <div class="bee-timer-display" id="beeTimerDisplayInline">${str}</div>
+
+    <div style="max-width:320px;margin:0 auto 12px;height:8px;background:#fef08a;border-radius:10px;overflow:hidden">
+      <div id="beeProgressFillInline" style="height:100%;width:${pct}%;background:linear-gradient(90deg,#eab308,#ca8a04);transition:width 0.3s ease;border-radius:10px"></div>
+    </div>
+
     <div style="display:flex;justify-content:center;gap:6px;margin-bottom:12px">
-      <button class="tt-day-pill ${beeTimerTotalSeconds===600?'active':''}" onclick="setBeeTimerMinutes(10)">10 phút</button>
-      <button class="tt-day-pill ${beeTimerTotalSeconds===900?'active':''}" onclick="setBeeTimerMinutes(15)">15 phút (Chuẩn)</button>
-      <button class="tt-day-pill ${beeTimerTotalSeconds===1200?'active':''}" onclick="setBeeTimerMinutes(20)">20 phút</button>
+      <button class="tt-day-pill bee-preset-10 ${total===600?'active':''}" onclick="setBeeTimerMinutes(10)">10 phút</button>
+      <button class="tt-day-pill bee-preset-15 ${total===900?'active':''}" onclick="setBeeTimerMinutes(15)">15 phút (Chuẩn)</button>
+      <button class="tt-day-pill bee-preset-20 ${total===1200?'active':''}" onclick="setBeeTimerMinutes(20)">20 phút</button>
     </div>
+
     <div class="bee-timer-actions">
-      <button class="bee-btn primary" id="beeStartBtnInline" onclick="toggleBeeTimer()">${beeTimerRunning?'⏸ Tạm dừng':'🚀 Bắt đầu ngay'}</button>
+      <button class="bee-btn primary" id="beeStartBtnInline" onclick="toggleBeeTimer()">${beeTimerRunning ? '⏸️ Tạm dừng' : (beeTimerSeconds < total ? '▶️ Tiếp tục' : '🚀 Bắt đầu ngay')}</button>
       <button class="bee-btn secondary" onclick="resetBeeTimer()">🔄 Cài lại</button>
-      <button class="bee-btn secondary" onclick="openBeeTimerModal()">🔍 Phóng to</button>
+      <button class="bee-btn secondary" onclick="openBeeTimerModal(false)">🔍 Phóng to</button>
     </div>
+    <div class="note" style="margin-top:10px;color:#a16207">Hoàn thành 15 phút sẽ thưởng ngay **+5 ⭐** và nhắc bé uống nước, vươn vai nghỉ ngơi!</div>
   `;
 }
 

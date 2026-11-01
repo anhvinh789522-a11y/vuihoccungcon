@@ -72,7 +72,7 @@
               <span>➕</span>
               <span>Thêm môn</span>
             </button>
-            <button class="secondary" style="padding:9px 11px;font-size:13px;display:inline-flex;align-items:center;gap:5px;background:#ca8a04;border-color:#ca8a04" onclick="openBeeTimerModal()">
+            <button class="secondary" style="padding:9px 11px;font-size:13px;display:inline-flex;align-items:center;gap:5px;background:#ca8a04;border-color:#ca8a04" onclick="openBeeTimerModal(true)">
               <span>🐝</span>
               <span>Đồng hồ 15p</span>
             </button>
@@ -103,17 +103,22 @@
           </div>
         </div>
 
-        <!-- Thanh chuyển chế độ xem: Thời khóa biểu tuần vs Soạn sách vs Hướng dẫn -->
+        <!-- Thanh chuyển chế độ xem: 1. Soạn sách vở ngày mai | 2. TKB Tuần | 3. Hướng dẫn soạn sách | 4. Đồng hồ Con Ong | 5. Lịch tháng -->
         <div class="tt-view-switch" style="margin-bottom:14px">
-          <button class="tt-switch-btn active" id="ttViewTimetableBtn" onclick="switchTimetableTab('timetable')">🎒 Bảng Thời khóa biểu (Kéo thả)</button>
-          <button class="tt-switch-btn" id="ttViewBagBtn" onclick="switchTimetableTab('bag')">🎒 Soạn cặp sách ngày mai</button>
+          <button class="tt-switch-btn active" id="ttViewBagBtn" onclick="switchTimetableTab('bag')">🎒 Soạn sách vở ngày mai</button>
+          <button class="tt-switch-btn" id="ttViewTimetableBtn" onclick="switchTimetableTab('timetable')">🎒 Bảng Thời khóa biểu (Lớp 1A4)</button>
           <button class="tt-switch-btn" id="ttViewGuideBtn" onclick="switchTimetableTab('guide')">📖 Hướng dẫn soạn sách vở (Lớp 1A4)</button>
           <button class="tt-switch-btn" id="ttViewBeeBtn" onclick="switchTimetableTab('bee')">🐝 Đồng hồ Con Ong 15p</button>
           <button class="tt-switch-btn" id="ttViewCalendarBtn" onclick="switchTimetableTab('calendar')">📅 Lịch tháng &amp; Nhiệm vụ</button>
         </div>
 
-        <!-- 1. VÙNG THỜI KHÓA BIỂU -->
-        <div id="ttTimetableTabWrap">
+        <!-- 1. VÙNG SOẠN SÁCH VỞ ĐẾN TRƯỜNG (ACTIVE LÊN ĐẦU TIÊN) -->
+        <div id="ttBagTabWrap">
+          <div id="scheduleSchoolBagCard" class="bag-card"></div>
+        </div>
+
+        <!-- 2. VÙNG THỜI KHÓA BIỂU (VỊ TRÍ THỨ 2) -->
+        <div id="ttTimetableTabWrap" style="display:none">
           <!-- Khay môn học (Subject Palette) để kéo thả -->
           <div class="tt-palette-card">
             <div class="tt-palette-head">
@@ -148,11 +153,6 @@
               <!-- Render động bằng JavaScript -->
             </table>
           </div>
-        </div>
-
-        <!-- 2. VÙNG SOẠN CẶP SÁCH ĐẾN TRƯỜNG -->
-        <div id="ttBagTabWrap" style="display:none">
-          <div id="scheduleSchoolBagCard" class="bag-card"></div>
         </div>
 
         <!-- 3. VÙNG BẢNG HƯỚNG DẪN SOẠN SÁCH VỞ LỚP 1A4 -->
@@ -982,7 +982,7 @@
   <div class="modal-card modal-small" style="max-width:440px;text-align:center">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
       <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:28px">🐝⏰</span>
+        <span class="flying-bee-icon" style="font-size:28px">🐝</span>
         <b style="font-size:17px;color:#854d0e">Đồng hồ Con Ong 15p</b>
       </div>
       <button class="close" onclick="closeBeeTimerModal()">✕</button>
@@ -990,12 +990,21 @@
 
     <div class="bee-card" style="box-shadow:none;border-width:1.5px">
       <div style="font-size:14px;font-weight:800;color:#a16207">Bé tập trung ngồi học ngoan 15 phút không nghịch điện thoại!</div>
+      
+      <div id="beeStatusModal" style="margin-top:8px;font-size:13px">
+        <span style="color:#854d0e;font-weight:800">⏱️ SẴN SÀNG (15 PHÚT)</span>
+      </div>
+
       <div class="bee-timer-display" id="beeTimerDisplayModal">15:00</div>
       
+      <div style="height:8px;background:#fef08a;border-radius:10px;overflow:hidden;margin:10px 0 14px">
+        <div id="beeProgressFillModal" style="height:100%;width:0%;background:linear-gradient(90deg,#eab308,#ca8a04);transition:width 0.3s ease;border-radius:10px"></div>
+      </div>
+
       <div style="display:flex;justify-content:center;gap:6px;margin-bottom:12px">
-        <button class="tt-day-pill" onclick="setBeeTimerMinutes(10)">10 phút</button>
-        <button class="tt-day-pill active" onclick="setBeeTimerMinutes(15)">15 phút (Chuẩn)</button>
-        <button class="tt-day-pill" onclick="setBeeTimerMinutes(20)">20 phút</button>
+        <button class="tt-day-pill bee-preset-10" onclick="setBeeTimerMinutes(10)">10 phút</button>
+        <button class="tt-day-pill bee-preset-15 active" onclick="setBeeTimerMinutes(15)">15 phút (Chuẩn)</button>
+        <button class="tt-day-pill bee-preset-20" onclick="setBeeTimerMinutes(20)">20 phút</button>
       </div>
 
       <div class="bee-timer-actions">
