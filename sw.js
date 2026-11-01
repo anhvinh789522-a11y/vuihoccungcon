@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vuihoc-cache-v10';
+const CACHE_NAME = 'vuihoc-cache-v11';
 const ASSETS = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const ASSETS = [
   './achievements.html',
   './rewards.html',
   './css/style.css',
+  './css/games.css',
   './js/app.js',
   './js/games.js',
   './js/sync.js',

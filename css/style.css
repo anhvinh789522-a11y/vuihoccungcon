@@ -3849,3 +3849,554 @@ textarea{min-height:80px;resize:vertical}
   font-weight: 800;
 }
 
+/* ============================================================
+   🐷 NGÔI NHÀ THÚ CƯNG: HEO ĐẤT ỤT ỊT (VIRTUAL PET PARADISE)
+   ============================================================ */
+.piggy-pet-paradise {
+  background: linear-gradient(180deg, #fff1f2 0%, #ffffff 45%, #fdf2f8 100%);
+  border: 2.5px solid #fbcfe8;
+  border-radius: 24px;
+  padding: 18px;
+  box-shadow: 0 12px 32px rgba(236, 72, 153, 0.14);
+  position: relative;
+  overflow: hidden;
+}
+
+.piggy-paradise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.piggy-paradise-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.piggy-paradise-title h3 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 900;
+  color: #9d174d;
+  letter-spacing: -0.3px;
+}
+
+.piggy-gen-badge {
+  background: linear-gradient(135deg, #ec4899, #db2777);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 900;
+  padding: 4px 12px;
+  border-radius: 999px;
+  box-shadow: 0 3px 8px rgba(236, 72, 153, 0.25);
+}
+
+/* Sân khấu đồng cỏ nuôi Heo Đất Ụt Ịt */
+.piggy-pasture-stage {
+  background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 52%, #bbf7d0 52%, #86efac 100%);
+  border-radius: 20px;
+  border: 2px solid #f9a8d4;
+  padding: 18px 16px 16px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 240px;
+  box-shadow: inset 0 4px 14px rgba(255, 255, 255, 0.65);
+}
+
+.piggy-sky-decor {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  font-size: 22px;
+  opacity: 0.85;
+}
+
+.piggy-cloud-float {
+  animation: piggyCloudMove 5s ease-in-out infinite alternate;
+}
+
+@keyframes piggyCloudMove {
+  0% { transform: translateX(-6px); }
+  100% { transform: translateX(8px); }
+}
+
+/* Bong bóng lời thoại của Heo Đất Ụt Ịt */
+.piggy-speech-bubble {
+  background: #ffffff;
+  border: 2px solid #f472b6;
+  border-radius: 18px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #831843;
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.15);
+  position: relative;
+  z-index: 4;
+  margin-bottom: 8px;
+  max-width: 92%;
+  text-align: center;
+  animation: speechPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.piggy-speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #f472b6;
+}
+
+@keyframes speechPop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Nhân vật SVG Heo Đất Ụt Ịt */
+.piggy-pet-figure {
+  position: relative;
+  z-index: 3;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: piggyIdleBounce 2.4s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.piggy-pet-figure:hover {
+  transform: scale(1.06);
+}
+
+.piggy-pet-figure:active {
+  transform: scale(0.93);
+}
+
+.piggy-pet-figure.jumping {
+  animation: piggyHappyJump 0.55s ease-in-out 2;
+}
+
+@keyframes piggyIdleBounce {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  50% { transform: translateY(-7px) scale(1.02, 0.98); }
+}
+
+@keyframes piggyHappyJump {
+  0%, 100% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-24px) scale(1.08) rotate(-4deg); }
+  60% { transform: translateY(-10px) scale(1.04) rotate(4deg); }
+}
+
+.piggy-svg-ear-left {
+  transform-origin: 48px 52px;
+  animation: earWiggleLeft 2.2s ease-in-out infinite alternate;
+}
+
+.piggy-svg-ear-right {
+  transform-origin: 132px 52px;
+  animation: earWiggleRight 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes earWiggleLeft {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-10deg); }
+}
+
+@keyframes earWiggleRight {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(10deg); }
+}
+
+.piggy-svg-snout {
+  transform-origin: 90px 100px;
+  animation: snoutOink 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes snoutOink {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.07, 0.95); }
+}
+
+.piggy-svg-eyes-blink {
+  transform-origin: 90px 82px;
+  animation: eyesBlink 4s infinite;
+}
+
+@keyframes eyesBlink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+
+/* Hiệu ứng đồ ăn & tim bay lên */
+.piggy-fx-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.piggy-floating-fx {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  font-size: 26px;
+  font-weight: 900;
+  color: #db2777;
+  text-shadow: 0 2px 6px rgba(255,255,255,0.95);
+  animation: piggyFloatUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  white-space: nowrap;
+}
+
+@keyframes piggyFloatUp {
+  0% { opacity: 1; transform: translate(-50%, 0) scale(0.7); }
+  60% { opacity: 1; transform: translate(-50%, -55px) scale(1.15); }
+  100% { opacity: 0; transform: translate(-50%, -85px) scale(1); }
+}
+
+/* Thanh chỉ số của Heo Đất Ụt Ịt */
+.piggy-vitals-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+@media (max-width: 640px) {
+  .piggy-vitals-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.piggy-vital-card {
+  background: #ffffff;
+  border: 1.5px solid #fbcfe8;
+  border-radius: 14px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.piggy-vital-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.piggy-vital-val {
+  font-size: 15px;
+  font-weight: 900;
+  color: #831843;
+}
+
+/* Nút chăm sóc nhanh (Xoa bụng, Tắm mát, Nghe nhạc, Mổ heo) */
+.piggy-care-toolbar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+@media (max-width: 520px) {
+  .piggy-care-toolbar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.piggy-care-tool-btn {
+  background: linear-gradient(180deg, #ffffff, #fdf2f8);
+  border: 1.5px solid #f9a8d4;
+  border-radius: 14px;
+  padding: 9px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 12.5px;
+  color: #9d174d;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(236, 72, 153, 0.08);
+}
+
+.piggy-care-tool-btn:hover {
+  transform: translateY(-2px);
+  border-color: #ec4899;
+  background: #fce7f3;
+}
+
+.piggy-care-tool-btn:active {
+  transform: scale(0.95);
+}
+
+/* Cửa hàng Thực đơn 12 món ăn cho Heo Đất */
+.piggy-kitchen-box {
+  margin-top: 14px;
+  background: #ffffff;
+  border: 1.5px solid #fbcfe8;
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.piggy-kitchen-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.piggy-food-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.piggy-food-tab {
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1.5px solid #fbcfe8;
+  background: #fdf2f8;
+  color: #9d174d;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.piggy-food-tab.active {
+  background: linear-gradient(135deg, #ec4899, #db2777);
+  color: #ffffff;
+  border-color: #db2777;
+}
+
+.piggy-food-shop-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .piggy-food-shop-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .piggy-food-shop-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.piggy-food-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fff1f2 100%);
+  border: 1.5px solid #fecdd3;
+  border-radius: 14px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  position: relative;
+}
+
+.piggy-food-card:hover {
+  transform: translateY(-3px);
+  border-color: #f43f5e;
+  box-shadow: 0 6px 14px rgba(244, 63, 94, 0.14);
+}
+
+.piggy-food-card:active {
+  transform: scale(0.95);
+}
+
+.piggy-food-card.locked {
+  opacity: 0.6;
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.piggy-food-emoji {
+  font-size: 30px;
+  line-height: 1.1;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.piggy-food-name {
+  font-size: 12px;
+  font-weight: 900;
+  color: #1e293b;
+  margin-bottom: 2px;
+}
+
+.piggy-food-perk {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #059669;
+  margin-bottom: 6px;
+}
+
+.piggy-food-price {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 900;
+  padding: 3px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* ============================================================
+   🛵 LỊCH CHỞ CON ĐI HỌC & RƯỚC CON VỀ (SÁNG & CHIỀU)
+   ============================================================ */
+.ride-schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+@media (max-width: 640px) {
+  .ride-schedule-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ride-slot-card {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1.5px solid #fde68a;
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ride-slot-card.active-slot {
+  background: #ffffff;
+  border-color: #f59e0b;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.18);
+}
+
+.ride-slot-icon {
+  font-size: 24px;
+}
+
+/* ============================================================
+   🔒 KHU VỰC PHỤ HUYNH ĐƠN GIẢN HÓA & CỘNG ĐIỂM 1 CHẠM
+   ============================================================ */
+.parent-simple-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.parent-tab-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1.5px solid #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 900;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.parent-tab-btn.active {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: #ffffff;
+  border-color: #4f46e5;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+}
+
+.parent-quick-score-hub {
+  background: linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%);
+  border: 2px solid #86efac;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.parent-one-tap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.parent-tap-btn {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #bbf7d0;
+  background: #ffffff;
+  color: #065f46;
+  font-weight: 800;
+  font-size: 12.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  text-align: left;
+  transition: all 0.14s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+}
+
+.parent-tap-btn:hover {
+  transform: translateY(-2px);
+  border-color: #10b981;
+  background: #ecfdf5;
+}
+
+.parent-tap-btn:active {
+  transform: scale(0.96);
+}
+
+.parent-tap-btn.penalty {
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.parent-tap-btn.penalty:hover {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+

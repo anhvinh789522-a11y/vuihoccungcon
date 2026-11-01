@@ -419,12 +419,40 @@ const defaultData=seedBaoNhi();
    🐷 HỆ THỐNG TRANG TRẠI & CHĂM HEO ĐẤT THÔNG MINH (PIGGY PET)
    ============================================================ */
 const PIGGY_LEVELS = [
-  { level: 1, name: 'Heo Con Sơ Sinh', minExp: 0, nextExp: 50, icon: '🐽', badge: 'Cấp 1 - Heo Nhỏ' },
-  { level: 2, name: 'Heo Nhí Nhanh Nhẹn', minExp: 50, nextExp: 150, icon: '🐷', badge: 'Cấp 2 - Siêu Đáng Yêu' },
-  { level: 3, name: 'Heo Béo Chăm Học', minExp: 150, nextExp: 300, icon: '🐖', badge: 'Cấp 3 - Béo Múp Mí' },
-  { level: 4, name: 'Heo Vàng Thông Thái', minExp: 300, nextExp: 600, icon: '👑', badge: 'Cấp 4 - Vương Miện Vàng' },
-  { level: 5, name: 'Heo Thần Tài Siêu Cấp', minExp: 600, nextExp: 9999, icon: '🏆', badge: 'Cấp 5 - Thần Tài Đỉnh Cao' }
+  { level: 1, name: 'Heo Sơ Sinh Đeo Nơ', minExp: 0, nextExp: 60, icon: '🐽', badge: 'Cấp 1 • Heo Sơ Sinh 🎀' },
+  { level: 2, name: 'Heo Nhí Mầm Non', minExp: 60, nextExp: 180, icon: '🐷', badge: 'Cấp 2 • Heo Mầm Non 🌱' },
+  { level: 3, name: 'Heo Béo Học Giỏi', minExp: 180, nextExp: 380, icon: '🐖', badge: 'Cấp 3 • Heo Học Giỏi 🎓' },
+  { level: 4, name: 'Heo Vàng Hoàng Gia', minExp: 380, nextExp: 700, icon: '👑', badge: 'Cấp 4 • Vương Miện Vàng 👑' },
+  { level: 5, name: 'Heo Thần Tài Phú Quý', minExp: 700, nextExp: 1200, icon: '🏆', badge: 'Cấp 5 • Heo Thần Tài 🏆' },
+  { level: 6, name: 'Heo Thiên Thần Kim Cương', minExp: 1200, nextExp: 99999, icon: '💎', badge: 'Cấp 6 • Thiên Thần Kim Cương 👼' }
 ];
+
+// 🍽️ THỰC ĐƠN 12 MÓN ĂN PHONG PHÚ CHO HEO ĐẤT ỤT ỊT
+const PIGGY_FOOD_MENU = [
+  // Nhóm 1: Quà vặt & Rau củ (2⭐ - 8⭐)
+  { id: 'snack_corn', cat: 'snack', emoji: '🌽', name: 'Bắp ngô ngọt', stars: 2, exp: 10, fullness: 20, weight: 0.1, vnd: 200 },
+  { id: 'snack_carrot', cat: 'snack', emoji: '🥕', name: 'Cà rốt non giòn', stars: 3, exp: 16, fullness: 25, weight: 0.15, vnd: 300 },
+  { id: 'snack_watermelon', cat: 'snack', emoji: '🍉', name: 'Dưa hấu đỏ mát', stars: 5, exp: 28, fullness: 35, weight: 0.25, vnd: 500 },
+  { id: 'snack_apple', cat: 'snack', emoji: '🍎', name: 'Táo đỏ mật ong', stars: 8, exp: 45, fullness: 45, weight: 0.4, vnd: 800 },
+  // Nhóm 2: Món ngon yêu thích (10⭐ - 20⭐)
+  { id: 'meal_milk', cat: 'meal', emoji: '🥛', name: 'Sữa tươi trân châu', stars: 10, exp: 60, fullness: 55, weight: 0.55, vnd: 1000 },
+  { id: 'meal_strawberry', cat: 'meal', emoji: '🍓', name: 'Dâu tây Đà Lạt', stars: 12, exp: 75, fullness: 65, weight: 0.7, vnd: 1200 },
+  { id: 'meal_donut', cat: 'meal', emoji: '🍩', name: 'Bánh Donut Socola', stars: 15, exp: 95, fullness: 75, weight: 0.9, vnd: 1500 },
+  { id: 'meal_pizza', cat: 'meal', emoji: '🍕', name: 'Pizza Phô Mai', stars: 20, exp: 130, fullness: 90, weight: 1.2, vnd: 2000 },
+  // Nhóm 3: Đại tiệc & Kho báu (30⭐ - 150⭐)
+  { id: 'feast_icecream', cat: 'feast', emoji: '🍦', name: 'Tháp Kem Cầu Vồng', stars: 30, exp: 200, fullness: 100, weight: 1.8, vnd: 3000 },
+  { id: 'feast_cake', cat: 'feast', emoji: '🎂', name: 'Bánh Kem Sinh Nhật', stars: 50, exp: 340, fullness: 100, weight: 3.2, vnd: 5000 },
+  { id: 'feast_royal', cat: 'feast', emoji: '🍱', name: 'Đại Tiệc Hoàng Gia', stars: 80, exp: 560, fullness: 100, weight: 5.5, vnd: 8000 },
+  { id: 'feast_diamond', cat: 'feast', emoji: '💎', name: 'Kim Cương Sao', stars: 150, exp: 1100, fullness: 100, weight: 10.0, vnd: 15000 }
+];
+
+let activePiggyFoodTab = 'all';
+let piggyCustomSpeech = '';
+
+function setPiggyFoodTab(tab) {
+  activePiggyFoodTab = tab;
+  renderPiggyPet();
+}
 
 function updatePiggyLevel(p) {
   let lvl = 1;
@@ -454,7 +482,9 @@ function ensurePiggyPet(c) {
       totalStarsEaten: 0,
       streakDays: 1,
       mood: 'happy',
-      lastPatDate: ''
+      lastPatDate: '',
+      lastBathDate: '',
+      lastMusicDate: ''
     };
   }
 
@@ -470,7 +500,6 @@ function ensurePiggyPet(c) {
   if (typeof p.totalHarvestedAllTime !== 'number') p.totalHarvestedAllTime = 0;
   if (typeof p.harvestCount !== 'number') p.harvestCount = 0;
 
-  // Tính số ngày không tương tác
   const lastDate = (p.lastInteractedDate || p.lastFedDate || today).slice(0, 10);
   let diffDays = 0;
   try {
@@ -481,7 +510,6 @@ function ensurePiggyPet(c) {
 
   p.daysWithoutCare = diffDays;
 
-  // Cảnh báo đói nếu qua 1 ngày không tương tác
   if (diffDays >= 2) {
     p.fullness = 0;
     p.mood = 'starving';
@@ -507,9 +535,9 @@ function playPiggyOinkSound() {
     const gain = ctx.createGain();
     osc.type = 'sine';
     osc.frequency.setValueAtTime(320, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(490, ctx.currentTime + 0.09);
-    osc.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + 0.22);
-    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(510, ctx.currentTime + 0.09);
+    osc.frequency.exponentialRampToValueAtTime(270, ctx.currentTime + 0.22);
+    gain.gain.setValueAtTime(0.22, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
     osc.connect(gain);
     gain.connect(ctx.destination);
@@ -518,19 +546,26 @@ function playPiggyOinkSound() {
   } catch(e) {}
 }
 
+function showPiggyFloatingFX(text) {
+  const layer = document.getElementById('piggyFxLayer');
+  if (!layer) return;
+  const el = document.createElement('div');
+  el.className = 'piggy-floating-fx';
+  el.innerHTML = text;
+  layer.appendChild(el);
+  setTimeout(() => el.remove(), 1100);
+}
+
 // 🌟 Mỗi buổi làm tốt 1 việc là giúp heo lớn hơn
 function boostPiggyOnGoodDeed(c, reasonText, expBoost = 15, weightBoost = 0.1) {
   if (!c) return;
   const p = ensurePiggyPet(c);
   if (!p) return;
-  if (p.status === 'harvested') {
-    showToast('🎉 Bé làm việc tốt: Được thưởng sao! Hãy mua heo giống mới (10.000đ / 100 ⭐) để cùng nuôi lứa mới nhé!');
-    return;
-  }
+  if (p.status === 'harvested') return;
   const oldLevel = p.level;
 
   p.exp += expBoost;
-  p.weightKg = Math.round((p.weightKg + weightBoost) * 10) / 10;
+  p.weightKg = Math.round((p.weightKg + weightBoost) * 100) / 100;
   p.fullness = Math.min(100, p.fullness + 25);
   p.lastInteractedDate = todayISO();
   p.daysWithoutCare = 0;
@@ -540,100 +575,185 @@ function boostPiggyOnGoodDeed(c, reasonText, expBoost = 15, weightBoost = 0.1) {
   if (p.level > oldLevel) {
     playChime('success');
     triggerConfetti();
-    showToast('🎉 TUYỆT VỜI: Heo Đất đã TIẾN HÓA lên Cấp ' + p.level + ' (' + PIGGY_LEVELS[p.level - 1].name + ')! 🐷👑');
-  } else {
-    showToast('🐷 Heo Đất vừa ăn mừng việc tốt của bé: Lớn thêm +' + weightBoost + 'kg (+' + expBoost + ' EXP)! Ụt ịt vui vẻ! 🎉');
+    showToast('🎉 TUYỆT VỜI: Heo Đất Ụt Ịt đã TIẾN HÓA lên Cấp ' + p.level + ' (' + PIGGY_LEVELS[p.level - 1].name + ')! 🐷👑');
   }
 }
 
-// 🥕 Nuôi heo bằng sao hợp lý
-function feedPiggyWithStars(tier) {
+// 🍽️ Cho Heo Đất Ụt Ịt ăn 1 trong 12 món trong thực đơn
+function feedPiggyFoodItem(foodId) {
   const c = child();
   if (!c) return;
   const p = ensurePiggyPet(c);
   if (!p) return;
 
-  const TIERS = {
-    snack: { stars: 2, exp: 10, fullness: 25, weight: 0.05, vnd: 200, name: 'Bắp ngọt & Cà rốt 🥕' },
-    meal: { stars: 5, exp: 30, fullness: 50, weight: 0.15, vnd: 500, name: 'Táo đỏ & Bánh ngũ cốc 🍎' },
-    feast: { stars: 10, exp: 70, fullness: 100, weight: 0.35, vnd: 1000, name: 'Đại tiệc Mâm Vàng 🍲' }
-  };
-
-  const opt = TIERS[tier];
-  if (!opt) return;
   if (p.status === 'harvested') {
     return alert('Bé vừa mổ heo rồi, chuồng đang trống! Bé hãy mua heo giống mới (10.000đ / 100 ⭐) để bắt đầu lứa mới nhé!');
   }
 
-  if (c.score < opt.stars) {
+  const food = PIGGY_FOOD_MENU.find(f => f.id === foodId) || PIGGY_FOOD_MENU[0];
+  if (!food) return;
+
+  if (c.score < food.stars) {
     playChime('error');
-    return alert('Bé chưa đủ ' + opt.stars + ' ⭐ để bón món này (Bé đang có ' + c.score + ' ⭐). Bé hãy hoàn thành thêm việc tốt nhé!');
+    piggyCustomSpeech = `Ụt ịt... Món "${food.name}" cần ${food.stars} ⭐ mà bé đang có ${c.score} ⭐ thôi. Bé làm thêm việc tốt để kiếm sao cho heo ăn nhé! 🥺`;
+    renderPiggyPet();
+    return showToast(`⚠️ Cần ${food.stars} ⭐ để mua ${food.emoji} ${food.name} (Bé đang có ${c.score} ⭐)`);
   }
 
-  askConfirm(
-    'Bón cho Heo Đất ăn',
-    'Bé có muốn dùng ' + opt.stars + ' ⭐ bón món "' + opt.name + '" cho Heo không?\n\n• Heo tăng: +' + opt.exp + ' EXP\n• Béo thêm: +' + opt.weight + ' kg\n• Bụng heo tích lũy: +' + opt.vnd.toLocaleString('vi-VN') + ' đ tiền tiết kiệm\n• Số sao còn lại của bé: ' + (c.score - opt.stars) + ' ⭐',
-    () => {
-      c.score -= opt.stars;
-      logPoint(c, 'reward', -opt.stars, 'Nuôi Heo Đất: ' + opt.name);
-      p.exp += opt.exp;
-      p.weightKg = Math.round((p.weightKg + opt.weight) * 100) / 100;
-      p.fullness = Math.min(100, p.fullness + opt.fullness);
-      p.coinsVND = (p.coinsVND || 0) + opt.vnd;
-      p.totalStarsEaten = (p.totalStarsEaten || 0) + opt.stars;
-      p.totalFeedCount = (p.totalFeedCount || 0) + 1;
-      p.lastFedDate = todayISO();
-      p.lastInteractedDate = todayISO();
-      p.mood = 'happy';
-      p.daysWithoutCare = 0;
+  const executeFeed = () => {
+    c.score -= food.stars;
+    logPoint(c, 'reward', -food.stars, `Cho Heo Đất Ụt Ịt ăn: ${food.emoji} ${food.name}`);
+    p.exp += food.exp;
+    p.weightKg = Math.round((p.weightKg + food.weight) * 100) / 100;
+    p.fullness = Math.min(100, p.fullness + food.fullness);
+    p.coinsVND = (p.coinsVND || 0) + food.vnd;
+    p.totalStarsEaten = (p.totalStarsEaten || 0) + food.stars;
+    p.totalFeedCount = (p.totalFeedCount || 0) + 1;
+    p.lastFedDate = todayISO();
+    p.lastInteractedDate = todayISO();
+    p.mood = 'happy';
+    p.daysWithoutCare = 0;
 
-      const oldLevel = p.level;
-      updatePiggyLevel(p);
+    const oldLevel = p.level;
+    updatePiggyLevel(p);
 
-      playPiggyOinkSound();
-      triggerConfetti();
-      save();
-      render();
+    piggyCustomSpeech = `Nhoằm nhoằm! ${food.emoji} "${food.name}" ngon tuyệt cú mèo! Bụng heo tăng +${food.weight}kg và tích thêm +${food.vnd.toLocaleString('vi-VN')}đ! Yêu bé ${c.name} nhất! 🥰`;
 
-      if (p.level > oldLevel) {
-        showToast('🎉 Oa! Heo Đất ăn no và đã LÊN CẤP ' + p.level + ' (' + PIGGY_LEVELS[p.level - 1].name + ')! 👑');
-      } else {
-        showToast('🥰 Ụt ịt! Heo cảm ơn bé! Heo vừa ăn "' + opt.name + '", bụng no căng và lớn thêm ' + opt.weight + 'kg!');
-      }
-    },
-    { yesText: 'Bón ngay (' + opt.stars + ' ⭐)', icon: '🐷' }
-  );
+    playPiggyOinkSound();
+    triggerConfetti();
+    save();
+    render();
+
+    setTimeout(() => {
+      const fig = document.getElementById('piggyPetFigure');
+      if (fig) fig.classList.add('jumping');
+      showPiggyFloatingFX(`${food.emoji} +${food.weight}kg • +${food.vnd.toLocaleString('vi-VN')}đ 💖`);
+    }, 60);
+
+    if (p.level > oldLevel) {
+      showToast(`🎉 OA! Heo Đất Ụt Ịt ăn no và đã LÊN CẤP ${p.level} (${PIGGY_LEVELS[p.level - 1].name})! 👑`);
+    } else {
+      showToast(`🥰 Ụt ịt! Heo vừa măm "${food.emoji} ${food.name}", béo thêm +${food.weight}kg và tích +${food.vnd.toLocaleString('vi-VN')}đ!`);
+    }
+  };
+
+  // Các món dưới 30 sao thì cho ăn ngay 1 chạm cực mượt, món đại tiệc >= 30 sao thì hỏi xác nhận
+  if (food.stars >= 30) {
+    askConfirm(
+      `Đãi Heo Đất Ụt Ịt món ${food.emoji} ${food.name}`,
+      `Bé muốn dùng ${food.stars} ⭐ đãi Heo món "${food.name}"?\n\n• Heo lớn thêm: +${food.weight} kg (+${food.exp} EXP)\n• Tích vào bụng heo: +${food.vnd.toLocaleString('vi-VN')} đ\n• Sao còn lại của bé: ${c.score - food.stars} ⭐`,
+      executeFeed,
+      { yesText: `Cho ăn ngay (${food.stars} ⭐)`, icon: food.emoji }
+    );
+  } else {
+    executeFeed();
+  }
 }
 
-// 💕 Vuốt ve cưng nựng heo
+// Giữ tương thích hàm cũ feedPiggyWithStars
+function feedPiggyWithStars(tier) {
+  const map = { snack: 'snack_corn', meal: 'snack_watermelon', feast: 'meal_milk' };
+  feedPiggyFoodItem(map[tier] || 'snack_corn');
+}
+
+// 💕 Vuốt ve xoa bụng cưng nựng heo
 function patPiggyPet() {
   const c = child();
   if (!c) return;
   const p = ensurePiggyPet(c);
-  if (!p) return;
-  if (p.status === 'harvested') {
-    return alert('Bé vừa mổ heo xong! Bé hãy mua heo giống mới (10.000đ hoặc 100 ⭐) để rước heo con về chuồng cưng nựng nhé!');
-  }
+  if (!p || p.status === 'harvested') return;
 
   const today = todayISO();
-  if (p.lastPatDate === today) {
-    playPiggyOinkSound();
-    showToast('🥰 Heo cười hí hí: "Hôm nay bé đã vuốt ve cưng nựng heo rồi! Yêu bé Bảo Nhi lắm!"');
-    return;
+  playPiggyOinkSound();
+
+  if (p.lastPatDate !== today) {
+    p.lastPatDate = today;
+    p.lastInteractedDate = today;
+    p.exp += 5;
+    p.fullness = Math.min(100, p.fullness + 10);
+    p.mood = 'happy';
+    p.daysWithoutCare = 0;
+    updatePiggyLevel(p);
+    piggyCustomSpeech = `Hí hí nhột quá! Bé ${c.name} xoa bụng làm Heo Đất Ụt Ịt sướng rơn người! (+5 EXP) 💖`;
+    save();
+    render();
+    showToast('💖 Heo Đất Ụt Ịt cười tít mắt: "Bé xoa bụng thích quá! (+5 EXP)"');
+  } else {
+    piggyCustomSpeech = `Ụt ịt! Bụng heo tròn xoe ấm áp nhờ bé ${c.name} chăm sóc mỗi ngày đó! 🥰`;
+    renderPiggyPet();
   }
 
-  p.lastPatDate = today;
-  p.lastInteractedDate = today;
-  p.exp += 5;
-  p.fullness = Math.min(100, p.fullness + 10);
-  p.mood = 'happy';
-  p.daysWithoutCare = 0;
-  updatePiggyLevel(p);
+  setTimeout(() => {
+    const fig = document.getElementById('piggyPetFigure');
+    if (fig) fig.classList.add('jumping');
+    showPiggyFloatingFX('💕 Ụt ịt! Hí hí! 💖');
+  }, 50);
+}
 
+// 🛁 Tắm bọt xà phòng thơm phức cho heo
+function bathPiggyPet() {
+  const c = child();
+  if (!c) return;
+  const p = ensurePiggyPet(c);
+  if (!p || p.status === 'harvested') return;
+
+  const today = todayISO();
   playPiggyOinkSound();
-  save();
-  render();
-  showToast('💖 Heo sướng rơn người: "Ụt ịt... Bé xoa bụng heo thích quá! (+5 EXP)"');
+
+  if (p.lastBathDate !== today) {
+    p.lastBathDate = today;
+    p.lastInteractedDate = today;
+    p.exp += 5;
+    p.mood = 'happy';
+    p.daysWithoutCare = 0;
+    updatePiggyLevel(p);
+    piggyCustomSpeech = `Oa mát quá! Bọt xà phòng thơm phức, Heo Đất Ụt Ịt sạch bong sáng bóng rồi! (+5 EXP) 🛁🫧`;
+    save();
+    render();
+    showToast('🛁 Đã tắm mát kỳ cọ cho Heo Đất Ụt Ịt thơm phức! (+5 EXP)');
+  } else {
+    piggyCustomSpeech = `Heo tắm sạch thơm mùi dâu tây rồi nè cô chủ nhỏ ${c.name} ơi! 🛁✨`;
+    renderPiggyPet();
+  }
+
+  setTimeout(() => {
+    const fig = document.getElementById('piggyPetFigure');
+    if (fig) fig.classList.add('jumping');
+    showPiggyFloatingFX('🛁 🫧 Sạch thơm quá! ✨');
+  }, 50);
+}
+
+// 🎵 Bật nhạc cho heo nhảy múa
+function musicPiggyPet() {
+  const c = child();
+  if (!c) return;
+  const p = ensurePiggyPet(c);
+  if (!p || p.status === 'harvested') return;
+
+  const today = todayISO();
+  playChime('success');
+
+  if (p.lastMusicDate !== today) {
+    p.lastMusicDate = today;
+    p.lastInteractedDate = today;
+    p.exp += 5;
+    p.mood = 'happy';
+    p.daysWithoutCare = 0;
+    updatePiggyLevel(p);
+    piggyCustomSpeech = `Là lá la! 🎵 Tiếng nhạc vui quá, Heo Đất Ụt Ịt lắc cái mông nhảy múa cùng bé ${c.name} nè! (+5 EXP) 🎶`;
+    save();
+    render();
+    showToast('🎵 Heo Đất Ụt Ịt nhảy múa theo điệu nhạc vui nhộn! (+5 EXP)');
+  } else {
+    piggyCustomSpeech = `🎵 Ụt ịt theo điệu nhạc! Chúc bé ${c.name} học thật vui nha! 🎶💃`;
+    renderPiggyPet();
+  }
+
+  setTimeout(() => {
+    const fig = document.getElementById('piggyPetFigure');
+    if (fig) fig.classList.add('jumping');
+    showPiggyFloatingFX('🎵 🎶 Lắc lư ụt ịt! 💃');
+  }, 50);
 }
 
 // 🔨 Thu hoạch tiền tiết kiệm từ bụng heo
@@ -649,7 +769,7 @@ function harvestPiggyCoins() {
 
   const coins = p.coinsVND || 0;
   if (coins < 10000) {
-    return alert('Bụng Heo đang có ' + coins.toLocaleString('vi-VN') + ' đ. Tích lũy tối thiểu 10.000 đ để mổ heo nhé!');
+    return alert('Bụng Heo Đất Ụt Ịt đang có ' + coins.toLocaleString('vi-VN') + ' đ. Bé hãy cho heo ăn thêm để tích lũy đủ tối thiểu 10.000 đ rồi mới mổ heo nhé!');
   }
 
   const nextGen = (p.generation || 1) + 1;
@@ -681,7 +801,7 @@ function harvestPiggyCoins() {
       triggerConfetti();
       save();
       render();
-      showToast('🎉 Đã mổ heo thành công! Bé thu hoạch ' + harvested.toLocaleString('vi-VN') + ' đ! Hãy mua chú heo giống mới (10.000 đ) để bắt đầu Lứa ' + nextGen + ' nhé!');
+      showToast('🎉 Đã mổ heo thành công! Bé thu hoạch ' + harvested.toLocaleString('vi-VN') + ' đ!');
     },
     { yesText: 'Mổ heo ngay 🔨', icon: '💰' }
   );
@@ -701,12 +821,12 @@ function buyNewPiggyBreed(method) {
   if (method === 'stars') {
     if (c.score < 100) {
       playChime('error');
-      return alert('Bé cần 100 ⭐ để mua heo giống mới (Bé hiện đang có ' + c.score + ' ⭐). Bé hãy hoàn thành bài học để kiếm thêm sao hoặc trích 10.000 đ tiền mặt nhé!');
+      return alert('Bé cần 100 ⭐ để mua heo giống mới (Bé hiện đang có ' + c.score + ' ⭐).');
     }
 
     askConfirm(
       'Mua Heo Giống Bằng Sao',
-      'Bé có muốn dùng 100 ⭐ (tương đương 10.000 đ) để rước chú "' + chosenName + '" về chuồng nuôi tiếp không?\n\n• Chi phí giống: 100 ⭐ (10.000 đ)\n• Cấp bắt đầu: Cấp 1 (1.0 kg)\n• Số sao còn lại của bé: ' + (c.score - 100) + ' ⭐',
+      'Bé có muốn dùng 100 ⭐ để rước chú "' + chosenName + '" về chuồng nuôi tiếp không?',
       () => {
         c.score -= 100;
         logPoint(c, 'reward', -100, 'Mua heo giống mới (100 ⭐) - Lứa ' + nextGen);
@@ -720,10 +840,9 @@ function buyNewPiggyBreed(method) {
       { yesText: 'Mua bằng 100 ⭐', icon: '⭐' }
     );
   } else {
-    // method === 'money'
     askConfirm(
       'Mua Heo Giống Bằng Tiền Mặt',
-      'Bé có muốn trích 10.000 đ (từ tiền mổ heo vừa nhận hoặc tiền tiêu vặt) để rước chú "' + chosenName + '" về chuồng nuôi tiếp không?\n\n• Tiền mua heo giống: 10.000 đ\n• Cấp bắt đầu: Cấp 1 (1.0 kg)\n• Chuồng heo sẽ hoạt động trở lại ngay lập tức!',
+      'Bé có muốn trích 10.000 đ (từ tiền mổ heo vừa nhận) để rước chú "' + chosenName + '" về chuồng nuôi tiếp không?',
       () => {
         if (!Array.isArray(c.giftHistory)) c.giftHistory = [];
         c.giftHistory.unshift({
@@ -740,7 +859,7 @@ function buyNewPiggyBreed(method) {
         render();
         playPiggyOinkSound();
         triggerConfetti();
-        showToast('🎉 Tuyệt vời! Bé đã đầu tư 10.000 đ mua giống "' + chosenName + '" thành công! Bắt đầu nuôi lứa ' + nextGen + '! 🐷❤️');
+        showToast('🎉 Tuyệt vời! Bé đã rước "' + chosenName + '" về chuồng thành công! 🐷❤️');
       },
       { yesText: 'Trích 10.000 đ mua', icon: '💵' }
     );
@@ -761,9 +880,10 @@ function initNewPiggyPet(p, name, nextGen) {
   p.lastInteractedDate = todayISO();
   p.daysWithoutCare = 0;
   p.lastPatDate = '';
+  p.lastBathDate = '';
+  p.lastMusicDate = '';
 }
 
-// 🧪 Thử nghiệm mô phỏng ngày không tương tác
 function toggleSimulatePiggyHunger() {
   const c = child();
   if (!c) return;
@@ -773,25 +893,176 @@ function toggleSimulatePiggyHunger() {
   if (p.daysWithoutCare >= 1) {
     p.lastInteractedDate = todayISO();
     p.lastFedDate = todayISO();
-    p.fullness = 90;
+    p.fullness = 95;
     p.mood = 'happy';
     p.daysWithoutCare = 0;
+    piggyCustomSpeech = 'Ụt ịt! Bụng heo đã no căng và vui vẻ trở lại rồi nè! 🥰';
     showToast('✨ Đã phục hồi: Heo Đất no căng bụng và vui vẻ trở lại!');
   } else {
-    // Giả lập lùi 1 ngày
     const yesterday = new Date(Date.now() - 86400000 * 1.5).toISOString().slice(0, 10);
     p.lastInteractedDate = yesterday;
     p.lastFedDate = yesterday;
-    p.fullness = 10;
+    p.fullness = 12;
     p.mood = 'hungry';
     p.daysWithoutCare = 1;
-    showToast('⚠️ Đã bật chế độ mô phỏng: Heo Đất đang đói sau 1 ngày không tương tác!');
+    piggyCustomSpeech = 'Ụt ịt... Bụng heo đói kêu ùng ục rồi, cô chủ nhỏ cho heo ăn bắp ngọt hay dâu tây với! 🥺';
+    showToast('⚠️ Đã bật chế độ mô phỏng: Heo Đất đang đói bụng!');
   }
   save();
   render();
 }
 
-// 🎨 Render Widget Chăm Heo Đất
+// 🎨 VẼ ĐỒ HỌA SVG CHÚ HEO ĐẤT ỤT ỊT KAWAII SIÊU DỄ THƯƠNG
+function getCutePiggySVG(level, isHungry) {
+  // Phụ kiện trên đầu theo cấp độ
+  let accessorySVG = '';
+  if (level === 1) {
+    // Nơ hồng xinh xắn bên tai
+    accessorySVG = `
+      <g transform="translate(52, 26) rotate(-15)">
+        <ellipse cx="-10" cy="0" rx="10" ry="7" fill="#ec4899"/>
+        <ellipse cx="10" cy="0" rx="10" ry="7" fill="#ec4899"/>
+        <circle cx="0" cy="0" r="4.5" fill="#fbcfe8"/>
+      </g>
+    `;
+  } else if (level === 2) {
+    // Mầm non xanh biếc trên đỉnh đầu
+    accessorySVG = `
+      <g transform="translate(90, 22)">
+        <path d="M0,12 Q0,0 -12,-6 Q-4,-12 0,2 Q4,-12 12,-6 Q0,0 0,12" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+      </g>
+    `;
+  } else if (level === 3) {
+    // Mũ học giả + Kính tri thức
+    accessorySVG = `
+      <g transform="translate(90, 20)">
+        <polygon points="0,-8 -26,4 0,14 26,4" fill="#1e293b"/>
+        <rect x="-14" y="8" width="28" height="7" rx="3" fill="#334155"/>
+        <path d="M20,6 L24,20" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+    `;
+  } else if (level === 4) {
+    // Vương miện Hoàng gia Vàng
+    accessorySVG = `
+      <g transform="translate(90, 20)">
+        <polygon points="-22,12 -26,-8 -10,2 0,-12 10,2 26,-8 22,12" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
+        <circle cx="0" cy="-4" r="3" fill="#ef4444"/>
+        <circle cx="-14" cy="2" r="2.5" fill="#3b82f6"/>
+        <circle cx="14" cy="2" r="2.5" fill="#10b981"/>
+      </g>
+    `;
+  } else if (level >= 5) {
+    // Vương miện Thần Tài Kim Cương & Đôi cánh thiên thần
+    accessorySVG = `
+      <g>
+        <path d="M26,75 Q4,52 12,84 Q4,96 28,98" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+        <path d="M154,75 Q176,52 168,84 Q176,96 152,98" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+        <g transform="translate(90, 18)">
+          <polygon points="-24,14 -28,-10 -12,2 0,-15 12,2 28,-10 24,14" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>
+          <polygon points="0,-9 -5,-1 0,7 5,-1" fill="#38bdf8"/>
+        </g>
+      </g>
+    `;
+  }
+
+  // Biểu cảm mắt & miệng
+  const eyesSVG = isHungry ? `
+    <g>
+      <circle cx="64" cy="78" r="8.5" fill="#1e293b"/>
+      <circle cx="61" cy="75" r="3.2" fill="#ffffff"/>
+      <circle cx="67" cy="81" r="1.8" fill="#38bdf8"/>
+      <circle cx="116" cy="78" r="8.5" fill="#1e293b"/>
+      <circle cx="113" cy="75" r="3.2" fill="#ffffff"/>
+      <circle cx="119" cy="81" r="1.8" fill="#38bdf8"/>
+      <path d="M55,66 Q64,70 71,67" stroke="#831843" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M125,66 Q116,70 109,67" stroke="#831843" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    </g>
+  ` : `
+    <g class="piggy-svg-eyes-blink">
+      <circle cx="64" cy="78" r="8.5" fill="#1e293b"/>
+      <circle cx="61" cy="74.5" r="3.5" fill="#ffffff"/>
+      <circle cx="67" cy="80.5" r="1.6" fill="#ffffff"/>
+      <circle cx="116" cy="78" r="8.5" fill="#1e293b"/>
+      <circle cx="113" cy="74.5" r="3.5" fill="#ffffff"/>
+      <circle cx="119" cy="80.5" r="1.6" fill="#ffffff"/>
+    </g>
+  `;
+
+  const mouthSVG = isHungry
+    ? `<path d="M82,118 Q90,111 98,118" stroke="#9d174d" stroke-width="3" fill="none" stroke-linecap="round"/>`
+    : `<path d="M78,113 Q90,125 102,113" stroke="#9d174d" stroke-width="3.2" fill="#f43f5e" stroke-linecap="round"/>`;
+
+  return `
+    <svg width="175" height="155" viewBox="0 0 180 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="pigBodyGrad" cx="38%" cy="32%" r="68%">
+          <stop offset="0%" stop-color="#ffdde8"/>
+          <stop offset="55%" stop-color="#f9a8d4"/>
+          <stop offset="100%" stop-color="#f472b6"/>
+        </radialGradient>
+        <linearGradient id="pigBellyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fff1f2"/>
+          <stop offset="100%" stop-color="#fbcfe8"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Bóng đổ dưới chân -->
+      <ellipse cx="90" cy="148" rx="52" ry="8" fill="rgba(15, 23, 42, 0.12)"/>
+
+      <!-- Đuôi xoắn xinh xắn -->
+      <path d="M148,96 Q165,88 160,78 Q154,72 158,84 Q163,92 170,84" stroke="#ec4899" stroke-width="4" stroke-linecap="round" fill="none"/>
+
+      <!-- 4 Chân mũm mĩm -->
+      <rect x="52" y="122" width="16" height="22" rx="8" fill="#ec4899"/>
+      <rect x="72" y="125" width="15" height="21" rx="7.5" fill="#f472b6"/>
+      <rect x="94" y="125" width="15" height="21" rx="7.5" fill="#f472b6"/>
+      <rect x="112" y="122" width="16" height="22" rx="8" fill="#ec4899"/>
+
+      <!-- Tai trái & Tai phải vẫy -->
+      <g class="piggy-svg-ear-left">
+        <path d="M54,48 Q30,22 36,56 Q40,66 56,60 Z" fill="#f472b6" stroke="#ec4899" stroke-width="2"/>
+        <path d="M50,50 Q36,32 40,53 Z" fill="#fda4af"/>
+      </g>
+      <g class="piggy-svg-ear-right">
+        <path d="M126,48 Q150,22 144,56 Q140,66 124,60 Z" fill="#f472b6" stroke="#ec4899" stroke-width="2"/>
+        <path d="M130,50 Q144,32 140,53 Z" fill="#fda4af"/>
+      </g>
+
+      <!-- Thân heo tròn mũm mĩm -->
+      <ellipse cx="90" cy="88" rx="60" ry="50" fill="url(#pigBodyGrad)" stroke="#ec4899" stroke-width="2.5"/>
+
+      <!-- Bụng hồng phấn -->
+      <ellipse cx="90" cy="108" rx="38" ry="24" fill="url(#pigBellyGrad)" opacity="0.75"/>
+
+      <!-- Khe bỏ tiền vàng trên lưng + Đồng xu lấp lánh -->
+      <rect x="74" y="39" width="32" height="5.5" rx="2.75" fill="#831843"/>
+      <circle cx="90" cy="34" r="9" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
+      <text x="90" y="37.5" text-anchor="middle" font-size="10" font-weight="900" fill="#854d0e">⭐</text>
+
+      <!-- Hai má hồng phúng phính -->
+      <ellipse cx="48" cy="92" rx="10" ry="6.5" fill="#fb7185" opacity="0.65"/>
+      <ellipse cx="132" cy="92" rx="10" ry="6.5" fill="#fb7185" opacity="0.65"/>
+
+      <!-- Đôi mắt long lanh -->
+      ${eyesSVG}
+
+      <!-- Miệng cười / mếu -->
+      ${mouthSVG}
+
+      <!-- Chiếc mũi Heo Đất Ụt Ịt nhấp nhô -->
+      <g class="piggy-svg-snout">
+        <ellipse cx="90" cy="94" rx="19" ry="13.5" fill="#fb7185" stroke="#e11d48" stroke-width="2"/>
+        <ellipse cx="83.5" cy="94" rx="3.8" ry="5.5" fill="#881337"/>
+        <ellipse cx="96.5" cy="94" rx="3.8" ry="5.5" fill="#881337"/>
+      </g>
+
+      <!-- Phụ kiện cấp độ -->
+      ${accessorySVG}
+    </svg>
+  `;
+}
+
+// 🎨 Render Ngôi Nhà Thú Cưng: Heo Đất Ụt Ịt
 function renderPiggyPet() {
   const c = child();
   const todayBox = document.getElementById('todayPiggyWidget');
@@ -813,32 +1084,26 @@ function renderPiggyPet() {
         <div class="piggy-empty-pen-head">
           <span style="font-size:32px">🧺🏚️</span>
           <div style="flex:1">
-            <div style="font-size:14px;font-weight:900;color:#b45309">🎉 Đã Mổ Heo Thành Công!</div>
-            <div style="font-size:11.5px;color:#78350f">
+            <div style="font-size:15px;font-weight:900;color:#b45309">🎉 Đã Mổ Heo Thành Công!</div>
+            <div style="font-size:12px;color:#78350f">
               Lứa ${p.generation || 1} đã thu hoạch <b>${(p.harvestedAmount || 0).toLocaleString('vi-VN')} đ</b>!
             </div>
           </div>
           <span class="piggy-level-pill" style="background:#fef3c7;color:#b45309;border-color:#fde68a">Lứa ${p.generation || 1}</span>
         </div>
 
-        <div style="background:#ffffff;border-radius:14px;padding:12px;margin:10px 0;border:1.5px solid #fde68a;box-shadow:0 2px 8px rgba(245,158,11,0.08)">
-          <div style="font-size:12.5px;font-weight:800;color:#92400e;margin-bottom:4px;display:flex;align-items:center;gap:6px">
-            <span>🛒</span> <span>Mua Heo Giống Mới (Lứa ${nextGen}) — Cần 10.000 đ</span>
+        <div style="background:#ffffff;border-radius:14px;padding:12px;margin:10px 0;border:1.5px solid #fde68a">
+          <div style="font-size:13px;font-weight:800;color:#92400e;margin-bottom:4px">
+            🛒 Mua Heo Giống Mới (Lứa ${nextGen}) — Cần 10.000 đ hoặc 100 ⭐
           </div>
-          <div style="font-size:11px;color:#78350f;margin-bottom:10px;line-height:1.4">
-            💡 <b>Bài học tài chính:</b> Sau khi mổ heo, bé cần <b>10.000 đ</b> (hoặc dùng <b>100 ⭐</b>) để mua chú heo giống mới về nuôi tiếp lứa sau nhé! Đây là tiền vốn tái đàn để heo sinh sôi tiền tiết kiệm!
-          </div>
-
           <div style="margin-bottom:10px">
-            <label style="font-size:11px;font-weight:700;color:#64748b;display:block;margin-bottom:3px">Đặt tên cho chú heo mới:</label>
-            <input type="text" id="newPiggyNameInput" value="Heo Đất Ụt Ịt Lứa ${nextGen}" style="width:100%;padding:7px 10px;border-radius:8px;border:1.5px solid #fcd34d;font-size:12px;font-weight:700;box-sizing:border-box">
+            <input type="text" id="newPiggyNameInput" value="Heo Đất Ụt Ịt Lứa ${nextGen}" style="width:100%;padding:8px 10px;border-radius:8px;border:1.5px solid #fcd34d;font-size:12.5px;font-weight:700;box-sizing:border-box">
           </div>
-
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <button type="button" class="today-cat-pill" style="justify-content:center;padding:9px;background:#fef3c7;border-color:#f59e0b;font-size:11.5px;font-weight:800;color:#b45309" onclick="buyNewPiggyBreed('money')">
+            <button type="button" class="today-cat-pill" style="justify-content:center;padding:9px;background:#fef3c7;border-color:#f59e0b;font-size:12px;font-weight:800;color:#b45309" onclick="buyNewPiggyBreed('money')">
               💵 Trích 10.000 đ
             </button>
-            <button type="button" class="today-cat-pill" style="justify-content:center;padding:9px;background:#fce7f3;border-color:#ec4899;font-size:11.5px;font-weight:800;color:#be185d" onclick="buyNewPiggyBreed('stars')">
+            <button type="button" class="today-cat-pill" style="justify-content:center;padding:9px;background:#fce7f3;border-color:#ec4899;font-size:12px;font-weight:800;color:#be185d" onclick="buyNewPiggyBreed('stars')">
               ⭐ Dùng 100 ⭐ (Có ${c.score}⭐)
             </button>
           </div>
@@ -851,139 +1116,162 @@ function renderPiggyPet() {
     return;
   }
 
-  // TRƯỜNG HỢP 2: ĐANG NUÔI HEO BÌNH THƯỜNG
-  const lvlInfo = PIGGY_LEVELS[p.level - 1] || PIGGY_LEVELS[0];
+  // TRƯỜNG HỢP 2: ĐANG NUÔI HEO ĐẤT ỤT ỊT
+  const lvlInfo = PIGGY_LEVELS[Math.min(p.level, PIGGY_LEVELS.length) - 1] || PIGGY_LEVELS[0];
   const nextExp = lvlInfo.nextExp;
   const expPercent = Math.min(100, Math.round((p.exp / nextExp) * 100));
+  const isHungry = (p.mood === 'hungry' || p.mood === 'starving' || p.daysWithoutCare >= 1);
+  const canHarvest = (p.coinsVND || 0) >= 10000;
 
-  let pigAvatar = '🐷';
-  let moodBadge = '🥰';
-  let moodText = 'No nê vui vẻ (' + p.fullness + '%)';
-  let isHungry = (p.mood === 'hungry' || p.mood === 'starving' || p.daysWithoutCare >= 1);
-
-  if (p.level === 1) pigAvatar = '🐽';
-  else if (p.level === 2) pigAvatar = '🐷';
-  else if (p.level === 3) pigAvatar = '🐖';
-  else if (p.level === 4) pigAvatar = '👑';
-  else pigAvatar = '🏆';
-
-  if (p.mood === 'starving' || p.daysWithoutCare >= 2) {
-    moodBadge = '😭';
-    moodText = 'Rất đói bụng (0%)';
-  } else if (p.mood === 'hungry' || p.daysWithoutCare === 1) {
-    moodBadge = '🥺';
-    moodText = 'Đang đói meo (' + p.fullness + '%)';
-  } else if (p.fullness <= 50) {
-    moodBadge = '😋';
-    moodText = 'Hơi thèm ăn (' + p.fullness + '%)';
+  let defaultSpeech = `Ụt ịt! Chào cô chủ nhỏ ${safe(c.name)}! Hôm nay bé cho Heo Đất ăn món gì ngon nè? 💕`;
+  if (isHungry) {
+    defaultSpeech = `Ụt ịt... Bụng heo đang đói meo (${p.fullness}%), bé chọn món ngon bên dưới bón cho heo ăn với nha! 🥺`;
   }
+  const speechText = piggyCustomSpeech || defaultSpeech;
 
-  // 1. Render trên Tab Hôm Nay
+  const filteredFoods = activePiggyFoodTab === 'all'
+    ? PIGGY_FOOD_MENU
+    : PIGGY_FOOD_MENU.filter(f => f.cat === activePiggyFoodTab);
+
+  const foodCardsHtml = filteredFoods.map(f => {
+    const canAfford = c.score >= f.stars;
+    return `
+      <div class="piggy-food-card ${canAfford ? '' : 'locked'}" onclick="feedPiggyFoodItem('${f.id}')" title="Bấm để bón ${f.name} cho Heo Đất Ụt Ịt">
+        <div class="piggy-food-emoji">${f.emoji}</div>
+        <div class="piggy-food-name">${f.name}</div>
+        <div class="piggy-food-perk">+${f.weight}kg • +${f.vnd.toLocaleString('vi-VN')}đ</div>
+        <div class="piggy-food-price">⭐ ${f.stars} sao</div>
+      </div>
+    `;
+  }).join('');
+
   if (todayBox) {
-    let alertHtml = '';
-    if (isHungry) {
-      alertHtml = `
-        <div class="piggy-hungry-alert">
-          <div class="piggy-alert-icon">🥺🐷</div>
-          <div class="piggy-alert-content">
-            <div class="piggy-alert-title">🚨 BÁO ĐỘNG: HEO ĐẤT ĐANG ĐÓI BỤNG!</div>
-            <div class="piggy-alert-desc">Đã ${p.daysWithoutCare >= 1 ? (p.daysWithoutCare + ' ngày') : 'lâu rồi'} bé chưa tương tác với heo! Hãy hoàn thành 1 việc tốt hoặc bón 1 bữa sao nhỏ để cứu heo nhé!</div>
-          </div>
-        </div>
-      `;
-    }
-
     todayBox.innerHTML = `
-      <div class="piggy-care-widget">
-        ${alertHtml}
-        <div class="piggy-card-header">
-          <div class="piggy-card-title-wrap">
-            <span style="font-size:18px">🐷</span>
-            <span class="piggy-card-title">${safe(p.name)}</span>
-            <span class="piggy-level-pill">${lvlInfo.badge} • Lứa ${p.generation || 1}</span>
+      <div class="piggy-pet-paradise">
+        <!-- Header Ngôi nhà Heo Đất Ụt Ịt -->
+        <div class="piggy-paradise-header">
+          <div class="piggy-paradise-title">
+            <span style="font-size:26px">🏡🐷</span>
+            <div>
+              <h3>${safe(p.name)}</h3>
+              <div style="font-size:12px;color:#be185d;font-weight:700">${lvlInfo.name} • Chạm vào người heo để cưng nựng!</div>
+            </div>
           </div>
-          <button type="button" onclick="toggleSimulatePiggyHunger()" style="border:none;background:none;font-size:11px;color:#94a3b8;cursor:pointer" title="Bấm để thử nghiệm / tắt cảnh báo đói">⚙️ Thử</button>
-        </div>
-
-        <div class="piggy-hero-stage">
-          <div class="piggy-avatar-box ${isHungry ? 'hungry' : ''}" onclick="patPiggyPet()" title="Chạm để vuốt ve heo">
-            <span>${pigAvatar}</span>
-            <span class="piggy-mood-badge">${moodBadge}</span>
-          </div>
-
-          <div class="piggy-stats-block">
-            <div class="piggy-stats-row">
-              <span class="piggy-stat-chip">⚖️ <b>${p.weightKg.toFixed(1)} kg</b></span>
-              <span class="piggy-stat-chip" style="color:#059669">💰 <b>${(p.coinsVND || 0).toLocaleString('vi-VN')} đ</b></span>
-            </div>
-
-            <div class="piggy-meter-wrap">
-              <div class="piggy-meter-head">
-                <span>🥣 Độ No:</span>
-                <span style="color:${isHungry ? '#ef4444' : '#059669'}">${moodText}</span>
-              </div>
-              <div class="piggy-meter-bar">
-                <div class="piggy-meter-fill fullness ${isHungry ? 'hungry' : ''}" style="width:${p.fullness}%"></div>
-              </div>
-            </div>
-
-            <div class="piggy-meter-wrap">
-              <div class="piggy-meter-head">
-                <span>⭐ Trưởng thành:</span>
-                <span>${p.exp} / ${nextExp} EXP</span>
-              </div>
-              <div class="piggy-meter-bar">
-                <div class="piggy-meter-fill exp" style="width:${expPercent}%"></div>
-              </div>
-            </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <span class="piggy-gen-badge">${lvlInfo.badge} • Lứa ${p.generation || 1}</span>
+            <button type="button" onclick="toggleSimulatePiggyHunger()" style="border:1px solid #fbcfe8;background:#fff;border-radius:999px;padding:4px 9px;font-size:11px;color:#9d174d;cursor:pointer;font-weight:700" title="Thử nghiệm trạng thái đói/no">⚙️ Thử đói</button>
           </div>
         </div>
 
-        <div class="piggy-encourage-quote">
-          <span>💡</span>
-          <span><b>Bé có biết:</b> Mỗi việc tốt con làm hôm nay (Toán, Đàn, việc nhà) đều giúp Heo lớn thêm <b>+0.1kg</b> và tích lũy tiền vào bụng đó!</span>
+        <!-- Sân khấu đồng cỏ & Nhân vật Heo Đất Ụt Ịt SVG Động -->
+        <div class="piggy-pasture-stage">
+          <div class="piggy-sky-decor">
+            <span class="piggy-cloud-float">☁️✨</span>
+            <span>☀️🌈</span>
+            <span class="piggy-cloud-float">🦋☁️</span>
+          </div>
+
+          <div class="piggy-fx-layer" id="piggyFxLayer"></div>
+
+          <div class="piggy-speech-bubble" id="piggySpeechBubble">
+            ${speechText}
+          </div>
+
+          <div class="piggy-pet-figure" id="piggyPetFigure" onclick="patPiggyPet()" title="Chạm để xoa bụng nựng Heo Đất Ụt Ịt!">
+            ${getCutePiggySVG(p.level, isHungry)}
+          </div>
+
+          <div style="display:flex;gap:14px;font-size:18px;margin-top:-4px;opacity:0.9">
+            <span>🌷</span><span>🌱</span><span>🌻</span><span>🍀</span><span>🌼</span>
+          </div>
         </div>
 
-        <div class="piggy-actions-grid">
-          <div class="piggy-action-btn free" onclick="patPiggyPet()" title="Vuốt ve cưng nựng heo mỗi ngày">
-            <span class="piggy-btn-icon">💕</span>
-            <span class="piggy-btn-label">Vuốt ve</span>
-            <span class="piggy-btn-sub piggy-btn-free">Miễn phí</span>
+        <!-- 4 Chỉ số quan trọng của Heo Đất Ụt Ịt -->
+        <div class="piggy-vitals-grid">
+          <div class="piggy-vital-card">
+            <div class="piggy-vital-label"><span>⚖️ Cân nặng</span><span>Lứa ${p.generation || 1}</span></div>
+            <div class="piggy-vital-val">${p.weightKg.toFixed(2)} kg</div>
           </div>
 
-          <div class="piggy-action-btn" onclick="feedPiggyWithStars('snack')" title="Bón bắp ngọt & cà rốt">
-            <span class="piggy-btn-icon">🥕</span>
-            <span class="piggy-btn-label">Bữa nhẹ</span>
-            <span class="piggy-btn-sub">2 ⭐</span>
+          <div class="piggy-vital-card">
+            <div class="piggy-vital-label"><span>💰 Ống tiết kiệm</span><span>${canHarvest ? 'Mổ được!' : 'Tích lũy'}</span></div>
+            <div class="piggy-vital-val" style="color:#059669">${(p.coinsVND || 0).toLocaleString('vi-VN')} đ</div>
           </div>
 
-          <div class="piggy-action-btn" onclick="feedPiggyWithStars('meal')" title="Bón táo đỏ & ngũ cốc thơm ngon">
-            <span class="piggy-btn-icon">🍎</span>
-            <span class="piggy-btn-label">Bữa chính</span>
-            <span class="piggy-btn-sub">5 ⭐</span>
+          <div class="piggy-vital-card">
+            <div class="piggy-vital-label">
+              <span>🥣 Độ no bụng</span>
+              <span style="color:${isHungry ? '#ef4444' : '#059669'}">${p.fullness}%</span>
+            </div>
+            <div class="piggy-meter-bar" style="margin-top:3px">
+              <div class="piggy-meter-fill fullness ${isHungry ? 'hungry' : ''}" style="width:${p.fullness}%"></div>
+            </div>
           </div>
 
-          <div class="piggy-action-btn" onclick="feedPiggyWithStars('feast')" title="Đại tiệc mâm vàng no nê">
-            <span class="piggy-btn-icon">🍲</span>
-            <span class="piggy-btn-label">Đại tiệc</span>
-            <span class="piggy-btn-sub">10 ⭐</span>
+          <div class="piggy-vital-card">
+            <div class="piggy-vital-label">
+              <span>⭐ Kinh nghiệm</span>
+              <span>${p.exp}/${nextExp}</span>
+            </div>
+            <div class="piggy-meter-bar" style="margin-top:3px">
+              <div class="piggy-meter-fill exp" style="width:${expPercent}%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thanh công cụ Chăm sóc Heo Đất mỗi ngày -->
+        <div class="piggy-care-toolbar">
+          <button type="button" class="piggy-care-tool-btn" onclick="patPiggyPet()">
+            <span style="font-size:18px">💕</span>
+            <span>Xoa bụng (+5 EXP)</span>
+          </button>
+          <button type="button" class="piggy-care-tool-btn" onclick="bathPiggyPet()">
+            <span style="font-size:18px">🛁</span>
+            <span>Tắm thơm (+5 EXP)</span>
+          </button>
+          <button type="button" class="piggy-care-tool-btn" onclick="musicPiggyPet()">
+            <span style="font-size:18px">🎵</span>
+            <span>Bật nhạc (+5 EXP)</span>
+          </button>
+          <button type="button" class="piggy-care-tool-btn" style="${canHarvest ? 'background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:#059669' : ''}" onclick="harvestPiggyCoins()">
+            <span style="font-size:18px">🔨</span>
+            <span>Mổ heo (${(p.coinsVND || 0).toLocaleString('vi-VN')}đ)</span>
+          </button>
+        </div>
+
+        <!-- Tiệm Đồ Ăn 12 Món Cho Heo Đất Ụt Ịt -->
+        <div class="piggy-kitchen-box">
+          <div class="piggy-kitchen-head">
+            <div>
+              <div style="font-weight:900;font-size:15px;color:#831843">🍽️ Thực Đơn 12 Món Ngon Cho Heo Đất Ụt Ịt</div>
+              <div style="font-size:11.5px;color:#64748b">Bé đang có <b style="color:#d97706">${c.score} ⭐</b> — Chạm vào món ăn để đút cho heo măm ngay!</div>
+            </div>
+            <div class="piggy-food-tabs">
+              <button type="button" class="piggy-food-tab ${activePiggyFoodTab==='all'?'active':''}" onclick="setPiggyFoodTab('all')">🌟 Tất cả (12)</button>
+              <button type="button" class="piggy-food-tab ${activePiggyFoodTab==='snack'?'active':''}" onclick="setPiggyFoodTab('snack')">🌽 Quà vặt (2-8⭐)</button>
+              <button type="button" class="piggy-food-tab ${activePiggyFoodTab==='meal'?'active':''}" onclick="setPiggyFoodTab('meal')">🍕 Món ngon (10-20⭐)</button>
+              <button type="button" class="piggy-food-tab ${activePiggyFoodTab==='feast'?'active':''}" onclick="setPiggyFoodTab('feast')">🎂 Đại tiệc (30-150⭐)</button>
+            </div>
+          </div>
+
+          <div class="piggy-food-shop-grid">
+            ${foodCardsHtml}
           </div>
         </div>
       </div>
     `;
   }
 
-  // 2. Render trên Tab Đổi Quà (Nông trại đầy đủ)
+  // 2. Render trên Tab Đổi Quà
   if (farmBox) {
-    const canHarvest = (p.coinsVND || 0) >= 10000;
     farmBox.innerHTML = `
       <div class="piggy-farm-full-card">
         <div class="piggy-farm-headline">
           <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-size:24px">${pigAvatar}</span>
+            <span style="font-size:28px">🐷</span>
             <div>
               <div style="font-weight:900;font-size:14.5px;color:#9d174d">${safe(p.name)} (${lvlInfo.name})</div>
-              <div style="font-size:11.5px;color:#64748b">Lứa ${p.generation || 1} • Cân nặng: ${p.weightKg.toFixed(1)}kg • Đã bón ${p.totalStarsEaten || 0} ⭐</div>
+              <div style="font-size:11.5px;color:#64748b">Lứa ${p.generation || 1} • Cân nặng: ${p.weightKg.toFixed(2)}kg • Đã ăn ${p.totalStarsEaten || 0} ⭐</div>
             </div>
           </div>
           ${canHarvest ? `
@@ -993,20 +1281,22 @@ function renderPiggyPet() {
           ` : `
             <div style="text-align:right">
               <div style="font-size:12px;font-weight:900;color:#059669">💰 ${(p.coinsVND||0).toLocaleString('vi-VN')} đ</div>
-              <div style="font-size:10px;color:#94a3b8">Cần 10.000đ để mổ</div>
+              <div style="font-size:10px;color:#94a3b8">Tối thiểu 10.000đ để mổ</div>
             </div>
           `}
         </div>
-
-        <div style="display:flex;gap:6px;margin-bottom:10px">
-          <button type="button" class="today-cat-pill" style="flex:1;justify-content:center;padding:6px 8px;font-size:11px" onclick="feedPiggyWithStars('snack')">
-            🥕 Bón 2 ⭐ (+200đ)
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button type="button" class="today-cat-pill" style="flex:1;justify-content:center;padding:6px 8px;font-size:11.5px" onclick="feedPiggyFoodItem('snack_corn')">
+            🌽 Bắp ngọt (2⭐)
           </button>
-          <button type="button" class="today-cat-pill" style="flex:1;justify-content:center;padding:6px 8px;font-size:11px" onclick="feedPiggyWithStars('meal')">
-            🍎 Bón 5 ⭐ (+500đ)
+          <button type="button" class="today-cat-pill" style="flex:1;justify-content:center;padding:6px 8px;font-size:11.5px" onclick="feedPiggyFoodItem('snack_watermelon')">
+            🍉 Dưa hấu (5⭐)
           </button>
-          <button type="button" class="today-cat-pill" style="flex:1;justify-content:center;padding:6px 8px;font-size:11px" onclick="feedPiggyWithStars('feast')">
-            🍲 Bón 10 ⭐ (+1.000đ)
+          <button type="button" class="today-cat-pill" style="flex:1;justify-content:center;padding:6px 8px;font-size:11.5px" onclick="feedPiggyFoodItem('meal_milk')">
+            🥛 Sữa tươi (10⭐)
+          </button>
+          <button type="button" class="today-cat-pill" style="flex:1;justify-content:center;padding:6px 8px;font-size:11.5px" onclick="feedPiggyFoodItem('meal_pizza')">
+            🍕 Pizza (20⭐)
           </button>
         </div>
       </div>
@@ -1467,30 +1757,22 @@ function renderTodayCategories(){
     const card = document.createElement('div');
     card.className = 'today-cat-card ' + key;
 
-    // Header nhóm
+    // Header nhóm gọn gàng cho bé
     const head = document.createElement('div');
     head.className = 'today-cat-card-head';
     head.innerHTML = `
       <div class="today-cat-title-wrap">
         <span style="font-size:22px">${catMeta.icon}</span>
         <div class="today-cat-badge">${catMeta.name}</div>
-        <span class="today-cat-count">${doneCount}/${catTasks.length} việc</span>
-      </div>
-      <div class="today-cat-quick-actions">
-        <button type="button" class="today-cat-act-btn praise" onclick="openPointAdjustModal('praise', '${key}')" title="Thưởng sao nhanh cho ${catMeta.name}">
-          <span>➕ Thưởng</span>
-        </button>
-        <button type="button" class="today-cat-act-btn penalty" onclick="openPointAdjustModal('penalty', '${key}')" title="Trừ điểm vi phạm">
-          <span>➖ Trừ</span>
-        </button>
+        <span class="today-cat-count">${doneCount}/${catTasks.length} việc đã xong</span>
       </div>
     `;
     card.appendChild(head);
 
-    // Danh sách nhiệm vụ của nhóm
+    // Danh sách nhiệm vụ nhắc việc của nhóm
     const listWrap = document.createElement('div');
     if(!catTasks.length) {
-      listWrap.innerHTML = `<div class="note" style="color:#94a3b8;padding:8px 2px;font-size:12.5px">Hôm nay chưa có việc nào trong mục <b>${catMeta.name}</b>. Bố mẹ có thể chạm <b>➕ Thưởng</b> ở trên hoặc chọn nhanh mẫu bên dưới!</div>`;
+      listWrap.innerHTML = `<div class="note" style="color:#94a3b8;padding:8px 2px;font-size:12.5px">Hôm nay chưa có việc cần nhắc trong mục <b>${catMeta.name}</b>.</div>`;
     } else {
       catTasks.forEach(t => {
         const isPenalty = Number(t.points) < 0;
@@ -1501,9 +1783,9 @@ function renderTodayCategories(){
         if(t.done) {
           btnHtml = `<button type="button" class="today-task-btn is-done" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">✓ Đã xong</button>`;
         } else if(isPenalty) {
-          btnHtml = `<button type="button" class="today-task-btn finish-penalty" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">${t.points} ⭐ Phạt</button>`;
+          btnHtml = `<button type="button" class="today-task-btn finish-penalty" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">${t.points} ⭐</button>`;
         } else {
-          btnHtml = `<button type="button" class="today-task-btn finish-praise" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">+${t.points} ⭐ Xong</button>`;
+          btnHtml = `<button type="button" class="today-task-btn finish-praise" onclick="toggleTaskCompletion('${c.id}', '${t.id}')">+${t.points} ⭐ Hoàn thành</button>`;
         }
 
         row.innerHTML = `
@@ -1521,53 +1803,6 @@ function renderTodayCategories(){
       });
     }
     card.appendChild(listWrap);
-
-    // Mẫu chạm nhanh 1 lần (Praises & Penalties) — Ưu tiên 5 môn chính ở Học ở nhà, thu gọn các nội dung khác
-    const presetsWrap = document.createElement('div');
-    presetsWrap.className = 'today-cat-presets-wrap';
-    
-    let pillsHtml = '';
-    let otherPillsHtml = '';
-    if (key === 'home_study') {
-      const corePraises = catMeta.praises.filter(p => p.core !== false);
-      const otherPraises = catMeta.praises.filter(p => p.core === false);
-      corePraises.forEach(p => {
-        pillsHtml += `<button type="button" class="today-preset-pill preset-praise" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'praise')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>+${p.points}⭐</b></button>`;
-      });
-      catMeta.penalties.slice(0, 2).forEach(p => {
-        pillsHtml += `<button type="button" class="today-preset-pill preset-penalty" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'penalty')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>${p.points}⭐</b></button>`;
-      });
-      if (otherPraises.length) {
-        const extraBtns = otherPraises.map(p =>
-          `<button type="button" class="today-preset-pill preset-praise" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'praise')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>+${p.points}⭐</b></button>`
-        ).join('');
-        otherPillsHtml = `
-          <details class="today-other-presets-details">
-            <summary>📂 Các nội dung học khác (Thu gọn — bấm để mở)</summary>
-            <div class="today-cat-presets-pills" style="margin-top:6px">${extraBtns}</div>
-          </details>
-        `;
-      }
-    } else {
-      catMeta.praises.slice(0, 3).forEach(p => {
-        pillsHtml += `<button type="button" class="today-preset-pill preset-praise" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'praise')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>+${p.points}⭐</b></button>`;
-      });
-      catMeta.penalties.slice(0, 2).forEach(p => {
-        pillsHtml += `<button type="button" class="today-preset-pill preset-penalty" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'penalty')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>${p.points}⭐</b></button>`;
-      });
-    }
-
-    presetsWrap.innerHTML = `
-      <div class="today-cat-presets-title">
-        <span>⚡ Chạm 1 lần để cộng / trừ nhanh${key==='home_study'?' (5 môn chính của con)':''}:</span>
-      </div>
-      <div class="today-cat-presets-pills">
-        ${pillsHtml}
-      </div>
-      ${otherPillsHtml}
-    `;
-    card.appendChild(presetsWrap);
-
     container.appendChild(card);
   });
 }
@@ -1610,6 +1845,9 @@ let pointAdjustState = {
 };
 
 function openPointAdjustModal(mode = 'praise', defaultCat = 'home_study', defaultPoints = null, defaultReason = ''){
+  // Chuyển toàn bộ việc Cộng / Trừ điểm vào Khu vực Phụ huynh đơn giản hóa (có mã PIN bảo vệ)
+  openParentModal('points');
+  return;
   const c = child();
   fillChildSelect(document.getElementById('pointAdjustChild'));
   if(c) {
@@ -2847,11 +3085,41 @@ function renderDayTasks(){
   });
 }
 
-function openParentModal(){document.getElementById('parentModal').classList.add('show')}
+let activeParentTab = 'points'; // 'points' | 'tasks' | 'settings'
+let isParentSessionUnlocked = false;
+
+function openParentModal(defaultTab = 'points'){
+  if (defaultTab && ['points', 'tasks', 'settings'].includes(defaultTab)) {
+    activeParentTab = defaultTab;
+  }
+  const modal = document.getElementById('parentModal');
+  if (!modal) return;
+  modal.classList.add('show');
+
+  if (isParentSessionUnlocked) {
+    document.getElementById('parentLogin').style.display = 'none';
+    document.getElementById('parentArea').style.display = 'block';
+    renderManagers();
+  } else {
+    setTimeout(() => {
+      document.getElementById('parentPasswordInput')?.focus();
+    }, 80);
+  }
+}
+
 function closeParentModal(){
   document.getElementById('parentModal').classList.remove('show');
-  document.getElementById('parentArea').style.display='none';document.getElementById('parentLogin').style.display='block';document.getElementById('parentPasswordInput').value='';
 }
+
+function lockParentSession(){
+  isParentSessionUnlocked = false;
+  document.getElementById('parentArea').style.display='none';
+  document.getElementById('parentLogin').style.display='block';
+  document.getElementById('parentPasswordInput').value='';
+  closeParentModal();
+  showToast('🔒 Đã khóa lại Khu vực phụ huynh!');
+}
+
 function unlockParent(){
   const input=document.getElementById('parentPasswordInput'),v=input.value;
   if(v==='****'){
@@ -2861,7 +3129,300 @@ function unlockParent(){
     data.parentPassword=p.trim();save();input.value='';alert('Đã cài lại mật khẩu.');return;
   }
   if(v!==data.parentPassword){alert('Mật khẩu không đúng.');return}
-  document.getElementById('parentLogin').style.display='none';document.getElementById('parentArea').style.display='block';input.value='';renderManagers();
+  isParentSessionUnlocked = true;
+  document.getElementById('parentLogin').style.display='none';
+  document.getElementById('parentArea').style.display='block';
+  input.value='';
+  renderManagers();
+}
+
+function switchParentSimpleTab(tabId){
+  activeParentTab = tabId;
+  renderParentSimplifiedHub();
+}
+
+// ⚡ CỘNG / TRỪ ĐIỂM 1 CHẠM TRONG KHU VỰC PHỤ HUYNH
+function parentOneTapScore(points, reason, categoryLabel = 'Phụ huynh'){
+  const c = child();
+  if(!c) return alert('Chưa có hồ sơ bé.');
+  const delta = Number(points || 0);
+  if(!delta) return;
+
+  c.score = Math.max(0, (c.score || 0) + delta);
+  if(delta > 0) c.highestScore = Math.max(c.highestScore || 0, c.score);
+
+  logPoint(c, delta > 0 ? 'bonus' : 'penalty', delta, `[${categoryLabel}] ${reason}`);
+  if(delta > 0) boostPiggyOnGoodDeed(c, reason, 15, 0.1);
+  updateEarnedAchievements(c);
+  save();
+  render();
+
+  if(delta > 0){
+    playChime('success');
+    triggerConfetti();
+    showToast(`🎉 Đã cộng +${delta} ⭐ cho ${c.name}: ${reason}`);
+  } else {
+    playPenaltySound();
+    showToast(`⚠️ Đã trừ ${delta} ⭐ của ${c.name}: ${reason}`);
+  }
+}
+
+function parentCustomQuickSubmit(mode){
+  const ptsEl = document.getElementById('parentQuickPtsInput');
+  const reasonEl = document.getElementById('parentQuickReasonInput');
+  const pts = Math.abs(Number(ptsEl?.value || 10));
+  if(!pts || pts <= 0) return alert('Vui lòng nhập số sao lớn hơn 0.');
+  const rawReason = (reasonEl?.value || '').trim();
+  const reason = rawReason || (mode === 'penalty' ? 'Nhắc nhở rèn luyện' : 'Bố mẹ khen thưởng');
+  const delta = mode === 'penalty' ? -pts : pts;
+  parentOneTapScore(delta, reason, mode === 'penalty' ? 'Nhắc nhở' : 'Khen thưởng');
+  if(reasonEl) reasonEl.value = '';
+}
+
+function undoParentPointEntry(entryId){
+  const c = child();
+  if(!c || !Array.isArray(c.pointHistory)) return;
+  const idx = c.pointHistory.findIndex(h => h.id === entryId);
+  if(idx < 0) return;
+  const entry = c.pointHistory[idx];
+  const amt = Number(entry.amount || 0);
+  c.score = Math.max(0, (c.score || 0) - amt);
+  c.pointHistory.splice(idx, 1);
+  save();
+  render();
+  showToast('↩ Đã hoàn tác mục điểm vừa chọn!');
+}
+
+// 📝 GIAO NHANH 1 CHẠM VIỆC HÔM NAY CHO BÉ
+function parentQuickAssignTodayTask(name, subject, category, points, duration = '15 phút'){
+  const c = child();
+  if(!c) return alert('Chưa có hồ sơ bé.');
+  const today = todayISO();
+  c.tasks.push({
+    id: uid('t'),
+    seriesId: null,
+    name,
+    subject,
+    category,
+    date: today,
+    points: Number(points || 10),
+    duration,
+    link: '',
+    instruction: '',
+    done: false,
+    awardedPoints: 0,
+    completedAt: null
+  });
+  save();
+  render();
+  playChime('success');
+  showToast(`📝 Đã thêm "${name}" (+${points}⭐) vào việc hôm nay của ${c.name}!`);
+}
+
+function renderParentSimplifiedHub(){
+  const parentArea = document.getElementById('parentArea');
+  if(!parentArea) return;
+
+  // Khởi tạo container đơn giản hóa ở đầu #parentArea nếu chưa có
+  let hubWrap = document.getElementById('parentSimplifiedContainer');
+  if(!hubWrap){
+    hubWrap = document.createElement('div');
+    hubWrap.id = 'parentSimplifiedContainer';
+    parentArea.insertBefore(hubWrap, parentArea.firstChild);
+  }
+
+  const c = child();
+  const childSwitchPills = data.children.map(ch => `
+    <button type="button" class="today-cat-pill ${ch.id===currentChildId?'active':''}" onclick="currentChildId='${ch.id}';render()">
+      ${childIcon(ch)} ${safe(ch.name)} (<b>${ch.score} ⭐</b>)
+    </button>
+  `).join('');
+
+  // Lịch sử 5 lần cộng/trừ gần nhất của bé để dễ kiểm tra & hoàn tác
+  const recentLogs = (c && Array.isArray(c.pointHistory)) ? c.pointHistory.slice(-5).reverse() : [];
+  const recentHtml = recentLogs.length ? recentLogs.map(item => {
+    const isPos = Number(item.amount) >= 0;
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#ffffff;border:1px solid #e2e8f0;border-radius:10px;font-size:12px;gap:8px">
+        <div style="flex:1">
+          <b style="color:${isPos?'#059669':'#dc2626'}">${isPos?'+'+item.amount:item.amount} ⭐</b>
+          <span style="color:#334155;margin-left:6px">${safe(item.reason || 'Cập nhật điểm')}</span>
+        </div>
+        <button type="button" onclick="undoParentPointEntry('${item.id}')" style="border:1px solid #cbd5e1;background:#f8fafc;border-radius:8px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#475569">↩ Hoàn tác</button>
+      </div>
+    `;
+  }).join('') : '<div class="note">Chưa có lịch sử cộng/trừ điểm gần đây.</div>';
+
+  hubWrap.innerHTML = `
+    <!-- Thanh chọn bé & nút Khóa lại -->
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;background:#f8fafc;padding:10px 12px;border-radius:14px;border:1px solid #e2e8f0">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <span style="font-size:12px;font-weight:800;color:#475569">Đang chọn bé:</span>
+        ${childSwitchPills}
+      </div>
+      <button type="button" class="btn delete" style="padding:6px 12px;font-size:12px" onclick="lockParentSession()">🔒 Khóa phụ huynh</button>
+    </div>
+
+    <!-- 3 Tab Phụ Huynh Gọn Gàng -->
+    <div class="parent-simple-tabs">
+      <button type="button" class="parent-tab-btn ${activeParentTab==='points'?'active':''}" onclick="switchParentSimpleTab('points')">
+        <span>⭐</span> <span>1. Cộng / Trừ Điểm (1 Chạm)</span>
+      </button>
+      <button type="button" class="parent-tab-btn ${activeParentTab==='tasks'?'active':''}" onclick="switchParentSimpleTab('tasks')">
+        <span>📝</span> <span>2. Giao &amp; Sửa Việc</span>
+      </button>
+      <button type="button" class="parent-tab-btn ${activeParentTab==='settings'?'active':''}" onclick="switchParentSimpleTab('settings')">
+        <span>⚙️</span> <span>3. Cài Đặt &amp; Đồng Bộ</span>
+      </button>
+    </div>
+
+    ${activeParentTab === 'points' ? `
+      <div class="parent-quick-score-hub">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+          <div>
+            <h3 style="margin:0;font-size:17px;color:#065f46">⚡ Chạm 1 Lần Cộng / Trừ Sao Ngay Cho ${c ? safe(c.name) : 'Bé'}</h3>
+            <div class="note">Bấm vào từng mục bên dưới để thưởng hoặc trừ sao tức thì, không cần điền nhiều ô!</div>
+          </div>
+          <div style="background:#ffffff;border:2px solid #10b981;border-radius:14px;padding:6px 14px;font-weight:900;color:#065f46;font-size:16px">
+            ⭐ Hiện có: ${c ? c.score : 0} sao
+          </div>
+        </div>
+
+        <!-- Nhóm 1: Học tập -->
+        <div style="font-size:12.5px;font-weight:900;color:#047857;margin-top:8px">🌟 Khen thưởng Học tập &amp; Tự giác (1 chạm):</div>
+        <div class="parent-one-tap-grid">
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(15, 'Học Toán tư duy chăm chỉ', 'Học tập')">
+            <span>🧮 Toán tư duy</span> <b>+15 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(15, 'Luyện Đàn đúng nhịp', 'Học tập')">
+            <span>🎹 Tập Đàn</span> <b>+15 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(15, 'Học Tiếng Anh Little Fox', 'Học tập')">
+            <span>🇬🇧 Tiếng Anh</span> <b>+15 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(15, 'Học Tiếng Trung Pinyin', 'Học tập')">
+            <span>🐼 Tiếng Trung</span> <b>+15 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(15, 'Nghe truyện kể Vĩ nhân', 'Học tập')">
+            <span>👑 Truyện Vĩ nhân</span> <b>+15 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(20, 'Đạt Điểm 10 ở trường', 'Trên lớp')">
+            <span>💯 Điểm 10 ở lớp</span> <b>+20 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(15, 'Được cô giáo khen ngợi', 'Trên lớp')">
+            <span>🌸 Cô giáo khen</span> <b>+15 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(10, 'Tự giác ngồi vào bàn học', 'Tự giác')">
+            <span>✍️ Tự giác học</span> <b>+10 ⭐</b>
+          </button>
+        </div>
+
+        <!-- Nhóm 2: Việc nhà & Ngoan ngoãn -->
+        <div style="font-size:12.5px;font-weight:900;color:#0369a1;margin-top:14px">🧹 Khen thưởng Phụ bố mẹ &amp; Nếp sống ngoan (1 chạm):</div>
+        <div class="parent-one-tap-grid">
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(10, 'Phụ bố mẹ làm việc nhà', 'Phụ bố mẹ')">
+            <span>🧹 Phụ việc nhà</span> <b>+10 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(5, 'Tự dọn gọn đồ chơi & sách vở', 'Phụ bố mẹ')">
+            <span>🧸 Dọn đồ chơi/sách</span> <b>+5 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(5, 'Ăn giỏi, đi ngủ đúng giờ', 'Nếp sống')">
+            <span>🍚 Ăn ngoan ngủ sớm</span> <b>+5 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentOneTapScore(10, 'Biết vâng lời, lễ phép với ông bà bố mẹ', 'Nếp sống')">
+            <span>💖 Ngoan &amp; lễ phép</span> <b>+10 ⭐</b>
+          </button>
+        </div>
+
+        <!-- Nhóm 3: Trừ điểm nhắc nhở -->
+        <div style="font-size:12.5px;font-weight:900;color:#b91c1c;margin-top:14px">⚠️ Trừ sao nhắc nhở vi phạm (1 chạm):</div>
+        <div class="parent-one-tap-grid">
+          <button type="button" class="parent-tap-btn penalty" onclick="parentOneTapScore(-10, 'Xem TV / Điện thoại quá giờ quy định', 'Nhắc nhở')">
+            <span>📺 Xem TV/ĐT quá giờ</span> <b>-10 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn penalty" onclick="parentOneTapScore(-5, 'Chậm trễ, để bố mẹ nhắc nhiều lần', 'Nhắc nhở')">
+            <span>🐢 Nhắc nhiều lần</span> <b>-5 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn penalty" onclick="parentOneTapScore(-10, 'Mè nheo, chưa vâng lời bố mẹ', 'Nhắc nhở')">
+            <span>😤 Chưa vâng lời</span> <b>-10 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn penalty" onclick="parentOneTapScore(-5, 'Quên dọn đồ chơi / sách vở bừa bộn', 'Nhắc nhở')">
+            <span>🧸 Không dọn đồ</span> <b>-5 ⭐</b>
+          </button>
+        </div>
+
+        <!-- Nhóm 4: Cộng / Trừ Tùy Ý Gọn Trên 1 Khung -->
+        <div style="background:#ffffff;border:1.5px solid #cbd5e1;border-radius:14px;padding:12px;margin-top:16px">
+          <div style="font-size:12.5px;font-weight:900;color:#1e293b;margin-bottom:8px">✏️ Hoặc nhập số sao &amp; lý do tùy ý:</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+            ${[5, 10, 15, 20, 30, 50].map(n => `<button type="button" class="btn open" style="padding:5px 10px;font-size:12px" onclick="document.getElementById('parentQuickPtsInput').value=${n}">${n} ⭐</button>`).join('')}
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <input id="parentQuickPtsInput" type="number" min="1" value="10" style="width:90px;font-weight:900;font-size:15px" placeholder="Số sao">
+            <input id="parentQuickReasonInput" placeholder="Nhập lý do (VD: Tự giác gấp quần áo, Điểm 10...)" style="flex:1;min-width:180px">
+            <button type="button" class="primary" style="background:linear-gradient(135deg,#10b981,#059669);padding:9px 16px" onclick="parentCustomQuickSubmit('praise')">➕ Cộng Sao</button>
+            <button type="button" class="btn delete" style="padding:9px 16px" onclick="parentCustomQuickSubmit('penalty')">➖ Trừ Sao</button>
+          </div>
+        </div>
+
+        <!-- Lịch sử 5 lần gần nhất + Hoàn tác -->
+        <div style="margin-top:14px">
+          <div style="font-size:12px;font-weight:800;color:#64748b;margin-bottom:6px">🕒 5 lần cộng/trừ gần nhất (Bấm Hoàn tác nếu chọn nhầm):</div>
+          <div style="display:flex;flex-direction:column;gap:5px">${recentHtml}</div>
+        </div>
+      </div>
+    ` : ''}
+
+    ${activeParentTab === 'tasks' ? `
+      <div class="parent-quick-score-hub" style="background:linear-gradient(135deg,#eff6ff,#f8fafc);border-color:#93c5fd">
+        <h3 style="margin:0 0 4px;font-size:16px;color:#1e3a8a">⚡ Chạm 1 Lần Giao Nhanh Việc Hôm Nay Cho ${c ? safe(c.name) : 'Bé'}</h3>
+        <div class="note" style="margin-bottom:8px">Bấm vào mẫu dưới đây để thêm ngay vào danh sách Nhắc việc hôm nay của bé:</div>
+        <div class="parent-one-tap-grid">
+          <button type="button" class="parent-tap-btn" onclick="parentQuickAssignTodayTask('Học Toán tư duy (15 phút)', 'Toán tư duy', 'home_study', 15, '15 phút')">
+            <span>🧮 Học Toán tư duy</span> <b>+15 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentQuickAssignTodayTask('Luyện Đàn chăm chỉ (20 phút)', 'Học Đàn', 'home_study', 15, '20 phút')">
+            <span>🎹 Luyện Đàn 20p</span> <b>+15 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentQuickAssignTodayTask('Học Tiếng Anh Little Fox', 'Tiếng Anh', 'home_study', 15, '15 phút')">
+            <span>🇬🇧 Tiếng Anh Little Fox</span> <b>+15 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentQuickAssignTodayTask('Học Tiếng Trung Pinyin', 'Tiếng Trung', 'home_study', 15, '15 phút')">
+            <span>🐼 Tiếng Trung Pinyin</span> <b>+15 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentQuickAssignTodayTask('Nghe truyện kể Vĩ nhân', 'Truyện kể Vĩ nhân', 'home_study', 15, '15 phút')">
+            <span>👑 Nghe truyện Vĩ nhân</span> <b>+15 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentQuickAssignTodayTask('Soạn sách vở & đồ dùng mai đi học', 'Kỹ năng sống', 'home_study', 10, '10 phút')">
+            <span>🎒 Soạn cặp sách</span> <b>+10 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentQuickAssignTodayTask('Phụ bố mẹ dọn bàn ăn / việc nhà', 'Kỹ năng sống', 'parent_help', 10, '15 phút')">
+            <span>🧹 Phụ việc nhà</span> <b>+10 ⭐</b>
+          </button>
+          <button type="button" class="parent-tap-btn" onclick="parentQuickAssignTodayTask('Dọn gọn đồ chơi & góc học tập', 'Kỹ năng sống', 'parent_help', 5, '10 phút')">
+            <span>🧸 Dọn đồ chơi</span> <b>+5 ⭐</b>
+          </button>
+        </div>
+      </div>
+    ` : ''}
+  `;
+
+  // Ẩn/hiện các .parent-section cũ theo đúng tab để giao diện cực gọn
+  const sections = parentArea.querySelectorAll('.parent-section');
+  sections.forEach(sec => {
+    const h3Text = (sec.querySelector('h3')?.textContent || '').toLowerCase();
+    const isOldScoreSec = h3Text.includes('chấm điểm') || h3Text.includes('thưởng điểm') || h3Text.includes('điểm phạt');
+    const isTaskSec = h3Text.includes('giao nhiệm vụ') || h3Text.includes('chỉnh sửa nhiệm vụ');
+
+    if (activeParentTab === 'points') {
+      sec.style.display = 'none';
+    } else if (activeParentTab === 'tasks') {
+      sec.style.display = isTaskSec ? 'block' : 'none';
+    } else {
+      // settings tab: hiển thị các cài đặt (trừ 3 mục điểm cũ và 2 mục nhiệm vụ)
+      sec.style.display = (!isOldScoreSec && !isTaskSec) ? 'block' : 'none';
+    }
+  });
 }
 function changePassword(){
   const oldp=document.getElementById('oldPassword').value,newp=document.getElementById('newPassword').value.trim();
@@ -2947,6 +3508,7 @@ function renderManagers(){
   renderAchievementManager();
   renderRateManager();
   renderPresets();
+  renderParentSimplifiedHub();
 }
 
 function renderParentToolList(){
@@ -3604,52 +4166,72 @@ function renderRideReminder(){
   const isUrgent=(ev && ev.diffDepartSecs<=0 && ev.diffSchoolSecs>=0);
   const cdText=ev?formatCountdownRide(ev.diffDepartSecs, ev.diffSchoolSecs):'--:--';
 
-  const html=`
-    <div class="ride-card-inner">
-      <div class="ride-card-left">
-        <div class="ride-icon-bubble">🛵</div>
-        <div>
-          <div class="ride-info-title">
-            <span>Giờ chở ${childName} đi học</span>
-            <span class="ride-badge">${ev?ev.label:'Hôm nay'}</span>
-            <span class="note" style="color:#b45309">Nhắc trước <b>${cfg.leadMinutes} phút</b></span>
-          </div>
-          <div style="font-size:13.5px;color:#78350f;margin-top:2px">
-            Vào lớp: <b>${ev?ev.schoolTime:'07:15'}</b> ➔ Xuất phát: <b style="color:#dc2626">${ev?ev.departTimeStr:'07:05'}</b>
-          </div>
-          <div class="ride-countdown">${cdText}</div>
-        </div>
-      </div>
-      <div class="ride-card-actions">
-        <label class="ride-switch-label" title="Bật/Tắt nhắc nhở">
-          <input type="checkbox" ${cfg.enabled?'checked':''} onchange="toggleRideReminderEnabled(this.checked)" style="width:16px;height:16px">
-          <span>${cfg.enabled?'🔔 Đang bật':'🔕 Đang tắt'}</span>
-        </label>
-        <button type="button" class="ride-btn ride-btn-test" onclick="testSchoolRideAlert()">🔊 Thử chuông</button>
-        <button type="button" class="ride-btn ride-btn-cfg" onclick="openRideReminderModal()">⚙️ Đổi giờ học</button>
-      </div>
-    </div>
-  `;
+  function calcDepart(timeStr, leadMins){
+    if(!timeStr) return '07:05';
+    const parts = timeStr.split(':').map(Number);
+    const total = (parts[0]||0)*60 + (parts[1]||0) - Number(leadMins||10);
+    return formatMinutesToHHMM(total);
+  }
 
-  const compactHtml=`
-    <div class="ride-compact-bar">
-      <div class="ride-compact-left">
-        <span class="ride-compact-icon">🛵</span>
-        <div class="ride-compact-text">
-          <div><b>Giờ chở đi học:</b> Vào lớp <b>${ev?ev.schoolTime:'07:15'}</b> ➔ Xuất phát <b style="color:#dc2626">${ev?ev.departTimeStr:'07:05'}</b></div>
-          <div style="font-size:11.5px;color:#b45309"><span class="ride-compact-cd">${cdText}</span> <span class="note" style="color:#b45309">(${ev?ev.label:'Hôm nay'})</span></div>
+  const lead = Number(cfg.leadMinutes||10);
+  const mSchool = cfg.morningTime||'07:15';
+  const mDepart = calcDepart(mSchool, lead);
+  const aSchool = cfg.afternoonTime||'13:30';
+  const aDepart = calcDepart(aSchool, lead);
+  const pSchool = cfg.pickupTime||'16:30';
+  const pDepart = calcDepart(pSchool, lead);
+
+  const html=`
+    <div class="ride-card-inner" style="flex-direction:column;align-items:stretch;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <div class="ride-card-left">
+          <div class="ride-icon-bubble">🛵</div>
+          <div>
+            <div class="ride-info-title">
+              <span>Lịch Chở &amp; Rước ${childName}</span>
+              <span class="ride-badge">${ev?ev.label:'Hôm nay'}</span>
+              <span class="note" style="color:#b45309">Nhắc trước <b>${lead} phút</b></span>
+            </div>
+            <div class="ride-countdown" style="margin-top:3px">${cdText}</div>
+          </div>
+        </div>
+        <div class="ride-card-actions">
+          <button type="button" class="ride-btn ride-btn-test" onclick="testSchoolRideAlert()">🔊 Thử chuông</button>
+          <button type="button" class="ride-btn ride-btn-cfg" onclick="openRideReminderModal()">⚙️ Giờ chở &amp; rước</button>
         </div>
       </div>
-      <div class="ride-compact-actions">
-        <button type="button" class="ride-compact-btn" onclick="testSchoolRideAlert()" title="Thử chuông báo 10 phút">🔔 Thử</button>
-        <button type="button" class="ride-compact-btn" onclick="openRideReminderModal()" title="Cài đặt giờ">⚙️ Đổi giờ</button>
+
+      <div class="ride-schedule-grid">
+        <div class="ride-slot-card ${ev&&ev.type==='morning'?'active-slot':''}">
+          <span class="ride-slot-icon">🌅🛵</span>
+          <div>
+            <div style="font-size:12px;font-weight:900;color:#78350f">Chở đi học Sáng</div>
+            <div style="font-size:12px;color:#92400e">Đi: <b style="color:#dc2626">${mDepart}</b> • Vào lớp: <b>${mSchool}</b></div>
+          </div>
+        </div>
+
+        <div class="ride-slot-card ${ev&&ev.type==='afternoon'?'active-slot':''}">
+          <span class="ride-slot-icon">☀️🛵</span>
+          <div>
+            <div style="font-size:12px;font-weight:900;color:#78350f">Chở đi học Chiều</div>
+            <div style="font-size:12px;color:#92400e">Đi: <b style="color:#dc2626">${aDepart}</b> • Vào lớp: <b>${aSchool}</b></div>
+          </div>
+        </div>
+
+        <div class="ride-slot-card ${ev&&ev.type==='pickup'?'active-slot':''}">
+          <span class="ride-slot-icon">🏠🎒</span>
+          <div>
+            <div style="font-size:12px;font-weight:900;color:#065f46">Rước con tan trường</div>
+            <div style="font-size:12px;color:#047857">Đi rước: <b style="color:#dc2626">${pDepart}</b> • Tan học: <b>${pSchool}</b></div>
+          </div>
+        </div>
       </div>
     </div>
   `;
 
   const todayEl = document.getElementById('todayRideReminderCard');
   if(todayEl){
-    todayEl.innerHTML = compactHtml;
+    todayEl.innerHTML = html;
     todayEl.classList.toggle('urgent', !!isUrgent);
   }
 

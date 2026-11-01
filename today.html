@@ -69,16 +69,13 @@
 
         <div class="today-hero-bottom-row">
           <div class="today-hero-meta">
-            <span>Tiến độ: <b id="count">0/0</b> việc</span>
+            <span>Tiến độ hôm nay: <b id="count">0/0</b> việc</span>
             <span class="meta-sep">•</span>
             <span>Quy đổi: <b id="moneyEquiv" style="color:#059669">0 đ</b></span>
           </div>
           <div class="today-hero-quick-actions">
-            <button class="today-score-quick-btn praise" onclick="openPointAdjustModal('praise')" title="Cộng điểm thưởng sao">
-              <span>➕ Thưởng</span>
-            </button>
-            <button class="today-score-quick-btn penalty" onclick="openPointAdjustModal('penalty')" title="Trừ điểm vi phạm">
-              <span>➖ Điểm trừ</span>
+            <button class="today-score-quick-btn praise" onclick="openParentModal('points')" title="Mở Khu vực phụ huynh để cộng / trừ điểm sao">
+              <span>🔒 Phụ huynh Cộng / Trừ sao</span>
             </button>
           </div>
         </div>
@@ -92,77 +89,50 @@
       <!-- 🎯 MỤC TIÊU QUÀ ĐANG PHẤN ĐẤU (HIỂN THỊ TRÊN MÀN HÌNH CHÍNH) -->
       <div id="todayTargetGoalCard" style="display:none"></div>
 
-      <!-- 🛵 BANNER NHẮC BÁO GIỜ CHỞ CON ĐI HỌC (TRƯỚC 10 PHÚT) - GỌN GÀNG -->
-      <div id="todayRideReminderCard" class="ride-card ride-card-compact" style="margin-bottom:12px"></div>
+      <!-- 🛵 BANNER NHẮC GIỜ CHỞ CON ĐI HỌC & RƯỚC CON VỀ -->
+      <div id="todayRideReminderCard" class="ride-card" style="margin-bottom:14px"></div>
 
-      <!-- 🐷 WIDGET CHĂM HEO ĐẤT MỖI NGÀY BẰNG SAO & CẢNH BÁO ĐÓI -->
-      <div id="todayPiggyWidget" style="margin-bottom:12px"></div>
+      <!-- 🐷 NGÔI NHÀ THÚ CƯNG: HEO ĐẤT ỤT ỊT (TRUNG TÂM CHĂM SÓC CỦA BÉ) -->
+      <div id="todayPiggyWidget" style="margin-bottom:16px"></div>
 
-      <!-- 🎮 CARD TRUY CẬP NHANH GAME ÔN TẬP TIẾNG ANH & TIẾNG TRUNG -->
-      <div class="quick-game-launcher-card" style="margin-bottom:12px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:32px">🎮🎈</span>
-          <div>
-            <div style="display:flex;align-items:center;gap:6px">
-              <b style="font-size:15px;color:#065f46">Game Ôn Tập Vui Nhộn</b>
-              <span class="quick-game-badge">+15 ⭐</span>
-            </div>
-            <div style="font-size:12px;color:#047857;margin-top:2px">
-              Chọn bong bóng, Bắn cung, Thả câu ôn từ vựng Tiếng Anh &amp; Tiếng Trung!
+      <!-- 📋 KHU VỰC NHẮC VIỆC HÔM NAY CHO BÉ -->
+      <div class="card" style="padding:16px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:22px">📋</span>
+            <div>
+              <h3 style="margin:0;font-size:17px;color:#1e293b">Nhắc Việc Hôm Nay Của Bé</h3>
+              <div class="note">Bé kiểm tra các việc cần làm và bấm hoàn thành khi làm xong nhé!</div>
             </div>
           </div>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button type="button" class="primary" style="padding:7px 12px;font-size:12px;background:linear-gradient(135deg,#10b981,#059669)" onclick="if(window.EduGames) window.EduGames.openModal('bubble'); else window.location.href='tools.html?coreTab=study_games';">
-            🎈 Bong Bóng
-          </button>
-          <button type="button" class="primary" style="padding:7px 12px;font-size:12px;background:linear-gradient(135deg,#0284c7,#0369a1)" onclick="if(window.EduGames) window.EduGames.openModal('archery'); else window.location.href='tools.html?coreTab=study_games';">
-            🏹 Bắn Cung
-          </button>
-          <button type="button" class="primary" style="padding:7px 12px;font-size:12px;background:linear-gradient(135deg,#f59e0b,#d97706)" onclick="if(window.EduGames) window.EduGames.openModal('fishing'); else window.location.href='tools.html?coreTab=study_games';">
-            🎣 Thả Câu
+          <button type="button" class="secondary" style="padding:6px 12px;font-size:12px" onclick="openParentModal('tasks')">
+            📝 Phụ huynh giao việc
           </button>
         </div>
-      </div>
 
-      <!-- 🏷️ THANH LỌC 3 NHÓM (HỌC Ở NHÀ - TRÊN LỚP - PHỤ BỐ MẸ) -->
-      <div class="today-cat-filter-bar" id="todayCatFilterBar">
-        <button type="button" class="today-cat-pill active" onclick="setTodayCategoryFilter('all')">
-          <span>🌟</span> <span>Tất cả</span>
-        </button>
-        <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('home_study')">
-          <span>🏠</span> <span>Học ở nhà</span>
-        </button>
-        <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('school_study')">
-          <span>🏫</span> <span>Trên lớp</span>
-        </button>
-        <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('parent_help')">
-          <span>🧹</span> <span>Phụ bố mẹ</span>
-        </button>
-      </div>
-
-      <!-- 📋 KHU VỰC 3 KHỐI NHIỆM VỤ & HÀNH VI DỄ CỘNG & CÓ ĐIỂM TRỪ -->
-      <div class="today-categories-container" id="todayCategoriesContainer">
-        <!-- Render động 3 nhóm: Học ở nhà, Học tập trên lớp, Phụ bố mẹ -->
-      </div>
-
-      <!-- 🎁 KHU VỰC ĐỔI QUÀ VÀ TÍCH ĐIỂM GỌN GÀNG -->
-      <div class="today-bottom-rewards-card card" style="margin-top:16px;padding:14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="font-size:18px">🎁</span>
-            <span style="font-weight:800;font-size:14px;color:#1e293b">Đổi quà cho <span id="goalName">bé</span></span>
-          </div>
-          <div style="display:flex;gap:6px">
-            <button class="primary" style="padding:6px 10px;font-size:11.5px" onclick="openFlexibleMoneyModal()">💱 Đổi tiền mặt</button>
-            <button class="secondary" style="padding:6px 10px;font-size:11.5px" onclick="openCustomRewardModal()">⚡ Thỏa thuận quà</button>
-          </div>
+        <!-- 🏷️ THANH LỌC 3 NHÓM (HỌC Ở NHÀ - TRÊN LỚP - PHỤ BỐ MẸ) -->
+        <div class="today-cat-filter-bar" id="todayCatFilterBar">
+          <button type="button" class="today-cat-pill active" onclick="setTodayCategoryFilter('all')">
+            <span>🌟</span> <span>Tất cả việc</span>
+          </button>
+          <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('home_study')">
+            <span>🏠</span> <span>Học ở nhà</span>
+          </button>
+          <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('school_study')">
+            <span>🏫</span> <span>Trên lớp</span>
+          </button>
+          <button type="button" class="today-cat-pill" onclick="setTodayCategoryFilter('parent_help')">
+            <span>🧹</span> <span>Phụ bố mẹ</span>
+          </button>
         </div>
-        <div id="rewardShopToday"></div>
+
+        <div class="today-categories-container" id="todayCategoriesContainer"></div>
       </div>
 
       <!-- Các phần tử ẩn để tương thích code cũ -->
       <div style="display:none !important">
+        <span id="goalName">bé</span>
+        <div id="rewardShopToday"></div>
         <div id="heroText"></div>
         <div id="taskTitle"></div>
         <div id="taskList"></div>
