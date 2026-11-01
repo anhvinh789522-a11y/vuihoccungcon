@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vuihoc-cache-v1';
+const CACHE_NAME = 'vuihoc-cache-v5';
 const ASSETS = [
   './',
   './index.html',

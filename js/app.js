@@ -11,14 +11,18 @@ function fmtDate(iso){ return parseISO(iso).toLocaleDateString('vi-VN'); }
 function uid(prefix='id'){ return prefix+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8); }
 function safe(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
-// ⭐ Bộ mẫu nhiệm vụ của Bảo Nhi
+// 🌟 5 MÔN HỌC TRỌNG TÂM CỦA CON (Các môn khác được thu gọn lại)
+const CORE_STUDY_SUBJECTS=['Toán tư duy','Học Đàn','Tiếng Anh','Tiếng Trung','Truyện kể Vĩ nhân'];
+
+// ⭐ Bộ mẫu nhiệm vụ của Bảo Nhi (Ưu tiên 5 môn chính)
 const TASK_PRESETS=[
+  {name:'Học Toán tư duy (15 phút)',subject:'Toán tư duy',points:15,duration:'15 phút',instruction:'Giải các bài toán đố logic, quy luật và tư duy'},
+  {name:'Luyện Đàn chăm chỉ',subject:'Học Đàn',points:15,duration:'20 phút',instruction:'Luyện ngón, tập đúng nhịp và hoàn thành bản nhạc'},
+  {name:'Học Tiếng Anh Little Fox',subject:'Tiếng Anh',points:20,duration:'20 phút',instruction:'Lật thẻ từ vựng và luyện nói câu theo bậc thang Little Fox'},
+  {name:'Học Tiếng Trung (Pinyin & Từ mới)',subject:'Tiếng Trung',points:20,duration:'20 phút',instruction:'Nghe phát âm chuẩn và tập nói câu Tiếng Trung cơ bản'},
+  {name:'Nghe truyện kể về Vĩ nhân',subject:'Truyện kể Vĩ nhân',points:15,duration:'15 phút',instruction:'Nghe kể chuyện tấm gương danh nhân và chia sẻ bài học rút ra'},
   {name:'Được cô khen học tốt',subject:'Kỹ năng sống',points:10,duration:'15 phút',instruction:'Cô khen học tốt ở trường'},
   {name:'Phụ bố mẹ 1 việc',subject:'Kỹ năng sống',points:5,duration:'15 phút',instruction:'Phụ bố mẹ một việc nhà'},
-  {name:'Bị cô chê',subject:'Kỹ năng sống',points:-10,duration:'5 phút',instruction:'Bị cô chê ở trường — rút kinh nghiệm nhé'},
-  {name:'Làm bài tập 1 môn',subject:'Toán',points:10,duration:'30 phút',instruction:'Hoàn thành bài tập của một môn'},
-  {name:'Học tiếng Anh',subject:'Tiếng Anh',points:20,duration:'20 phút',instruction:'Học từ mới và luyện đọc'},
-  {name:'Học tiếng Trung',subject:'Tiếng Trung',points:20,duration:'20 phút',instruction:'Học từ mới và luyện viết'},
   {name:'Chủ động giúp bà làm việc nhà',subject:'Kỹ năng sống',points:5,duration:'15 phút',instruction:'Tự giác giúp bà mà không cần nhắc'}
 ];
 
@@ -34,47 +38,82 @@ const QUICK_PRAISES=[
   {name:'Ngủ sớm đúng giờ',icon:'🌙',points:5,reason:'Tự giác chuẩn bị và đi ngủ đúng giờ'}
 ];
 
-// 📚 Bộ tiêu chí & mẫu cộng điểm học tập chuẩn giáo dục
+// 📚 Bộ tiêu chí & mẫu cộng điểm học tập (5 Môn chính hiển thị nổi bật, các nội dung khác thu gọn)
 const STUDY_PRESETS=[
-  {id:'sp_10',name:'Điểm 10 kiểm tra / thi',icon:'💯',points:20,subject:'Toán',desc:'Bài kiểm tra hoặc bài thi đạt điểm 10 tuyệt đối'},
-  {id:'sp_9',name:'Điểm 9 kiểm tra / thi',icon:'🌟',points:15,subject:'Toán',desc:'Bài kiểm tra đạt điểm 9 xuất sắc'},
-  {id:'sp_8',name:'Điểm 8 kiểm tra / thi',icon:'👍',points:10,subject:'Toán',desc:'Bài kiểm tra đạt điểm 8 kết quả tốt'},
-  {id:'sp_teacher',name:'Cô giáo khen / Hoa điểm 10',icon:'🌸',points:15,subject:'Kỹ năng sống',desc:'Được cô khen học tốt, chăm chỉ trên lớp'},
-  {id:'sp_homework',name:'Xong bài tập về nhà xuất sắc',icon:'✍️',points:10,subject:'Toán',desc:'Tự giác hoàn thành bài tập về nhà sạch sẽ, đúng giờ'},
-  {id:'sp_reading',name:'Đọc sách tri thức 20 phút',icon:'📖',points:10,subject:'Tiếng Việt',desc:'Tự giác đọc sách khoa học hoặc truyện bổ ích'},
-  {id:'sp_handwriting',name:'Luyện viết chữ đẹp, sạch sẽ',icon:'📝',points:10,subject:'Tiếng Việt',desc:'Nét chữ nắn nót, vở sạch chữ đẹp'},
-  {id:'sp_english',name:'Học Duolingo / Tiếng Anh 15p',icon:'🦉',points:10,subject:'Tiếng Anh',desc:'Học từ vựng và luyện phát âm tiếng Anh'},
-  {id:'sp_math',name:'Toán tư duy / VioEdu / Violympic',icon:'🧮',points:15,subject:'Toán',desc:'Chăm chỉ luyện các bài toán đố và logic'},
-  {id:'sp_speaking',name:'Thuộc bài & hăng hái phát biểu',icon:'🗣️',points:10,subject:'Tiếng Việt',desc:'Tự tin phát biểu xây dựng bài trong lớp'},
-  {id:'sp_creative',name:'Sáng tạo tranh vẽ / Thủ công',icon:'🎨',points:10,subject:'Kỹ năng sống',desc:'Hoàn thành tác phẩm tranh vẽ, mô hình khéo tay'}
+  {id:'sp_math_logic',name:'Giải Toán tư duy xuất sắc',icon:'🧮',points:15,subject:'Toán tư duy',core:true,desc:'Chăm chỉ giải các bài toán logic, quy luật và tư duy'},
+  {id:'sp_piano',name:'Luyện Đàn chăm chỉ đúng nhịp',icon:'🎹',points:15,subject:'Học Đàn',core:true,desc:'Tự giác ngồi luyện ngón và đánh đàn 15–20 phút'},
+  {id:'sp_english',name:'Học Tiếng Anh Little Fox & Nói câu',icon:'🇬🇧',points:15,subject:'Tiếng Anh',core:true,desc:'Học thẻ từ và luyện nói câu tiếng Anh theo Level'},
+  {id:'sp_chinese',name:'Học từ & phát âm Tiếng Trung',icon:'🐼',points:15,subject:'Tiếng Trung',core:true,desc:'Luyện phát âm Pinyin và nói câu tiếng Trung chuẩn'},
+  {id:'sp_great_figures',name:'Nghe truyện Vĩ nhân & Rút bài học',icon:'👑',points:15,subject:'Truyện kể Vĩ nhân',core:true,desc:'Nghe câu chuyện tấm gương vĩ nhân và kể lại bài học hay'},
+  // Các nội dung khác (sẽ được thu gọn trong mục mở rộng)
+  {id:'sp_10',name:'Điểm 10 kiểm tra / thi',icon:'💯',points:20,subject:'Toán tư duy',core:false,desc:'Bài kiểm tra hoặc bài thi đạt điểm 10 tuyệt đối'},
+  {id:'sp_9',name:'Điểm 9 kiểm tra / thi',icon:'🌟',points:15,subject:'Toán tư duy',core:false,desc:'Bài kiểm tra đạt điểm 9 xuất sắc'},
+  {id:'sp_8',name:'Điểm 8 kiểm tra / thi',icon:'👍',points:10,subject:'Toán tư duy',core:false,desc:'Bài kiểm tra đạt điểm 8 kết quả tốt'},
+  {id:'sp_teacher',name:'Cô giáo khen / Hoa điểm 10',icon:'🌸',points:15,subject:'Kỹ năng sống',core:false,desc:'Được cô khen học tốt, chăm chỉ trên lớp'},
+  {id:'sp_homework',name:'Xong bài tập về nhà xuất sắc',icon:'✍️',points:10,subject:'Toán tư duy',core:false,desc:'Tự giác hoàn thành bài tập về nhà sạch sẽ, đúng giờ'},
+  {id:'sp_reading',name:'Đọc sách tri thức 20 phút',icon:'📖',points:10,subject:'Tiếng Việt',core:false,desc:'Tự giác đọc sách khoa học hoặc truyện bổ ích'},
+  {id:'sp_handwriting',name:'Luyện viết chữ đẹp, sạch sẽ',icon:'📝',points:10,subject:'Tiếng Việt',core:false,desc:'Nét chữ nắn nót, vở sạch chữ đẹp'},
+  {id:'sp_speaking',name:'Thuộc bài & hăng hái phát biểu',icon:'🗣️',points:10,subject:'Tiếng Việt',core:false,desc:'Tự tin phát biểu xây dựng bài trong lớp'},
+  {id:'sp_creative',name:'Sáng tạo tranh vẽ / Thủ công',icon:'🎨',points:10,subject:'Kỹ năng sống',core:false,desc:'Hoàn thành tác phẩm tranh vẽ, mô hình khéo tay'}
 ];
 
-// 💡 Danh mục công cụ học tập chọn lọc
+// 💡 Danh mục công cụ học tập chọn lọc (5 môn chính + các nguồn bổ sung thu gọn)
 const DEFAULT_STUDY_TOOLS=[
-  {id:'tool_khan',name:'Khan Academy Tiếng Việt',category:'Toán & Khoa học',icon:'📐',url:'https://vi.khanacademy.org',desc:'Học Toán & Khoa học miễn phí chuẩn quốc tế, có bài giảng video và bài tập tương tác sinh động.'},
-  {id:'tool_vioedu',name:'VioEdu - Đấu trường Toán học',category:'Toán & Khoa học',icon:'🧮',url:'https://vio.edu.vn',desc:'Nền tảng học và luyện thi Toán tiểu học thông minh với hệ thống kiến thức bám sát SGK.'},
-  {id:'tool_violympic',name:'Violympic Quốc Gia',category:'Toán & Khoa học',icon:'🏆',url:'https://violympic.vn',desc:'Sân chơi giải Toán và Tiếng Việt qua Internet dành cho học sinh cả nước.'},
-  {id:'tool_duolingo',name:'Duolingo Tiếng Anh',category:'Tiếng Anh',icon:'🦉',url:'https://www.duolingo.com',desc:'Học tiếng Anh mỗi ngày qua các bài học tương tác vui nhộn như trò chơi mini-game.'},
-  {id:'tool_british_council',name:'LearnEnglish Kids (British Council)',category:'Tiếng Anh',icon:'🇬🇧',url:'https://learnenglishkids.britishcouncil.org',desc:'Kho bài hát, trò chơi, câu chuyện và bài tập tiếng Anh thiếu nhi chuẩn Hội đồng Anh.'},
-  {id:'tool_storyline',name:'Storyline Online (Sách nói)',category:'Tiếng Anh',icon:'📖',url:'https://storylineonline.net',desc:'Thư viện truyện tranh tiếng Anh có hình ảnh minh họa sống động và diễn viên đọc truyện.'},
-  {id:'tool_trangnguyen',name:'Trạng Nguyên Tiếng Việt',category:'Tiếng Việt',icon:'🇻🇳',url:'https://trangnguyen.edu.vn',desc:'Sân chơi khám phá vẻ đẹp Tiếng Việt, câu đố dân gian và lịch sử hào hùng cho thiếu nhi.'},
-  {id:'tool_scratch',name:'Scratch MIT - Lập trình sáng tạo',category:'Sáng tạo & Lập trình',icon:'🐱',url:'https://scratch.mit.edu',desc:'Học lập trình kéo thả sáng tạo game, phim hoạt hình và câu chuyện tương tác từ MIT.'},
-  {id:'tool_codeorg',name:'Code.org - Giờ Lập Trình',category:'Sáng tạo & Lập trình',icon:'💻',url:'https://code.org',desc:'Khóa học tư duy máy tính trực quan cùng các nhân vật hoạt hình quen thuộc.'},
-  {id:'tool_natgeo',name:'National Geographic Kids',category:'Khám phá thế giới',icon:'🌍',url:'https://kids.nationalgeographic.com',desc:'Khám phá thế giới kỳ diệu của động vật hoang dã, thiên nhiên và khoa học đời sống.'},
-  {id:'tool_nasa',name:'NASA Kids\' Club',category:'Khám phá thế giới',icon:'🚀',url:'https://www.nasa.gov/learning-resources/nasa-kids-club/',desc:'Khám phá vũ trụ, phi thuyền, các hành tinh và tìm hiểu công việc của phi hành gia.'}
+  // 1. Toán tư duy
+  {id:'tool_vioedu',name:'VioEdu - Đấu trường Toán tư duy',category:'Toán tư duy',core:true,icon:'🧮',url:'https://vio.edu.vn',desc:'Luyện các dạng toán tư duy, toán đố logic và thử thách trí tuệ tiểu học sinh động.'},
+  {id:'tool_khan',name:'Khan Academy Toán Tư Duy',category:'Toán tư duy',core:true,icon:'📐',url:'https://vi.khanacademy.org',desc:'Học tư duy Toán học từ cơ bản đến nâng cao qua video và bài tập tương tác trực quan.'},
+  {id:'tool_mathplayground',name:'Math Playground - Game Toán Logic',category:'Toán tư duy',core:true,icon:'🧩',url:'https://www.mathplayground.com',desc:'Trò chơi rèn luyện tư duy logic, xếp hình, giải đố số học vui nhộn cho bé.'},
+  // 2. Học Đàn
+  {id:'tool_musicca',name:'Musicca - Đàn Piano ảo & Nhạc lý',category:'Học Đàn',core:true,icon:'🎹',url:'https://www.musicca.com/vi/piano',desc:'Đàn Piano trực tuyến miễn phí kết hợp bài tập nhận biết nốt nhạc, hợp âm và tiết tấu.'},
+  {id:'tool_chrome_music',name:'Chrome Music Lab - Sáng tạo Giai điệu',category:'Học Đàn',core:true,icon:'🎵',url:'https://musiclab.chromeexperiments.com/Song-Maker',desc:'Tự tay sáng tác giai điệu Piano, khám phá nhịp điệu và sóng âm thanh cực kỳ thú vị.'},
+  // 3. Tiếng Anh
+  {id:'tool_littlefox',name:'Little Fox English - Truyện & Bài hát',category:'Tiếng Anh',core:true,icon:'🦊',url:'https://www.littlefox.com',desc:'Thư viện truyện hoạt hình Tiếng Anh phân theo Level 1 đến Level 9 giúp bé nghe và nói câu tự nhiên.'},
+  {id:'tool_duolingo',name:'Duolingo Tiếng Anh',category:'Tiếng Anh',core:true,icon:'🦉',url:'https://www.duolingo.com',desc:'Học tiếng Anh mỗi ngày qua các bài học tương tác vui nhộn như trò chơi mini-game.'},
+  {id:'tool_british_council',name:'LearnEnglish Kids (British Council)',category:'Tiếng Anh',core:true,icon:'🇬🇧',url:'https://learnenglishkids.britishcouncil.org',desc:'Kho bài hát, trò chơi, câu chuyện và bài tập tiếng Anh thiếu nhi chuẩn Hội đồng Anh.'},
+  // 4. Tiếng Trung
+  {id:'tool_littlefox_cn',name:'Little Fox Chinese - Tiếng Trung cho bé',category:'Tiếng Trung',core:true,icon:'🐼',url:'https://chinese.littlefox.com',desc:'Học Tiếng Trung qua truyện hoạt hình và bài hát thiếu nhi theo từng cấp độ từ cơ bản.'},
+  {id:'tool_duolingo_cn',name:'Duolingo Tiếng Trung (Pinyin & Hán tự)',category:'Tiếng Trung',core:true,icon:'🏮',url:'https://www.duolingo.com/course/zh/en/Learn-Chinese',desc:'Luyện phát âm thanh điệu Pinyin, nhận diện chữ Hán và mẫu câu giao tiếp hàng ngày.'},
+  // 5. Truyện kể Vĩ nhân
+  {id:'tool_vinhan_audio',name:'Kho Truyện Kể Danh Nhân & Vĩ Nhân',category:'Truyện kể Vĩ nhân',core:true,icon:'👑',url:'https://www.youtube.com/results?search_query=k%E1%BB%83+chuy%E1%BB%87n+danh+nh%C3%A2n+th%E1%BA%BF+gi%E1%BB%9Bi+cho+b%C3%A9',desc:'Tuyển tập phim hoạt hình & truyện kể về các nhà bác học, danh nhân lịch sử truyền cảm hứng cho bé.'},
+  // Các nguồn bổ sung khác (Thu gọn)
+  {id:'tool_trangnguyen',name:'Trạng Nguyên Tiếng Việt',category:'Tiếng Việt',core:false,icon:'🇻🇳',url:'https://trangnguyen.edu.vn',desc:'Sân chơi khám phá vẻ đẹp Tiếng Việt, câu đố dân gian và lịch sử hào hùng cho thiếu nhi.'},
+  {id:'tool_scratch',name:'Scratch MIT - Lập trình sáng tạo',category:'Sáng tạo & Lập trình',core:false,icon:'🐱',url:'https://scratch.mit.edu',desc:'Học lập trình kéo thả sáng tạo game, phim hoạt hình và câu chuyện tương tác từ MIT.'},
+  {id:'tool_codeorg',name:'Code.org - Giờ Lập Trình',category:'Sáng tạo & Lập trình',core:false,icon:'💻',url:'https://code.org',desc:'Khóa học tư duy máy tính trực quan cùng các nhân vật hoạt hình quen thuộc.'},
+  {id:'tool_natgeo',name:'National Geographic Kids',category:'Khám phá thế giới',core:false,icon:'🌍',url:'https://kids.nationalgeographic.com',desc:'Khám phá thế giới kỳ diệu của động vật hoang dã, thiên nhiên và khoa học đời sống.'},
+  {id:'tool_nasa',name:'NASA Kids\' Club',category:'Khám phá thế giới',core:false,icon:'🚀',url:'https://www.nasa.gov/learning-resources/nasa-kids-club/',desc:'Khám phá vũ trụ, phi thuyền, các hành tinh và tìm hiểu công việc của phi hành gia.'}
 ];
 
 // 🎁 Danh mục phần quà mặc định đa dạng, linh hoạt
+// 🎁 Danh mục phần quà chuẩn: 100 ⭐ = 10.000đ (Ưu tiên đồ dùng học tập, bánh ngon ấm bụng, quà & đi chơi; Không dùng đồ lạnh!)
 const DEFAULT_REWARDS=[
-  {id:uid('r'),name:'Xem TV / iPad 15 phút',cost:20,category:'Thời gian & Đặc quyền',icon:'📺',rule:'Mỗi ngày tối đa 1 lần'},
-  {id:uid('r'),name:'Chọn món ăn tối yêu thích',cost:30,category:'Thời gian & Đặc quyền',icon:'🍕',rule:'Bố mẹ nấu theo ý con'},
-  {id:uid('r'),name:'1 cây kem mát lạnh',cost:40,category:'Đồ ăn & Thức uống',icon:'🍦',rule:'Đổi vào buổi chiều hoặc cuối tuần'},
-  {id:uid('r'),name:'Đi công viên dạo chơi',cost:50,category:'Hoạt động & Dã ngoại',icon:'🌳',rule:'Vào ngày nghỉ cuối tuần'},
-  {id:uid('r'),name:'1 ly trà sữa / nước ngọt',cost:60,category:'Đồ ăn & Thức uống',icon:'🧋',rule:'1 lần / tuần'},
-  {id:uid('r'),name:'Mua 1 cuốn truyện mới',cost:100,category:'Sách & Đồ chơi',icon:'📚',rule:'Tự chọn tại nhà sách'},
-  {id:uid('r'),name:'Đi siêu thị GO thỏa thích',cost:300,category:'Hoạt động & Dã ngoại',icon:'🛒',rule:'Dịp cuối tuần'},
-  {id:uid('r'),name:'Chuyến đi chơi xa / Khu vui chơi',cost:500,category:'Hoạt động & Dã ngoại',icon:'🎡',rule:'Dịp nghỉ lễ hoặc cuối tháng'},
-  {id:uid('r'),name:'Món quà lớn theo nguyện vọng',cost:1000,category:'Sách & Đồ chơi',icon:'🎁',rule:'Tích lũy dài hạn'}
+  // ✏️ ĐỒ DÙNG HỌC TẬP (ƯU TIÊN HÀNG ĐẦU)
+  {id:uid('r'),name:'Gọt bút chì quay tay cute / Bút sáp màu',cost:50,category:'Đồ dùng học tập',icon:'✏️',rule:'Dụng cụ học tập xinh xắn cho con'},
+  {id:uid('r'),name:'Bộ thước kẻ hình thú & Tẩy hoạt hình',cost:100,category:'Đồ dùng học tập',icon:'📐',rule:'Tự chọn màu sắc yêu thích'},
+  {id:uid('r'),name:'Hộp bút hoạt hình / Bút dạ quang 6 màu',cost:150,category:'Đồ dùng học tập',icon:'🖊️',rule:'Dùng trong góc học tập & trên lớp'},
+  {id:uid('r'),name:'Tập vở ô li sạch đẹp & Bút máy rèn chữ',cost:200,category:'Đồ dùng học tập',icon:'📓',rule:'Khen ngợi nét chữ nắn nót'},
+  {id:uid('r'),name:'Cuốn truyện tranh / Sách khoa học thiếu nhi',cost:300,category:'Đồ dùng học tập',icon:'📚',rule:'Tự chọn sách hay tại nhà sách'},
+  {id:uid('r'),name:'Bộ đồ dùng học tập cao cấp (Màu nước, đất nặn)',cost:500,category:'Đồ dùng học tập',icon:'🎨',rule:'Tích lũy chăm chỉ từ 1 - 2 tuần'},
+
+  // 🍪 BÁNH & MÓN NGON ẤM BỤNG (KHÔNG DÙNG ĐỒ LẠNH!)
+  {id:uid('r'),name:'Gói bánh quy bơ / Bánh gạo giòn rụm',cost:50,category:'Bánh & Món ngon',icon:'🍪',rule:'Ăn xế chiều ấm bụng, thơm ngon'},
+  {id:uid('r'),name:'1 Hộp sữa lúa mạch ấm / Sữa hạt dinh dưỡng',cost:80,category:'Bánh & Món ngon',icon:'🥛',rule:'Uống ấm buổi sáng hoặc trước khi ngủ'},
+  {id:uid('r'),name:'Hộp bánh que Pocky / Bánh gấu sôcôla',cost:100,category:'Bánh & Món ngon',icon:'🥨',rule:'Thưởng món bánh thơm ngọt dịp cuối tuần'},
+  {id:uid('r'),name:'Bố mẹ nấu bữa tối món con yêu thích',cost:150,category:'Bánh & Món ngon',icon:'🍲',rule:'Con được tự chọn thực đơn bữa ăn'},
+  {id:uid('r'),name:'Bữa tiệc gà rán / Pizza nhỏ ấm nóng cả nhà',cost:350,category:'Bánh & Món ngon',icon:'🍕',rule:'Liên hoan cùng gia đình dịp cuối tuần'},
+
+  // 🎁 QUÀ & ĐỒ CHƠI SÁNG TẠO
+  {id:uid('r'),name:'Tấm sticker dán hình công chúa / siêu nhân',cost:30,category:'Quà & Đồ chơi',icon:'✨',rule:'Trang trí tập vở hoặc góc học tập'},
+  {id:uid('r'),name:'Bộ đất nặn không dính tay 12 màu sáng tạo',cost:100,category:'Quà & Đồ chơi',icon:'🧸',rule:'Rèn luyện đôi bàn tay khéo léo'},
+  {id:uid('r'),name:'Bộ đồ chơi xếp hình Lego mini trí tuệ',cost:200,category:'Quà & Đồ chơi',icon:'🧩',rule:'Phát triển tư duy không gian & logic'},
+  {id:uid('r'),name:'Thú bông nhỏ xinh / Búp bê dễ thương',cost:350,category:'Quà & Đồ chơi',icon:'🎀',rule:'Đặt tại góc học tập của con'},
+  {id:uid('r'),name:'Món quà lớn theo nguyện vọng ước mơ',cost:1000,category:'Quà & Đồ chơi',icon:'🎁',rule:'Phần thưởng tích lũy nỗ lực cả tháng'},
+
+  // 🎡 ĐI CHƠI & DÃ NGOẠI
+  {id:uid('r'),name:'Đi công viên dạo chơi, chạy nhảy cuối tuần',cost:100,category:'Đi chơi & Dã ngoại',icon:'🌳',rule:'Vận động thể thao ngoài trời mát mẻ'},
+  {id:uid('r'),name:'Đi nhà sách Fahasa đọc truyện & dạo chơi',cost:250,category:'Đi chơi & Dã ngoại',icon:'📖',rule:'Dịp cuối tuần cùng bố mẹ'},
+  {id:uid('r'),name:'Đi siêu thị GO dạo chơi & chọn quà nhỏ',cost:350,category:'Đi chơi & Dã ngoại',icon:'🛒',rule:'Tham quan & tự chọn món yêu thích'},
+  {id:uid('r'),name:'Vé khu vui chơi trẻ em (tiNiWorld / Kidzooona)',cost:500,category:'Đi chơi & Dã ngoại',icon:'🎡',rule:'Thưởng khi hoàn thành mục tiêu học tập'},
+  {id:uid('r'),name:'Chuyến đi dã ngoại xa cùng cả gia đình',cost:1000,category:'Đi chơi & Dã ngoại',icon:'🏖️',rule:'Dịp nghỉ lễ hoặc cuối tháng'}
 ];
 
 // 🎒 DANH MỤC MÔN HỌC CHUẨN TIỂU HỌC (LỚP 1)
@@ -149,20 +188,25 @@ const DEFAULT_GRADE1_TIMETABLE = {
 const TODAY_CATEGORIES = {
   home_study: {
     id: 'home_study',
-    name: 'Học ở nhà',
+    name: 'Học ở nhà (5 Môn Chính)',
     icon: '🏠',
     color: '#10b981',
     bgColor: '#ecfdf5',
     praises: [
-      { name: 'Xong bài tập cô giao', points: 10, icon: '✍️' },
-      { name: 'Luyện viết chữ đẹp', points: 10, icon: '📝' },
-      { name: 'Đọc sách 15 phút', points: 10, icon: '📖' },
-      { name: 'Học Tiếng Anh / Duolingo', points: 10, icon: '🦉' },
-      { name: 'Tập trung 15p (Con Ong)', points: 5, icon: '🐝' }
+      { name: 'Học Toán tư duy', points: 15, icon: '🧮', core: true },
+      { name: 'Luyện Đàn 15–20 phút', points: 15, icon: '🎹', core: true },
+      { name: 'Học Tiếng Anh Little Fox', points: 15, icon: '🇬🇧', core: true },
+      { name: 'Học Tiếng Trung (Pinyin)', points: 15, icon: '🐼', core: true },
+      { name: 'Nghe truyện kể Vĩ nhân', points: 15, icon: '👑', core: true },
+      // Các nội dung khác (sẽ được thu gọn)
+      { name: 'Xong bài tập cô giao', points: 10, icon: '✍️', core: false },
+      { name: 'Luyện viết chữ đẹp', points: 10, icon: '📝', core: false },
+      { name: 'Đọc sách 15 phút', points: 10, icon: '📖', core: false },
+      { name: 'Tập trung 15p (Con Ong)', points: 5, icon: '🐝', core: false }
     ],
     penalties: [
-      { name: 'Chưa làm bài tập / Lười học', points: -5, icon: '⚠️' },
-      { name: 'Viết nguệch ngoạc, cẩu thả', points: -3, icon: '✏️' }
+      { name: 'Chưa hoàn thành bài học / Lười tập đàn', points: -5, icon: '⚠️' },
+      { name: 'Học thiếu tập trung', points: -3, icon: '✏️' }
     ]
   },
   school_study: {
@@ -234,17 +278,17 @@ function seedBaoNhi(){
       tasks:TASK_PRESETS.map(p=>({id:uid('t'),seriesId:null,name:p.name,subject:p.subject,date:todayISO(),points:p.points,duration:p.duration,link:'',instruction:p.instruction,done:false,awardedPoints:0,completedAt:null})),
       giftHistory:[],
       pointHistory:[
-        {id:uid('study'),type:'study',subject:'Toán',topic:'Kiểm tra 15 phút đạt điểm 10',amount:20,note:'Làm bài cẩn thận, không sai câu nào!',reason:'[Toán] Kiểm tra 15 phút đạt điểm 10 — Làm bài cẩn thận, không sai câu nào!',at:new Date().toISOString()},
-        {id:uid('study'),type:'study',subject:'Tiếng Anh',topic:'Hoàn thành bài Duolingo & từ mới',amount:10,note:'Phát âm rất chuẩn',reason:'[Tiếng Anh] Hoàn thành bài Duolingo & từ mới — Phát âm rất chuẩn',at:new Date().toISOString()}
+        {id:uid('study'),type:'study',subject:'Toán tư duy',topic:'Giải đúng bộ câu đố quy luật Toán tư duy',amount:15,note:'Tư duy nhanh và chính xác!',reason:'[Toán tư duy] Giải đúng bộ câu đố quy luật Toán tư duy — Tư duy nhanh và chính xác!',at:new Date().toISOString()},
+        {id:uid('study'),type:'study',subject:'Tiếng Anh',topic:'Hoàn thành thẻ từ & nói câu Little Fox',amount:15,note:'Phát âm rất chuẩn',reason:'[Tiếng Anh] Hoàn thành thẻ từ & nói câu Little Fox — Phát âm rất chuẩn',at:new Date().toISOString()}
       ],
       rewards:structuredClone(DEFAULT_REWARDS),
       achievements:[],
       earnedAchievements:[]
     }],
-    subjects:['Toán','Tiếng Việt','Tiếng Anh','Tiếng Trung','Kỹ năng sống'],
+    subjects:['Toán tư duy','Học Đàn','Tiếng Anh','Tiếng Trung','Truyện kể Vĩ nhân','Tiếng Việt','Kỹ năng sống'],
     studyTools:structuredClone(DEFAULT_STUDY_TOOLS),
     parentPassword:'1234',
-    exchangeRate:{stars:100,vnd:5000}
+    exchangeRate:{stars:100,vnd:10000}
   };
 }
 const defaultData=seedBaoNhi();
@@ -256,11 +300,26 @@ function loadData(){
     const d=JSON.parse(raw);
     if(!Array.isArray(d.children)) d.children=[];
     if(!Array.isArray(d.subjects)) d.subjects=[];
+    // Đảm bảo 5 môn chính luôn nằm ở đầu danh sách môn học của con
+    const mergedSubj=[...CORE_STUDY_SUBJECTS];
+    d.subjects.forEach(s=>{ if(s && !mergedSubj.includes(s)) mergedSubj.push(s); });
+    d.subjects=mergedSubj;
+
     if(!Array.isArray(d.customSubjects)) d.customSubjects=[];
     if(!d.rideReminder) d.rideReminder={enabled:true,leadMinutes:10,morningTime:'07:15',afternoonTime:'13:30',pickupTime:'16:30',enableSound:true,enableSpeech:true,enableNotification:true};
-    if(!Array.isArray(d.studyTools)) d.studyTools=structuredClone(DEFAULT_STUDY_TOOLS);
+    if(!Array.isArray(d.studyTools)||!d.studyTools.length){
+      d.studyTools=structuredClone(DEFAULT_STUDY_TOOLS);
+    }else{
+      // Đồng bộ các công cụ của 5 môn học chính nếu dữ liệu cũ chưa có
+      const mapById=new Map(DEFAULT_STUDY_TOOLS.map(t=>[t.id,t]));
+      const existingIds=new Set(d.studyTools.map(t=>t.id));
+      d.studyTools=d.studyTools.map(t=>mapById.has(t.id)?{...t,...mapById.get(t.id)}:t);
+      DEFAULT_STUDY_TOOLS.forEach(defTool=>{
+        if(!existingIds.has(defTool.id)) d.studyTools.unshift(structuredClone(defTool));
+      });
+    }
     if(!d.parentPassword) d.parentPassword='1234';
-    if(!d.exchangeRate||!(Number(d.exchangeRate.stars)>0)||!(Number(d.exchangeRate.vnd)>0)) d.exchangeRate={stars:100,vnd:5000};
+    if(!d.exchangeRate||!(Number(d.exchangeRate.stars)>0)||!(Number(d.exchangeRate.vnd)>0)||d.exchangeRate.vnd===5000) d.exchangeRate={stars:100,vnd:10000};
 
     const oldRewards=Array.isArray(d.rewards)?d.rewards:[];
     const oldAchievements=Array.isArray(d.achievements)?d.achievements:[];
@@ -275,7 +334,14 @@ function loadData(){
       if(!Array.isArray(c.tasks))c.tasks=[];
       if(!Array.isArray(c.giftHistory))c.giftHistory=[];
       if(!Array.isArray(c.pointHistory))c.pointHistory=[];
-      if(!Array.isArray(c.rewards))c.rewards=oldRewards.length?oldRewards.map(r=>({...r,id:r.id||uid('r')})):structuredClone(DEFAULT_REWARDS);
+      if(!Array.isArray(c.rewards)||!c.rewards.length||c.rewards.some(r=>(r.name||'').includes('kem')||r.category==='Thời gian & Đặc quyền')){
+        c.rewards=structuredClone(DEFAULT_REWARDS);
+      } else {
+        c.rewards=c.rewards.filter(r=>{
+          const n=(r.name||'').toLowerCase();
+          return !n.includes('kem') && !n.includes('trà sữa') && !n.includes('nước ngọt');
+        });
+      }
       if(!Array.isArray(c.achievements))c.achievements=oldAchievements.map(a=>({...a,id:a.id||uid('a')}));
       if(!Array.isArray(c.earnedAchievements))c.earnedAchievements=[];
       if(!c.timetable || typeof c.timetable !== 'object' || !Object.keys(c.timetable).length) c.timetable=structuredClone(DEFAULT_GRADE1_TIMETABLE);
@@ -496,6 +562,7 @@ function render(){
   renderQuickPraise();
   renderTargetGoalCards();
   renderStudyTools();
+  if(typeof renderFlashcards==='function') renderFlashcards();
   renderAchievements();
   renderRewards();
   renderRideReminder();
@@ -710,25 +777,49 @@ function renderTodayCategories(){
     }
     card.appendChild(listWrap);
 
-    // Mẫu chạm nhanh 1 lần (Praises & Penalties)
+    // Mẫu chạm nhanh 1 lần (Praises & Penalties) — Ưu tiên 5 môn chính ở Học ở nhà, thu gọn các nội dung khác
     const presetsWrap = document.createElement('div');
     presetsWrap.className = 'today-cat-presets-wrap';
     
     let pillsHtml = '';
-    catMeta.praises.slice(0, 3).forEach(p => {
-      pillsHtml += `<button type="button" class="today-preset-pill preset-praise" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'praise')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>+${p.points}⭐</b></button>`;
-    });
-    catMeta.penalties.slice(0, 2).forEach(p => {
-      pillsHtml += `<button type="button" class="today-preset-pill preset-penalty" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'penalty')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>${p.points}⭐</b></button>`;
-    });
+    let otherPillsHtml = '';
+    if (key === 'home_study') {
+      const corePraises = catMeta.praises.filter(p => p.core !== false);
+      const otherPraises = catMeta.praises.filter(p => p.core === false);
+      corePraises.forEach(p => {
+        pillsHtml += `<button type="button" class="today-preset-pill preset-praise" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'praise')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>+${p.points}⭐</b></button>`;
+      });
+      catMeta.penalties.slice(0, 2).forEach(p => {
+        pillsHtml += `<button type="button" class="today-preset-pill preset-penalty" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'penalty')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>${p.points}⭐</b></button>`;
+      });
+      if (otherPraises.length) {
+        const extraBtns = otherPraises.map(p =>
+          `<button type="button" class="today-preset-pill preset-praise" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'praise')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>+${p.points}⭐</b></button>`
+        ).join('');
+        otherPillsHtml = `
+          <details class="today-other-presets-details">
+            <summary>📂 Các nội dung học khác (Thu gọn — bấm để mở)</summary>
+            <div class="today-cat-presets-pills" style="margin-top:6px">${extraBtns}</div>
+          </details>
+        `;
+      }
+    } else {
+      catMeta.praises.slice(0, 3).forEach(p => {
+        pillsHtml += `<button type="button" class="today-preset-pill preset-praise" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'praise')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>+${p.points}⭐</b></button>`;
+      });
+      catMeta.penalties.slice(0, 2).forEach(p => {
+        pillsHtml += `<button type="button" class="today-preset-pill preset-penalty" onclick="applyQuickPresetPoint('${key}', '${safe(p.name)}', ${p.points}, 'penalty')"><span>${p.icon}</span> <span>${safe(p.name)}</span> <b>${p.points}⭐</b></button>`;
+      });
+    }
 
     presetsWrap.innerHTML = `
       <div class="today-cat-presets-title">
-        <span>⚡ Chạm 1 lần để cộng / trừ nhanh:</span>
+        <span>⚡ Chạm 1 lần để cộng / trừ nhanh${key==='home_study'?' (5 môn chính của con)':''}:</span>
       </div>
       <div class="today-cat-presets-pills">
         ${pillsHtml}
       </div>
+      ${otherPillsHtml}
     `;
     card.appendChild(presetsWrap);
 
@@ -1046,13 +1137,14 @@ function openStudyScoreModal(presetIdOrObj, defaultSubject){
   fillChildSelect(document.getElementById('studyScoreChild'));
   if(c) document.getElementById('studyScoreChild').value=c.id;
 
-  // Điền dropdown môn học
+  // Điền dropdown môn học (Đưa 5 môn học chính lên đầu tiên)
   const subjSelect=document.getElementById('studyScoreSubject');
   subjSelect.innerHTML='';
-  const allSubjects=Array.from(new Set([...(data.subjects||[]),'Toán','Tiếng Việt','Tiếng Anh','Tiếng Trung','Kỹ năng sống']));
+  const allSubjects=Array.from(new Set([...CORE_STUDY_SUBJECTS,...(data.subjects||[]),'Tiếng Việt','Kỹ năng sống']));
   allSubjects.forEach(s=>{
     const opt=document.createElement('option');
-    opt.value=s;opt.textContent='📘 '+s;
+    const isCore=CORE_STUDY_SUBJECTS.includes(s);
+    opt.value=s;opt.textContent=(isCore?'🌟 ':'📘 ')+s;
     subjSelect.appendChild(opt);
   });
   const optOther=document.createElement('option');
@@ -1062,10 +1154,13 @@ function openStudyScoreModal(presetIdOrObj, defaultSubject){
   document.getElementById('customSubjectWrap').style.display='none';
   document.getElementById('studyScoreCustomSubject').value='';
 
-  // Điền danh sách chip chọn nhanh
+  // Điền danh sách chip chọn nhanh (5 môn chính hiển thị luôn, các tiêu chí khác thu gọn)
   const chipBox=document.getElementById('studyScoreChips');
   chipBox.innerHTML='';
-  STUDY_PRESETS.forEach(p=>{
+  const corePresets=STUDY_PRESETS.filter(p=>p.core!==false);
+  const otherPresets=STUDY_PRESETS.filter(p=>p.core===false);
+
+  corePresets.forEach(p=>{
     const chip=document.createElement('button');
     chip.type='button';
     chip.className='study-chip'+(presetIdOrObj===p.id?' active':'');
@@ -1073,6 +1168,27 @@ function openStudyScoreModal(presetIdOrObj, defaultSubject){
     chip.onclick=()=>selectStudyPreset(p.id);
     chipBox.appendChild(chip);
   });
+
+  if(otherPresets.length){
+    const details=document.createElement('details');
+    details.className='study-other-chips-details';
+    if(otherPresets.some(p=>p.id===presetIdOrObj)) details.open=true;
+    const summary=document.createElement('summary');
+    summary.textContent='📂 Các môn & tiêu chí bổ sung khác (Thu gọn — bấm để mở)';
+    const inner=document.createElement('div');
+    inner.className='study-chip-list';
+    inner.style.marginTop='6px';
+    otherPresets.forEach(p=>{
+      const chip=document.createElement('button');
+      chip.type='button';
+      chip.className='study-chip'+(presetIdOrObj===p.id?' active':'');
+      chip.innerHTML=`<span>${p.icon}</span><span>${safe(p.name)}</span><b style="color:#4338ca">+${p.points}⭐</b>`;
+      chip.onclick=()=>selectStudyPreset(p.id);
+      inner.appendChild(chip);
+    });
+    details.append(summary,inner);
+    chipBox.appendChild(details);
+  }
 
   let pFound=null;
   if(typeof presetIdOrObj==='string'){
@@ -1321,46 +1437,92 @@ function redeemTargetGoal(rewardId){
   redeem(target);
 }
 
-// 💡 Góc học tập
+// 💡 Góc học tập (Ưu tiên 5 môn chính của con & thu gọn các nội dung khác)
+function isCoreStudyTool(t){
+  if(!t) return false;
+  if(t.core===true) return true;
+  if(t.core===false) return false;
+  const cat=String(t.category||'');
+  return CORE_STUDY_SUBJECTS.some(s=>cat===s || cat.includes(s));
+}
+
+function createStudyToolCard(t){
+  const card=document.createElement('div');
+  card.className='tool-card';
+  card.innerHTML=`
+    <div>
+      <div class="tool-card-head">
+        <div class="tool-card-icon">${t.icon||'🌐'}</div>
+        <div>
+          <div class="tool-card-title">${safe(t.name)}</div>
+          <span class="tool-card-cat">${safe(t.category)}</span>
+        </div>
+      </div>
+      <div class="tool-card-desc">${safe(t.desc||'')}</div>
+    </div>
+    <div class="tool-card-actions">
+      <a class="tool-btn-open" href="${safe(t.url)}" target="_blank" rel="noopener">Mở học ngay ↗</a>
+      <button class="tool-btn-assign" onclick="assignTaskFromTool('${safe(t.id)}')">Giao bài 📝</button>
+    </div>
+  `;
+  return card;
+}
+
 function filterStudyTools(cat,btn){
   selectedToolCategory=cat;
   document.querySelectorAll('.tools-filter-btn').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
   renderStudyTools();
 }
+
 function renderStudyTools(){
+  const c=child();
+  const childNameEl=document.getElementById('studyHubChildName');
+  if(childNameEl) childNameEl.textContent=c?(childIcon(c)+' '+c.name):'Con';
+
+  if(typeof renderCoreInteractiveHub==='function') renderCoreInteractiveHub();
+
   const box=document.getElementById('studyToolsGrid');
+  const otherBox=document.getElementById('otherStudyToolsGrid');
+  const otherQuickBox=document.getElementById('otherStudyQuickButtons');
   if(!box)return;
   box.innerHTML='';
+
   const tools=Array.isArray(data.studyTools)&&data.studyTools.length?data.studyTools:DEFAULT_STUDY_TOOLS;
-  const filtered=(selectedToolCategory==='all')?tools:tools.filter(t=>t.category===selectedToolCategory);
+  const coreTools=tools.filter(t=>isCoreStudyTool(t));
+  const otherTools=tools.filter(t=>!isCoreStudyTool(t));
+
+  const filtered=(selectedToolCategory==='all')
+    ? coreTools
+    : coreTools.filter(t=>t.category===selectedToolCategory || String(t.category||'').includes(selectedToolCategory));
 
   if(!filtered.length){
-    box.innerHTML='<div class="empty" style="grid-column:1/-1">Không có công cụ học tập nào trong nhóm này. Phụ huynh có thể bấm thêm trong khu vực Phụ huynh.</div>';
-    return;
+    box.innerHTML='<div class="empty" style="grid-column:1/-1">Chưa có liên kết web nào trong môn này. Phụ huynh có thể thêm ở Khu vực phụ huynh.</div>';
+  }else{
+    filtered.forEach(t=>box.appendChild(createStudyToolCard(t)));
   }
 
-  filtered.forEach(t=>{
-    const card=document.createElement('div');
-    card.className='tool-card';
-    card.innerHTML=`
-      <div>
-        <div class="tool-card-head">
-          <div class="tool-card-icon">${t.icon||'🌐'}</div>
-          <div>
-            <div class="tool-card-title">${safe(t.name)}</div>
-            <span class="tool-card-cat">${safe(t.category)}</span>
-          </div>
-        </div>
-        <div class="tool-card-desc">${safe(t.desc||'')}</div>
-      </div>
-      <div class="tool-card-actions">
-        <a class="tool-btn-open" href="${safe(t.url)}" target="_blank" rel="noopener">Mở học ngay ↗</a>
-        <button class="tool-btn-assign" onclick="assignTaskFromTool('${safe(t.id)}')">Giao bài 📝</button>
-      </div>
-    `;
-    box.appendChild(card);
-  });
+  if(otherBox){
+    otherBox.innerHTML='';
+    if(!otherTools.length){
+      otherBox.innerHTML='<div class="empty" style="grid-column:1/-1">Không có nguồn học bổ sung nào khác.</div>';
+    }else{
+      otherTools.forEach(t=>otherBox.appendChild(createStudyToolCard(t)));
+    }
+  }
+
+  if(otherQuickBox){
+    otherQuickBox.innerHTML='';
+    const extraPresets=STUDY_PRESETS.filter(p=>p.core===false);
+    extraPresets.forEach(p=>{
+      const b=document.createElement('button');
+      b.type='button';
+      b.className='today-preset-pill preset-praise';
+      b.innerHTML=`<span>${p.icon}</span> <span>${safe(p.name)}</span> <b>+${p.points}⭐</b>`;
+      b.onclick=()=>openStudyScoreModal(p.id);
+      otherQuickBox.appendChild(b);
+    });
+  }
 }
 
 function assignTaskFromTool(toolId){
@@ -1385,10 +1547,15 @@ function fillTaskLinkFromTool(toolId){
     document.getElementById('taskName').value='Học trên '+tool.name;
   }
   const subjSel=document.getElementById('subject');
-  if(tool.category.includes('Toán')&&data.subjects.includes('Toán')) subjSel.value='Toán';
-  else if(tool.category.includes('Tiếng Anh')&&data.subjects.includes('Tiếng Anh')) subjSel.value='Tiếng Anh';
-  else if(tool.category.includes('Tiếng Việt')&&data.subjects.includes('Tiếng Việt')) subjSel.value='Tiếng Việt';
-  else if(tool.category.includes('Lập trình')&&data.subjects.includes('Kỹ năng sống')) subjSel.value='Kỹ năng sống';
+  const cat=String(tool.category||'');
+  if(CORE_STUDY_SUBJECTS.includes(cat) && data.subjects.includes(cat)) subjSel.value=cat;
+  else if(cat.includes('Toán')&&data.subjects.includes('Toán tư duy')) subjSel.value='Toán tư duy';
+  else if(cat.includes('Đàn')&&data.subjects.includes('Học Đàn')) subjSel.value='Học Đàn';
+  else if(cat.includes('Tiếng Anh')&&data.subjects.includes('Tiếng Anh')) subjSel.value='Tiếng Anh';
+  else if(cat.includes('Tiếng Trung')&&data.subjects.includes('Tiếng Trung')) subjSel.value='Tiếng Trung';
+  else if(cat.includes('Vĩ nhân')&&data.subjects.includes('Truyện kể Vĩ nhân')) subjSel.value='Truyện kể Vĩ nhân';
+  else if(cat.includes('Tiếng Việt')&&data.subjects.includes('Tiếng Việt')) subjSel.value='Tiếng Việt';
+  else if(cat.includes('Lập trình')&&data.subjects.includes('Kỹ năng sống')) subjSel.value='Kỹ năng sống';
 }
 
 function toggleTaskCompletion(childId,taskId){
@@ -1481,7 +1648,7 @@ function currentRewards(){return child()?.rewards||[]}
 function exchangeRate(){
   const r=data.exchangeRate;
   if(r&&Number(r.stars)>0&&Number(r.vnd)>0) return r;
-  return {stars:100,vnd:5000};
+  return {stars:100,vnd:10000};
 }
 function fmtVND(n){return Math.floor(Number(n||0)).toLocaleString('vi-VN')+' đ'}
 function starsToVND(stars){
@@ -1490,62 +1657,88 @@ function starsToVND(stars){
   return Math.round(s*Number(r.vnd)/Number(r.stars));
 }
 
-// 💱 Modal Đổi sao ra tiền mặt linh hoạt
+// 🐷 Tỷ giá đổi tiền mặt bỏ ống Heo Đất: 150 ⭐ = 10.000đ (Đổi tiền khó hơn đổi quà)
+function starsToCashVND(stars){
+  const s=Number(stars||0);
+  if(s<150) return 0;
+  return Math.floor((s / 150) * 10000);
+}
+
+// 🐷 Modal Đổi sao nuôi Heo Đất tiết kiệm (Đổi tiền khó hơn đổi quà)
 function openFlexibleMoneyModal(){
   const c=child();
-  if(!c)return alert('Chưa có hồ sơ bé.');
+  if(!c) return alert('Chưa có hồ sơ bé.');
   const r=exchangeRate();
-  document.getElementById('moneyModalRateInfo').textContent=`Tỷ giá: ${r.stars} ⭐ = ${fmtVND(r.vnd)} (1 ⭐ = ${fmtVND(r.vnd/r.stars)})`;
-  document.getElementById('moneyModalCurrentStars').textContent=c.score+' ⭐ ('+fmtVND(starsToVND(c.score))+')';
-  
-  [20,50,100,200,500].forEach(p=>{
-    const el=document.getElementById('qSub'+p);
-    if(el) el.textContent=fmtVND(starsToVND(p));
-  });
+  const rateInfo=document.getElementById('moneyModalRateInfo');
+  if(rateInfo){
+    rateInfo.innerHTML=`Tỷ giá quà: <b>100 ⭐ = ${fmtVND(r.vnd)}</b> • Nuôi heo đất: <b style="color:#dc2626">150 ⭐ = 10.000đ</b>`;
+  }
+  const curStars=document.getElementById('moneyModalCurrentStars');
+  if(curStars){
+    curStars.textContent=`${c.score} ⭐ (Đổi được ${fmtVND(starsToCashVND(c.score))} tiền mặt)`;
+  }
 
   const inp=document.getElementById('customMoneyStars');
-  inp.value=Math.min(c.score,100)||'';
+  if(inp){
+    inp.value=c.score>=150?150:(c.score||'');
+  }
   updateCustomMoneyCalc();
   document.getElementById('flexibleMoneyModal').classList.add('show');
 }
+
 function closeFlexibleMoneyModal(){
   document.getElementById('flexibleMoneyModal').classList.remove('show');
 }
+
 function selectQuickMoney(stars){
-  document.getElementById('customMoneyStars').value=stars;
-  updateCustomMoneyCalc();
+  const inp=document.getElementById('customMoneyStars');
+  if(inp){
+    inp.value=stars;
+    updateCustomMoneyCalc();
+  }
 }
-function selectAllStarsMoney(){
-  const c=child();
-  document.getElementById('customMoneyStars').value=c?c.score:0;
-  updateCustomMoneyCalc();
-}
+
 function updateCustomMoneyCalc(){
-  const stars=Number(document.getElementById('customMoneyStars').value||0);
-  const vnd=starsToVND(stars);
-  document.getElementById('customMoneyVndResult').textContent=fmtVND(vnd);
+  const stars=Number(document.getElementById('customMoneyStars')?.value||0);
+  const vnd=starsToCashVND(stars);
+  const resEl=document.getElementById('customMoneyVndResult');
+  if(resEl) resEl.textContent=fmtVND(vnd);
+
+  const hintEl=document.getElementById('moneyModalMinHint');
+  if(hintEl){
+    if(stars<150){
+      hintEl.innerHTML='<span style="color:#dc2626;font-weight:700">⚠️ Đổi tiền khó hơn đổi quà: Cần tối thiểu 150 ⭐ để đổi mốc 10.000đ đầu tiên!</span>';
+    }else{
+      hintEl.innerHTML=`<span style="color:#059669;font-weight:700">✓ Hợp lệ: ${stars.toLocaleString('vi-VN')} ⭐ quy đổi thành ${fmtVND(vnd)} tiền mặt bỏ heo đất.</span>`;
+    }
+  }
 }
+
 function confirmFlexibleMoneyRedeem(){
-  const c=child();if(!c)return;
-  const stars=Number(document.getElementById('customMoneyStars').value||0);
-  if(stars<=0) return alert('Hãy nhập số sao muốn đổi (lớn hơn 0).');
+  const c=child();
+  if(!c) return;
+  const stars=Number(document.getElementById('customMoneyStars')?.value||0);
+  if(stars<150){
+    return alert('Đổi tiền mặt nuôi heo đất khó hơn đổi quà: Bé cần tích lũy tối thiểu 150 ⭐ để đổi mốc 10.000đ đầu tiên nhé!');
+  }
   if(c.score<stars){
     document.getElementById('missingPoints').textContent=(stars-c.score).toLocaleString('vi-VN');
     closeFlexibleMoneyModal();
     document.getElementById('encourageModal').classList.add('show');
     return;
   }
-  const vnd=starsToVND(stars);
-  const giftName='Tiền thưởng '+fmtVND(vnd);
-  askConfirm('Xác nhận đổi tiền',`Con chắc chắn muốn đổi ${stars.toLocaleString('vi-VN')} ⭐ ra ${giftName}?`,()=>{
+  const vnd=starsToCashVND(stars);
+  const giftName='Tiền nuôi Heo Đất '+fmtVND(vnd);
+
+  askConfirm('Xác nhận đổi tiền bỏ heo', `Con chắc chắn muốn đổi ${stars.toLocaleString('vi-VN')} ⭐ thành ${fmtVND(vnd)} tiền mặt bỏ ống heo tiết kiệm?`, ()=>{
     if(!Array.isArray(c.giftHistory))c.giftHistory=[];
     if(!Array.isArray(c.pointHistory))c.pointHistory=[];
     c.giftHistory.push({
-      id:uid('g'),rewardId:'money_'+stars,name:giftName,cost:stars,
+      id:uid('g'),rewardId:'piggy_bank_'+stars,name:giftName,cost:stars,
       status:'pending',receivedAt:new Date().toISOString()
     });
     c.score-=stars;
-    logPoint(c,'reward',-stars,'Đổi sao ra tiền: '+giftName);
+    logPoint(c,'reward',-stars,'Nuôi Heo Đất: '+giftName);
     save();render();
     closeFlexibleMoneyModal();
     playChime('success');
@@ -1553,10 +1746,9 @@ function confirmFlexibleMoneyRedeem(){
     document.getElementById('successGiftName').textContent=giftName;
     document.getElementById('successGiftPoints').textContent=stars.toLocaleString('vi-VN');
     document.getElementById('rewardSuccessModal').classList.add('show');
-  },{yesText:'Có, con muốn đổi',icon:'💰'});
+  },{yesText:'Có, bỏ heo tiết kiệm',icon:'🐷'});
 }
 
-// ⚡ Modal Đổi quà theo thỏa thuận trực tiếp (Custom Reward Barter)
 function openCustomRewardModal(){
   const c=child();
   fillChildSelect(document.getElementById('customRewardChild'));
@@ -1630,115 +1822,107 @@ function renderRewards(){
     return;
   }
 
-  // Render on Today page (preview 4 items)
+  const curScore = c ? Number(c.score || 0) : 0;
+
+  // 1. Render trên Tab Hôm nay (Gọn gàng, thanh tiến độ khích lệ)
   if(boxToday){
-    rewards.slice(0,4).forEach(r=>{
-      const row=document.createElement('div');row.className='gift';
-      row.innerHTML=`
-        <div class="emoji">${r.icon||'🎁'}</div>
-        <div class="grow">
-          <b>${safe(r.name)}</b>
-          <div class="pts">${r.cost} ⭐</div>
+    // Ưu tiên hiển thị các món bé sắp đủ đổi hoặc đã đủ đổi
+    const sorted = [...rewards].sort((a,b)=>{
+      const aAfford = curScore >= a.cost ? 0 : 1;
+      const bAfford = curScore >= b.cost ? 0 : 1;
+      if(aAfford !== bAfford) return aAfford - bAfford;
+      return a.cost - b.cost;
+    });
+
+    sorted.slice(0, 4).forEach(r=>{
+      const canAfford = (curScore >= r.cost);
+      const pct = Math.min(100, Math.round((curScore / r.cost) * 100));
+      const diff = Math.max(0, r.cost - curScore);
+      const vndVal = fmtVND(starsToVND(r.cost));
+
+      const card = document.createElement('div');
+      card.className = 'today-reward-mini-card ' + (canAfford ? 'can-afford' : '');
+      card.innerHTML = `
+        <div class="today-reward-mini-top">
+          <span style="font-size:24px">${r.icon || '🎁'}</span>
+          <div style="flex:1;min-width:0">
+            <div class="today-reward-mini-title">${safe(r.name)}</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
+              <span style="font-weight:900;color:#f59e0b;font-size:13px">${r.cost} ⭐</span>
+              <span class="gift-vnd-tag">${vndVal}</span>
+            </div>
+          </div>
+          <button type="button" class="today-reward-mini-btn ${canAfford ? 'ready' : 'locked'}" onclick="redeemById('${r.id}')">
+            ${canAfford ? 'Đổi 🎁' : 'Thiếu ' + diff + '⭐'}
+          </button>
+        </div>
+        <div class="gift-progress-track">
+          <div class="gift-progress-fill ${canAfford ? 'fill-ready' : ''}" style="width:${pct}%"></div>
         </div>
       `;
-      const b=document.createElement('button');b.className='btn-redeem';b.textContent='Đổi';b.onclick=()=>redeem(r);
-      row.appendChild(b);
-      boxToday.appendChild(row);
+      boxToday.appendChild(card);
     });
   }
 
-  // Render on full Rewards page (with filtering and goal setting)
+  // 2. Render trên Trang Đổi quà chính (Đẹp mắt, thanh tiến độ khích lệ rèn luyện mỗi ngày)
   if(boxMain){
-    const filtered=(selectedRewardCategory==='all')?rewards:rewards.filter(r=>r.category===selectedRewardCategory);
+    const filtered = (selectedRewardCategory === 'all') ? rewards : rewards.filter(r => r.category === selectedRewardCategory);
     if(!filtered.length){
-      boxMain.innerHTML='<div class="empty">Không có món quà nào trong nhóm này.</div>';
-    }else{
-      filtered.forEach(r=>{
-        const isTarget=c && c.targetRewardId===r.id;
-        const row=document.createElement('div');row.className='gift';
-        row.innerHTML=`
-          <div class="emoji">${r.icon||'🎁'}</div>
-          <div class="grow">
-            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-              <b>${safe(r.name)}</b>
-              <span class="meta-chip" style="font-size:11px">${safe(r.category||'Quà tặng')}</span>
+      boxMain.innerHTML = '<div class="empty">Không có món quà nào trong nhóm này. Bố mẹ có thể thêm phần quà mới ở khu vực Phụ huynh!</div>';
+    } else {
+      filtered.forEach(r => {
+        const isTarget = c && c.targetRewardId === r.id;
+        const canAfford = (curScore >= r.cost);
+        const pct = Math.min(100, Math.round((curScore / r.cost) * 100));
+        const diff = Math.max(0, r.cost - curScore);
+        const vndVal = fmtVND(starsToVND(r.cost));
+
+        const card = document.createElement('div');
+        card.className = 'gift-card ' + (canAfford ? 'can-afford' : '');
+        card.innerHTML = `
+          <div class="gift-card-top">
+            <div class="gift-emoji">${r.icon || '🎁'}</div>
+            <div class="gift-content">
+              <div class="gift-title-row">
+                <b class="gift-name">${safe(r.name)}</b>
+                <span class="gift-cat-chip">${safe(r.category || 'Quà')}</span>
+              </div>
+              <div class="gift-price-row">
+                <span class="gift-pts">${r.cost} ⭐</span>
+                <span class="gift-vnd-tag">~ ${vndVal}</span>
+              </div>
+              ${r.rule ? `<div class="gift-rule">${safe(r.rule)}</div>` : ''}
             </div>
-            <div class="pts">${r.cost} ⭐</div>
-            ${r.rule?`<div class="note">${safe(r.rule)}</div>`:''}
           </div>
-          <div class="gift-actions">
-            <button class="btn-set-goal${isTarget?' active':''}" onclick="setTargetGoal('${r.id}')">${isTarget?'🎯 Mục tiêu của con':'🎯 Đặt mục tiêu'}</button>
-            <button class="btn-redeem" onclick="redeemById('${r.id}')">Đổi quà 🎁</button>
+
+          <!-- Thanh tiến độ khích lệ rèn luyện mỗi ngày -->
+          <div class="gift-progress-wrap">
+            <div class="gift-progress-bar">
+              <div class="gift-progress-fill ${canAfford ? 'fill-ready' : ''}" style="width: ${pct}%"></div>
+            </div>
+            <div class="gift-progress-label">
+              ${canAfford
+                ? '<span class="ready-text">🎉 Đã đủ sao để đổi ngay!</span>'
+                : `<span>Đã đạt <b>${pct}%</b> • Còn thiếu <b>${diff} ⭐</b> (Cố gắng tập luyện nhé con! 💪)</span>`
+              }
+            </div>
+          </div>
+
+          <div class="gift-card-actions">
+            <button class="btn-set-goal ${isTarget ? 'active' : ''}" onclick="setTargetGoal('${r.id}')">
+              ${isTarget ? '🎯 Mục tiêu đang chọn' : '🎯 Đặt mục tiêu'}
+            </button>
+            <button class="btn-redeem ${canAfford ? 'ready' : 'locked'}" onclick="redeemById('${r.id}')">
+              ${canAfford ? 'Đổi quà ngay 🎁' : 'Thiếu ' + diff + ' ⭐'}
+            </button>
           </div>
         `;
-        boxMain.appendChild(row);
+        boxMain.appendChild(card);
       });
     }
   }
 
   renderPendingGifts();
-}
-
-function renderPendingGifts(){
-  const c=child();
-  const container=document.getElementById('pendingGiftsContainer');
-  const list=document.getElementById('pendingGiftsList');
-  if(!container||!list)return;
-  if(!c){container.style.display='none';return;}
-
-  const pendingGifts=(c.giftHistory||[]).filter(g=>g.status==='pending');
-  if(!pendingGifts.length){
-    container.style.display='none';list.innerHTML='';return;
-  }
-
-  container.style.display='block';
-  list.innerHTML='';
-  pendingGifts.forEach(g=>{
-    const item=document.createElement('div');
-    item.className='pending-gift-item';
-    item.innerHTML=`
-      <div>
-        <div style="font-weight:800;font-size:14px">🎁 ${safe(g.name)}</div>
-        <div class="note">Đã trừ: <b>${g.cost} ⭐</b> • Đổi lúc: ${fmtDate(g.receivedAt)}</div>
-      </div>
-      <div style="display:flex;gap:6px;align-items:center">
-        <button class="primary" style="padding:7px 12px;font-size:12px;background:#16a34a" onclick="fulfillGift('${g.id}')">✅ Đã trao quà</button>
-        <button class="btn delete" style="padding:7px 10px;font-size:12px" onclick="refundGift('${g.id}')">↩ Hoàn sao</button>
-      </div>
-    `;
-    list.appendChild(item);
-  });
-}
-
-function fulfillGift(giftId){
-  const c=child();if(!c)return;
-  const g=c.giftHistory.find(x=>x.id===giftId);if(!g)return;
-  askConfirm('Xác nhận đã trao quà',`Bố mẹ đã thực hiện xong phần quà "${g.name}" cho ${c.name}?`,()=>{
-    g.status='fulfilled';
-    g.fulfilledAt=new Date().toISOString();
-    save();render();
-    playChime('success');
-    showToast('🎉 Tuyệt vời! Đã hoàn thành trao quà cho con!');
-  },{yesText:'Có, đã trao quà',icon:'✅'});
-}
-
-function refundGift(giftId){
-  const c=child();if(!c)return;
-  const g=c.giftHistory.find(x=>x.id===giftId);if(!g)return;
-  askConfirm('Hoàn lại điểm sao',`Hủy nhận quà và hoàn trả ${g.cost} ⭐ lại cho ${c.name}?`,()=>{
-    c.score+=Number(g.cost||0);
-    logPoint(c,'undo-reward',Number(g.cost||0),'Hoàn lại sao: '+g.name);
-    c.giftHistory=c.giftHistory.filter(x=>x.id!==giftId);
-    save();render();
-    showToast('↩ Đã hoàn lại '+g.cost+' ⭐ cho con!');
-  },{yesText:'Có, hoàn sao',icon:'↩'});
-}
-
-function redeemById(rewardId){
-  const c=child();if(!c)return;
-  const r=c.rewards.find(x=>x.id===rewardId);
-  if(!r)return;
-  redeem(r);
 }
 
 function redeem(r){
@@ -3356,6 +3540,1043 @@ function renderBeeTimer(){
 
 // Bắt đầu nhịp tick đếm ngược cho Nhắc báo giờ chở con đi học (mỗi 1 giây)
 setInterval(updateRideReminderTick, 1000);
+
+/* ============================================================
+   🌟 TRUNG TÂM TƯƠNG TÁC 5 MÔN HỌC CHÍNH CỦA CON
+   1. 👑 Truyện kể cho bé về Vĩ nhân
+   2. 🧮 Toán tư duy
+   3. 🎹 Học Đàn (Metronome & Bản nhạc)
+   4. 🇬🇧 Tiếng Anh Little Fox
+   5. 🐼 Tiếng Trung (Thẻ Pinyin & Phát âm)
+   ============================================================ */
+
+let activeCoreStudyTab = 'great_figures';
+let activeGreatFigureIdx = 0;
+let activeMathPuzzleIdx = 0;
+let mathPuzzleAnswered = false;
+let activeChineseTopic = 'all';
+let activePianoBpm = 80;
+let pianoMetronomeTimer = null;
+let pianoMetronomeBeat = 0;
+
+// 1. 👑 KHO TRUYỆN KỂ CHO BÉ VỀ VĨ NHÂN (VIỆT NAM & THẾ GIỚI)
+const GREAT_FIGURES_STORIES = [
+  {
+    id: 'gf_luongthevinh',
+    name: 'Lương Thế Vinh (Trạng Lường)',
+    title: 'Cậu bé thông minh cân voi bằng thuyền',
+    era: 'Danh nhân Việt Nam • Toán học & Trí tuệ',
+    icon: '🐘⚖️',
+    badgeColor: '#7c3aed',
+    story: 'Ngày xưa có cậu bé Lương Thế Vinh rất ham học và thích suy nghĩ tìm tòi. Một lần, sứ thần nước ngoài mang sang một con voi khổng lồ và thách đố các quan trong triều làm sao cân được xem con voi nặng bao nhiêu mà không có chiếc cân nào đủ lớn. Ai nấy đều bối rối. Ông Lương Thế Vinh liền mỉm cười, cho dắt voi xuống một chiếc thuyền lớn rồi đánh dấu vạch nước mớm trên mạn thuyền. Sau đó, ông cho dắt voi lên bờ, rồi xếp từng tảng đá xuống thuyền cho đến khi thuyền chìm xuống đúng vạch dấu cũ. Cuối cùng, chỉ cần cân từng tảng đá rồi cộng lại là biết chính xác cân nặng của con voi! Ông còn viết cuốn "Đại thành Toán pháp" dạy trẻ em Việt Nam tính toán và đo đạc.',
+    lesson: 'Khi gặp bài toán khó, đừng vội nản lòng! Hãy quan sát kỹ và suy nghĩ sáng tạo (tư duy thông minh), việc khó mấy cũng tìm ra cách giải.',
+    question: 'Đố con: Vì sao ông Lương Thế Vinh không cân con voi trực tiếp mà lại dùng chiếc thuyền và những tảng đá?'
+  },
+  {
+    id: 'gf_nguyenhien',
+    name: 'Trạng nguyên Nguyễn Hiền',
+    title: 'Cậu bé bắt đom đóm bỏ vào vỏ trứng để học bài',
+    era: 'Danh nhân Việt Nam • Trạng nguyên 12 tuổi',
+    icon: '✨🥚',
+    badgeColor: '#059669',
+    story: 'Nguyễn Hiền sinh ra trong một gia đình nghèo khó, không đủ tiền đi học hay mua dầu thắp đèn. Hàng ngày, cậu bé đi chăn trâu, đứng ngoài cửa lớp nghe thầy giảng bài rồi lấy nhánh cây viết chữ lên nền đất và trên lưng trâu. Buổi tối trời tối mịt, không có đèn dầu, Nguyễn Hiền liền đi bắt những con đom đóm phát sáng ngoài bờ cỏ, bỏ vào trong vỏ trứng gà rỗng để lấy ánh sáng đọc sách. Nhờ sự kiên trì và lòng hiếu học phi thường, năm mới 12 tuổi, Nguyễn Hiền đã thi đỗ Trạng nguyên — vị Trạng nguyên nhỏ tuổi nhất lịch sử nước ta!',
+    lesson: 'Hoàn cảnh khó khăn không ngăn được người chăm học. Chỉ cần con tự giác và yêu thích việc học mỗi ngày, con sẽ tỏa sáng như ánh đom đóm của Trạng nguyên Nguyễn Hiền.',
+    question: 'Đố con: Khi không có vở và không có đèn dầu, cậu bé Nguyễn Hiền đã làm cách nào để tập viết và đọc sách?'
+  },
+  {
+    id: 'gf_macdinhchi',
+    name: 'Lưỡng quốc Trạng nguyên Mạc Đĩnh Chi',
+    title: 'Bông sen ngọc tỏa hương trong giếng vàng',
+    era: 'Danh nhân Việt Nam • Nghị lực & Tự tin',
+    icon: '🪷👑',
+    badgeColor: '#db2777',
+    story: 'Mạc Đĩnh Chi từ nhỏ nhà nghèo, dáng người thấp bé và khuôn mặt không được khôi ngô, nhưng cậu lại có trí nhớ siêu phàm và tấm lòng trong sáng. Hàng ngày kiếm củi giúp mẹ xong, cậu đều miệt mài ôn luyện kinh sử. Khi đi thi và đỗ đầu bảng (Trạng nguyên), nhà vua ban đầu thấy tướng mạo ông kém sắc nên còn ngần ngại. Mạc Đĩnh Chi liền làm bài phú "Bông sen trong giếng ngọc" để nói rằng: Giá trị thật sự của một con người nằm ở trí tuệ, đạo đức và tài năng tỏa hương thơm ngát chứ không phải ở vẻ bề ngoài. Về sau khi đi sứ, ông làm cả triều đình phương Bắc khâm phục và phong ông là "Lưỡng quốc Trạng nguyên" (Trạng nguyên của hai nước).',
+    lesson: 'Vẻ đẹp đáng quý nhất của mỗi người là sự thông minh, lễ phép, chăm chỉ và tấm lòng nhân hậu bên trong.',
+    question: 'Đố con: Qua hình ảnh "Bông sen trong giếng ngọc", ông Mạc Đĩnh Chi muốn nhắn nhủ điều gì đáng quý nhất ở một con người?'
+  },
+  {
+    id: 'gf_edison',
+    name: 'Nhà phát minh Thomas Edison',
+    title: '10.000 lần kiên trì thắp sáng bóng đèn điện',
+    era: 'Vĩ nhân Thế giới • Kiên trì không bỏ cuộc',
+    icon: '💡🔬',
+    badgeColor: '#d97706',
+    story: 'Thuở nhỏ, Thomas Edison là một cậu bé vô cùng tò mò, lúc nào cũng hỏi "Tại sao?". Khi lớn lên, ông quyết tâm chế tạo ra chiếc bóng đèn điện có thể chiếu sáng lâu bền để mọi gia đình không còn phải sống trong bóng tối. Ông đã thử hàng nghìn chất liệu khác nhau làm dây tóc bóng đèn nhưng đều bị cháy đứt. Đến lần thử thứ 9.999 vẫn chưa thành công, có người hỏi ông: "Ông đã thất bại gần một vạn lần, sao không bỏ cuộc?". Edison mỉm cười đáp: "Tôi đâu có thất bại! Tôi đã khám phá ra 9.999 chất liệu chưa phù hợp đấy chứ!". Và rồi nhờ sự kiên trì ấy, chiếc bóng đèn điện rực sáng đã ra đời, thay đổi cả thế giới!',
+    lesson: 'Làm sai một bài toán hay đánh đàn vấp một nốt nhạc không phải là thất bại, mà là một bước để con giỏi hơn ở lần thử tiếp theo!',
+    question: 'Đố con: Khi làm bài khó hoặc tập đàn chưa quen tay, con sẽ học tập tinh thần gì của ông Thomas Edison?'
+  },
+  {
+    id: 'gf_mozart',
+    name: 'Thần đồng âm nhạc Mozart',
+    title: 'Đôi bàn tay nhỏ chăm chỉ trên phím đàn Piano',
+    era: 'Vĩ nhân Thế giới • Âm nhạc & Khổ luyện',
+    icon: '🎹🎼',
+    badgeColor: '#0284c7',
+    story: 'Wolfgang Amadeus Mozart được cả thế giới gọi là "Thần đồng âm nhạc". Ngay từ khi mới 3–4 tuổi, cậu bé Mozart đã say mê lắng nghe từng nốt nhạc khi chị gái tập đàn và tự mình tìm ra những hợp âm vui tươi. Đến năm 5 tuổi, Mozart đã tự sáng tác được những bản nhạc nhỏ đầu tiên! Nhưng ít ai biết rằng, để đánh đàn hay như vậy, cậu bé Mozart đã luyện ngón trên phím đàn mỗi ngày với niềm vui và sự tập trung cao độ, ngay cả những buổi tối mùa đông lạnh giá. Ông từng nói: "Người ta tưởng nghệ thuật của tôi đến dễ dàng, nhưng không ai thấy tôi đã chăm chỉ luyện tập từng nốt nhạc như thế nào".',
+    lesson: 'Năng khiếu chỉ là hạt giống nhỏ, chính sự chăm chỉ luyện đàn mỗi ngày mới giúp tiếng đàn của con ngân vang tuyệt vời!',
+    question: 'Đố con: Điều gì đã giúp cậu bé Mozart trở thành nhà soạn nhạc vĩ đại được cả thế giới yêu mến?'
+  },
+  {
+    id: 'gf_beethoven',
+    name: 'Nhà soạn nhạc Ludwig van Beethoven',
+    title: 'Lắng nghe âm nhạc bằng cả trái tim dũng cảm',
+    era: 'Vĩ nhân Thế giới • Nghị lực phi thường',
+    icon: '🎵❤️',
+    badgeColor: '#4f46e5',
+    story: 'Beethoven là một trong những nhà soạn nhạc vĩ đại nhất lịch sử nhân loại, tác giả của giai điệu "Khúc nhạc vui" (Ode to Joy) mà trẻ em khắp thế giới đều tập trên đàn Piano. Thế nhưng, một thử thách vô cùng lớn đã ập đến: đôi tai của ông nghe kém dần rồi không còn nghe thấy âm thanh nữa! Với một người nhạc sĩ, không nghe được là nỗi buồn khổng lồ. Nhưng Beethoven không đầu hàng số phận. Ông cưa ngắn chân đàn Piano xuống sàn gỗ, áp tai và cảm nhận độ rung của từng nốt nhạc truyền qua sàn nhà và qua trái tim mình để viết nên Bản giao hưởng số 9 bất hủ!',
+    lesson: 'Dù gặp bất kỳ khó khăn nào, chỉ cần có ý chí mạnh mẽ và tình yêu thương trong trái tim, con đều có thể tạo nên điều kỳ diệu.',
+    question: 'Đố con: Khi đôi tai không còn nghe rõ, ông Beethoven đã làm cách nào để tiếp tục sáng tác âm nhạc?'
+  },
+  {
+    id: 'gf_mariecurie',
+    name: 'Nhà bác học nữ Marie Curie',
+    title: 'Cô gái nhỏ ham đọc sách và hai giải Nobel danh giá',
+    era: 'Vĩ nhân Thế giới • Khoa học & Lòng nhân ái',
+    icon: '🧪🏅',
+    badgeColor: '#0d9488',
+    story: 'Từ khi còn là cô bé nhỏ ở Ba Lan, Marie đã mê đọc sách đến mức khi ngồi vào bàn học là tập trung hoàn toàn, quên cả tiếng ồn xung quanh. Lớn lên, dù điều kiện học tập vô cùng thiếu thốn trong căn phòng áp mái mùa đông giá rét, bà vẫn miệt mài nghiên cứu Vật lý và Hóa học. Bà đã tìm ra hai nguyên tố mới là Polonium và Radium giúp ích to lớn cho việc chữa bệnh cứu người. Đặc biệt, bà không giữ bản quyền phát minh để làm giàu cho riêng mình mà tặng lại cho toàn nhân loại. Marie Curie trở thành người phụ nữ đầu tiên trên thế giới giành được hai giải Nobel ở hai lĩnh vực khoa học khác nhau!',
+    lesson: 'Sự tập trung cao độ khi ngồi vào bàn học và tấm lòng nhân hậu biết sẻ chia sẽ giúp con trở thành người tài giỏi, có ích cho đời.',
+    question: 'Đố con: Thói quen tốt nào từ thuở nhỏ đã giúp bà Marie Curie học giỏi và khám phá ra nhiều điều kỳ diệu?'
+  },
+  {
+    id: 'gf_einstein',
+    name: 'Nhà bác học Albert Einstein',
+    title: 'Chiếc la bàn nhỏ và trí tưởng tượng bay xa',
+    era: 'Vĩ nhân Thế giới • Tư duy & Trí tưởng tượng',
+    icon: '🧭🌌',
+    badgeColor: '#2563eb',
+    story: 'Hồi còn nhỏ, Albert Einstein chậm nói hơn các bạn cùng trang lứa, nhưng cậu lại có đôi mắt luôn chăm chú quan sát mọi vật. Năm cậu 5 tuổi, khi bị ốm nằm trên giường, bố tặng cậu một chiếc la bàn nhỏ. Cậu bé Albert vô cùng kinh ngạc: "Vì sao kim la bàn dù xoay hướng nào cũng luôn chỉ về một phía? Chắc chắn có một lực vô hình kỳ diệu trong không gian!". Chính sự tò mò và thói quen tự suy nghĩ tìm quy luật ấy đã nuôi dưỡng trí tuệ của Einstein, giúp ông trở thành nhà vật lý vĩ đại nhất thế kỷ 20. Ông luôn khuyên các bạn nhỏ: "Trí tưởng tượng và việc đặt câu hỏi quan trọng hơn cả việc học thuộc lòng!".',
+    lesson: 'Khi học Toán tư duy hay khám phá thế giới, con hãy luôn mạnh dạn đặt câu hỏi "Vì sao?" và dùng trí tưởng tượng của mình nhé!',
+    question: 'Đố con: Món quà nào của bố đã khơi dậy trí tò mò khoa học của cậu bé Albert Einstein lúc 5 tuổi?'
+  }
+];
+
+// 2. 🧮 BỘ CÂU ĐỐ TOÁN TƯ DUY TƯƠNG TÁC NHANH CHO BÉ
+const MATH_LOGIC_PUZZLES = [
+  {
+    id: 'mp_1',
+    title: 'Câu đố 1: Quy luật dãy số nhảy cóc 🐸',
+    question: 'Chú ếch xanh nhảy trên các lá sen theo quy luật: 2 ➔ 4 ➔ 6 ➔ 8 ➔ [ ? ]. Đố con số tiếp theo trên lá sen là số mấy?',
+    options: ['Số 9', 'Số 10', 'Số 11', 'Số 12'],
+    correctIdx: 1,
+    explanation: 'Chính xác! Mỗi lần chú ếch nhảy tăng thêm +2 đơn vị (số chẵn liên tiếp): 8 + 2 = 10!'
+  },
+  {
+    id: 'mp_2',
+    title: 'Câu đố 2: Quy luật hình học vui nhộn 🔺🔵',
+    question: 'Con hãy nhìn chuỗi hạt của công chúa: 🍎 Táo — 🍌 Chuối — 🍎 Táo — 🍌 Chuối — 🍎 Táo — [ ? ]. Quả tiếp theo là quả gì?',
+    options: ['🍎 Quả Táo', '🍌 Quả Chuối', '🍇 Chùm Nho', '🍉 Dưa Hấu'],
+    correctIdx: 1,
+    explanation: 'Giỏi lắm! Quy luật lặp lại xen kẽ 1 Táo rồi đến 1 Chuối. Sau quả Táo chắc chắn là 🍌 Quả Chuối!'
+  },
+  {
+    id: 'mp_3',
+    title: 'Câu đố 3: Toán tư duy đếm chân con vật 🐥🐰',
+    question: 'Trong sân có 2 chú gà con 🐥🐥 và 1 chú thỏ trắng 🐰. Đố con có tất cả bao nhiêu cái chân đang chạy nhảy?',
+    options: ['6 cái chân', '8 cái chân', '10 cái chân', '4 cái chân'],
+    correctIdx: 1,
+    explanation: 'Xuất sắc! Mỗi chú gà có 2 chân (2 + 2 = 4 chân), chú thỏ có 4 chân. Tổng cộng: 4 + 4 = 8 cái chân!'
+  },
+  {
+    id: 'mp_4',
+    title: 'Câu đố 4: Cân thăng bằng thông minh ⚖️',
+    question: 'Biết 1 quả Dưa hấu 🍉 nặng bằng 2 quả Dứa 🍍🍍, mà 1 quả Dứa 🍍 lại nặng bằng 3 quả Táo 🍎🍎🍎. Hỏi 1 quả Dưa hấu nặng bằng mấy quả Táo?',
+    options: ['4 quả Táo', '5 quả Táo', '6 quả Táo', '7 quả Táo'],
+    correctIdx: 2,
+    explanation: 'Tư duy siêu đỉnh! 1 quả Dứa = 3 quả Táo, vậy 2 quả Dứa sẽ bằng 3 + 3 = 6 quả Táo!'
+  },
+  {
+    id: 'mp_5',
+    title: 'Câu đố 5: Xếp hàng thông minh 👧👦',
+    question: 'Bảo Nhi xếp hàng vào lớp: Đếm từ đầu hàng xuống thì Bảo Nhi đứng thứ 3, phía sau Bảo Nhi còn 2 bạn nữa. Hỏi hàng đó có tất cả mấy bạn?',
+    options: ['4 bạn', '5 bạn', '6 bạn', '7 bạn'],
+    correctIdx: 1,
+    explanation: 'Tuyệt vời! Từ đầu hàng đến Bảo Nhi là 3 bạn, cộng thêm 2 bạn đứng sau: 3 + 2 = 5 bạn!'
+  },
+  {
+    id: 'mp_6',
+    title: 'Câu đố 6: Dãy số bậc thang tăng dần 🚀',
+    question: 'Tìm số còn thiếu trong dãy số bí mật: 1 ➔ 2 ➔ 4 ➔ 7 ➔ 11 ➔ [ ? ] (Gợi ý: Khoảng cách tăng +1, +2, +3, +4...)',
+    options: ['Số 14', 'Số 15', 'Số 16', 'Số 17'],
+    correctIdx: 2,
+    explanation: 'Quá thông minh! Quy luật cộng tăng dần: +1, +2, +3, +4, và bước tiếp theo là +5: 11 + 5 = 16!'
+  }
+];
+
+// 3. 🎹 DANH SÁCH BÀI TẬP ĐÀN & GIAI ĐIỆU MẪU CHO BÉ
+const PIANO_PRACTICE_SONGS = [
+  {
+    id: 'ps_hanon',
+    name: 'Bài 1: Luyện ngón tròn đều (Đô - Rê - Mi - Fa - Sol)',
+    notes: 'C4 - D4 - E4 - F4 - G4 - F4 - E4 - D4 - C4',
+    freqs: [261.63, 293.66, 329.63, 349.23, 392.00, 349.23, 329.63, 293.66, 261.63],
+    tip: 'Giữ cổ tay mềm mại, cong tròn 5 đầu ngón tay như đang cầm quả bóng nhỏ.'
+  },
+  {
+    id: 'ps_twinkle',
+    name: 'Bài 2: Ngôi sao nhỏ lấp lánh (Twinkle Twinkle Little Star)',
+    notes: 'Đô Đô Sol Sol La La Sol — Fa Fa Mi Mi Rê Rê Đô',
+    freqs: [261.63, 261.63, 392.00, 392.00, 440.00, 440.00, 392.00, 349.23, 349.23, 329.63, 329.63, 293.66, 293.66, 261.63],
+    tip: 'Đánh đều nhịp, ngân đủ 2 phách ở nốt Sol và nốt Đô cuối câu nhé!'
+  },
+  {
+    id: 'ps_ode',
+    name: 'Bài 3: Khúc nhạc vui (Ode to Joy — Beethoven)',
+    notes: 'Mi Mi Fa Sol — Sol Fa Mi Rê — Đô Đô Rê Mi — Mi Rê Rê',
+    freqs: [329.63, 329.63, 349.23, 392.00, 392.00, 349.23, 329.63, 293.66, 261.63, 261.63, 293.66, 329.63, 329.63, 293.66, 293.66],
+    tip: 'Bản nhạc nổi tiếng của vĩ nhân Beethoven! Con bắt đầu bằng ngón giữa (ngón số 3) ở nốt Mi.'
+  },
+  {
+    id: 'ps_jingle',
+    name: 'Bài 4: Tiếng chuông ngân vang (Jingle Bells)',
+    notes: 'Mi Mi Mi — Mi Mi Mi — Mi Sol Đô Rê Mi',
+    freqs: [329.63, 329.63, 329.63, 329.63, 329.63, 329.63, 329.63, 392.00, 261.63, 293.66, 329.63],
+    tip: 'Giữ nhịp vui tươi, rộn ràng và kết hợp tay trái đệm hợp âm Đô trưởng (C).'
+  }
+];
+
+// 4. 🐼 BỘ THẺ TIẾNG TRUNG (PINYIN + HÁN TỰ + CÂU NGẮN CHO BÉ)
+const CHINESE_KIDS_CARDS = [
+  { id: 'cn_1', topic: 'Chào hỏi', hanzi: '你好', pinyin: 'Nǐ hǎo', vi: 'Xin chào', emoji: '👋', sentenceHz: '老师，你好！', sentencePy: 'Lǎoshī, nǐ hǎo!', sentenceVi: 'Em chào cô giáo ạ!' },
+  { id: 'cn_2', topic: 'Chào hỏi', hanzi: '谢谢', pinyin: 'Xièxie', vi: 'Cảm ơn', emoji: '🙏', sentenceHz: '谢谢妈妈！', sentencePy: 'Xièxie māma!', sentenceVi: 'Con cảm ơn mẹ ạ!' },
+  { id: 'cn_3', topic: 'Chào hỏi', hanzi: '再见', pinyin: 'Zàijiàn', vi: 'Tạm biệt', emoji: '😊', sentenceHz: '明天见，再见！', sentencePy: 'Míngtiān jiàn, zàijiàn!', sentenceVi: 'Hẹn gặp ngày mai, tạm biệt!' },
+  { id: 'cn_4', topic: 'Gia đình', hanzi: '爸爸', pinyin: 'Bàba', vi: 'Bố / Ba', emoji: '👨', sentenceHz: '我爱爸爸。', sentencePy: 'Wǒ ài bàba.', sentenceVi: 'Con yêu bố.' },
+  { id: 'cn_5', topic: 'Gia đình', hanzi: '妈妈', pinyin: 'Māma', vi: 'Mẹ / Má', emoji: '👩', sentenceHz: '妈妈很漂亮。', sentencePy: 'Māma hěn piàoliang.', sentenceVi: 'Mẹ rất xinh đẹp.' },
+  { id: 'cn_6', topic: 'Số đếm', hanzi: '一 二 三', pinyin: 'Yī èr sān', vi: 'Một, Hai, Ba', emoji: '🔢', sentenceHz: '一二三，我们一起读！', sentencePy: 'Yī èr sān, wǒmen yìqǐ dú!', sentenceVi: 'Một hai ba, chúng mình cùng đọc!' },
+  { id: 'cn_7', topic: 'Động vật', hanzi: '大熊猫', pinyin: 'Dà xióngmāo', vi: 'Gấu trúc lớn', emoji: '🐼', sentenceHz: '大熊猫喜欢吃竹子。', sentencePy: 'Dà xióngmāo xǐhuan chī zhúzi.', sentenceVi: 'Gấu trúc thích ăn trúc.' },
+  { id: 'cn_8', topic: 'Động vật', hanzi: '小猫', pinyin: 'Xiǎo māo', vi: 'Mèo con', emoji: '🐱', sentenceHz: '这只小猫很可爱。', sentencePy: 'Zhè zhī xiǎo māo hěn kě\'ài.', sentenceVi: 'Chú mèo con này rất đáng yêu.' },
+  { id: 'cn_9', topic: 'Đồ ăn', hanzi: '苹果', pinyin: 'Píngguǒ', vi: 'Quả táo', emoji: '🍎', sentenceHz: '我喜欢吃红苹果。', sentencePy: 'Wǒ xǐhuan chī hóng píngguǒ.', sentenceVi: 'Con thích ăn táo đỏ.' },
+  { id: 'cn_10', topic: 'Đồ ăn', hanzi: '牛奶', pinyin: 'Niúnǎi', vi: 'Sữa tươi', emoji: '🥛', sentenceHz: '我每天喝牛奶。', sentencePy: 'Wǒ měitiān hē niúnǎi.', sentenceVi: 'Mỗi ngày con đều uống sữa.' }
+];
+
+function switchCoreStudyTab(tabId){
+  activeCoreStudyTab = tabId;
+  document.querySelectorAll('.core-subj-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-core-tab') === tabId);
+  });
+  renderCoreInteractiveHub();
+}
+
+function quickAwardCoreStudy(subject, topic, points){
+  const c = child();
+  if(!c) return alert('Chưa có hồ sơ bé.');
+  const pts = Number(points || 15);
+  c.score += pts;
+  c.highestScore = Math.max(c.highestScore || 0, c.score);
+  if(!Array.isArray(c.pointHistory)) c.pointHistory = [];
+  c.pointHistory.push({
+    id: uid('study'),
+    type: 'study',
+    subject: subject,
+    topic: topic,
+    amount: pts,
+    note: 'Hoàn thành bài học trong Góc học tập 5 môn chính',
+    reason: `[${subject}] ${topic} (+${pts} ⭐)`,
+    at: new Date().toISOString()
+  });
+  updateEarnedAchievements(c);
+  save();
+  render();
+  playChime('success');
+  triggerConfetti();
+  showToast(`🎉 Tuyệt vời! Đã thưởng +${pts} ⭐ môn ${subject} cho ${c.name}!`);
+}
+
+function selectGreatFigureStory(idx){
+  activeGreatFigureIdx = idx;
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  renderCoreInteractiveHub();
+}
+
+function speakGreatFigureStory(idx){
+  const st = GREAT_FIGURES_STORIES[idx] || GREAT_FIGURES_STORIES[0];
+  if(!st) return;
+  const fullText = `Câu chuyện về ${st.name}: ${st.title}. ${st.story} Bài học rút ra cho con là: ${st.lesson}`;
+  speakVietnamese(fullText);
+  showToast(`🔊 Đang đọc truyện: ${st.name}...`);
+}
+
+function stopGreatFigureSpeech(){
+  try{
+    if('speechSynthesis' in window) window.speechSynthesis.cancel();
+    showToast('⏹ Đã dừng đọc truyện.');
+  }catch(e){}
+}
+
+function selectMathPuzzle(idx){
+  activeMathPuzzleIdx = idx;
+  mathPuzzleAnswered = false;
+  renderCoreInteractiveHub();
+}
+
+function answerMathPuzzle(optionIdx){
+  const pz = MATH_LOGIC_PUZZLES[activeMathPuzzleIdx] || MATH_LOGIC_PUZZLES[0];
+  const fb = document.getElementById('coreMathFeedback');
+  if(!pz || !fb) return;
+
+  if(optionIdx === pz.correctIdx){
+    playChime('success');
+    fb.style.display = 'block';
+    fb.style.background = '#ecfdf5';
+    fb.style.borderColor = '#6ee7b7';
+    fb.style.color = '#065f46';
+    fb.innerHTML = `🎉 <b>Chính xác!</b> ${safe(pz.explanation)} <button type="button" class="primary" style="margin-left:8px;padding:4px 10px;font-size:12px" onclick="quickAwardCoreStudy('Toán tư duy','Giải đúng: ${safe(pz.title)}',10)">+10 ⭐ Nhận thưởng ngay</button>`;
+  } else {
+    playPenaltySound();
+    fb.style.display = 'block';
+    fb.style.background = '#fef2f2';
+    fb.style.borderColor = '#fecaca';
+    fb.style.color = '#991b1b';
+    fb.innerHTML = `💡 <b>Chưa đúng rồi!</b> Con thử suy nghĩ lại quy luật và chọn đáp án khác nhé!`;
+  }
+}
+
+function playPianoMelodyDemo(songIdx){
+  const song = PIANO_PRACTICE_SONGS[songIdx];
+  if(!song || !Array.isArray(song.freqs)) return;
+  try{
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if(!AudioCtx) return;
+    const ctx = new AudioCtx();
+    song.freqs.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      const start = ctx.currentTime + i * 0.32;
+      osc.frequency.setValueAtTime(freq, start);
+      gain.gain.setValueAtTime(0.24, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.28);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.30);
+    });
+    showToast(`🎹 Đang phát giai điệu mẫu: ${song.name}`);
+  }catch(e){}
+}
+
+function setPianoMetronomeBpm(bpm){
+  activePianoBpm = bpm;
+  if(pianoMetronomeTimer){
+    togglePianoMetronome();
+    togglePianoMetronome();
+  }else{
+    renderCoreInteractiveHub();
+  }
+}
+
+function togglePianoMetronome(){
+  if(pianoMetronomeTimer){
+    clearInterval(pianoMetronomeTimer);
+    pianoMetronomeTimer = null;
+    renderCoreInteractiveHub();
+    showToast('⏹ Đã tắt nhịp gõ đàn Metronome.');
+    return;
+  }
+  pianoMetronomeBeat = 0;
+  const intervalMs = Math.round(60000 / (activePianoBpm || 80));
+  const tick = () => {
+    try{
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if(AudioCtx){
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const isFirst = (pianoMetronomeBeat % 4 === 0);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(isFirst ? 980 : 660, ctx.currentTime);
+        gain.gain.setValueAtTime(isFirst ? 0.28 : 0.16, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.08);
+      }
+      const dot = document.getElementById('pianoBeatIndicator');
+      if(dot){
+        dot.textContent = `Nhịp ${(pianoMetronomeBeat % 4) + 1} / 4`;
+        dot.style.transform = (pianoMetronomeBeat % 4 === 0) ? 'scale(1.12)' : 'scale(1)';
+      }
+      pianoMetronomeBeat++;
+    }catch(e){}
+  };
+  tick();
+  pianoMetronomeTimer = setInterval(tick, intervalMs);
+  renderCoreInteractiveHub();
+}
+
+function speakChineseText(text, rate = 0.85){
+  try{
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-CN';
+    u.rate = rate;
+    const voices = window.speechSynthesis.getVoices();
+    const zhVoice = voices.find(v => v.lang.startsWith('zh') || v.lang.includes('CN'));
+    if(zhVoice) u.voice = zhVoice;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function setChineseTopicFilter(topic){
+  activeChineseTopic = topic;
+  renderCoreInteractiveHub();
+}
+
+function renderCoreInteractiveHub(){
+  const box = document.getElementById('coreInteractiveContainer');
+  if(!box) return;
+
+  if(activeCoreStudyTab === 'great_figures'){
+    const st = GREAT_FIGURES_STORIES[activeGreatFigureIdx] || GREAT_FIGURES_STORIES[0];
+    const pillsHtml = GREAT_FIGURES_STORIES.map((item, idx) => `
+      <button type="button" class="gf-story-pill ${idx===activeGreatFigureIdx?'active':''}" onclick="selectGreatFigureStory(${idx})">
+        <span>${item.icon}</span>
+        <span>${safe(item.name)}</span>
+      </button>
+    `).join('');
+
+    box.innerHTML = `
+      <div class="gf-reader-card">
+        <div class="gf-story-selector">${pillsHtml}</div>
+        <div class="gf-story-main">
+          <div class="gf-story-header">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="gf-story-avatar">${st.icon}</div>
+              <div>
+                <span class="study-badge" style="background:${st.badgeColor}">${safe(st.era)}</span>
+                <h3 style="margin:4px 0 2px;font-size:19px;color:#1e1b4b">${safe(st.name)} — ${safe(st.title)}</h3>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button type="button" class="primary" style="padding:8px 14px;font-size:13px;background:linear-gradient(135deg,#7c3aed,#4f46e5)" onclick="speakGreatFigureStory(${activeGreatFigureIdx})">
+                🔊 Đọc truyện cho bé nghe
+              </button>
+              <button type="button" class="secondary" style="padding:8px 12px;font-size:12.5px" onclick="stopGreatFigureSpeech()">
+                ⏹ Dừng đọc
+              </button>
+            </div>
+          </div>
+
+          <div class="gf-story-content">${safe(st.story)}</div>
+
+          <div class="gf-lesson-box">
+            <div><b>💡 Bài học tấm gương cho con:</b> ${safe(st.lesson)}</div>
+            <div style="margin-top:6px;color:#4338ca"><b>❓ Câu hỏi cùng con suy ngẫm:</b> ${safe(st.question)}</div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:12px">
+            <div style="display:flex;gap:8px">
+              <button type="button" class="secondary" style="padding:7px 12px;font-size:12.5px" onclick="selectGreatFigureStory(${(activeGreatFigureIdx - 1 + GREAT_FIGURES_STORIES.length) % GREAT_FIGURES_STORIES.length})">◀ Truyện trước</button>
+              <button type="button" class="secondary" style="padding:7px 12px;font-size:12.5px" onclick="selectGreatFigureStory(${(activeGreatFigureIdx + 1) % GREAT_FIGURES_STORIES.length})">Truyện tiếp theo ▶</button>
+            </div>
+            <button type="button" class="primary" style="padding:9px 18px;font-size:13.5px;background:linear-gradient(135deg,#10b981,#059669)" onclick="quickAwardCoreStudy('Truyện kể Vĩ nhân','Nghe & hiểu truyện: ${safe(st.name)}',15)">
+              🌟 Con đã nghe &amp; hiểu bài học (+15 ⭐)
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  if(activeCoreStudyTab === 'math_logic'){
+    const pz = MATH_LOGIC_PUZZLES[activeMathPuzzleIdx] || MATH_LOGIC_PUZZLES[0];
+    const tabsHtml = MATH_LOGIC_PUZZLES.map((item, idx) => `
+      <button type="button" class="gf-story-pill ${idx===activeMathPuzzleIdx?'active':''}" onclick="selectMathPuzzle(${idx})">
+        🧮 Câu ${idx + 1}
+      </button>
+    `).join('');
+
+    const optsHtml = pz.options.map((opt, oIdx) => `
+      <button type="button" class="core-math-opt-btn" onclick="answerMathPuzzle(${oIdx})">
+        <b>${String.fromCharCode(65 + oIdx)}.</b> ${safe(opt)}
+      </button>
+    `).join('');
+
+    box.innerHTML = `
+      <div class="gf-reader-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+          <div class="gf-story-selector" style="margin-bottom:0">${tabsHtml}</div>
+          <button type="button" class="primary" style="padding:8px 14px;font-size:13px;background:linear-gradient(135deg,#10b981,#059669)" onclick="quickAwardCoreStudy('Toán tư duy','Hoàn thành bài luyện Toán tư duy hôm nay',15)">
+            ⭐ Cộng +15 ⭐ Hoàn thành Toán tư duy
+          </button>
+        </div>
+
+        <div class="gf-story-main">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+            <h3 style="margin:0;font-size:17px;color:#1e3a8a">🧩 ${safe(pz.title)}</h3>
+            <button type="button" class="secondary" style="padding:6px 12px;font-size:12px" onclick="speakVietnamese('${safe(pz.question)}')">🔊 Đọc đề bài cho bé</button>
+          </div>
+          <div class="gf-story-content" style="font-size:15.5px;font-weight:700;margin-top:8px">${safe(pz.question)}</div>
+          <div class="core-math-options-grid">${optsHtml}</div>
+          <div id="coreMathFeedback" style="display:none;margin-top:12px;padding:10px 14px;border-radius:12px;border:1.5px solid"></div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  if(activeCoreStudyTab === 'piano_music'){
+    const songsHtml = PIANO_PRACTICE_SONGS.map((s, idx) => `
+      <div class="piano-song-card">
+        <div>
+          <div style="font-weight:800;font-size:14.5px;color:#1e293b">🎼 ${safe(s.name)}</div>
+          <div style="font-size:13px;font-weight:800;color:#0284c7;margin:4px 0">🎹 Nốt nhạc: ${safe(s.notes)}</div>
+          <div class="note">💡 ${safe(s.tip)}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          <button type="button" class="secondary" style="padding:7px 12px;font-size:12px" onclick="playPianoMelodyDemo(${idx})">🔊 Nghe giai điệu mẫu</button>
+          <button type="button" class="primary" style="padding:7px 12px;font-size:12px;background:linear-gradient(135deg,#10b981,#059669)" onclick="quickAwardCoreStudy('Học Đàn','Luyện đàn bài: ${safe(s.name)}',15)">+15 ⭐ Đã tập xong</button>
+        </div>
+      </div>
+    `).join('');
+
+    box.innerHTML = `
+      <div class="gf-reader-card">
+        <div class="piano-metronome-bar">
+          <div>
+            <div style="font-weight:900;font-size:15px;color:#0f172a">🎹 Máy gõ nhịp Đàn (Metronome) &amp; Nhật ký luyện ngón</div>
+            <div class="note">Bật máy gõ nhịp để con tập đàn đều tay, đúng tiết tấu</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button type="button" class="gf-story-pill ${activePianoBpm===60?'active':''}" onclick="setPianoMetronomeBpm(60)">🐢 60 BPM (Chậm)</button>
+            <button type="button" class="gf-story-pill ${activePianoBpm===80?'active':''}" onclick="setPianoMetronomeBpm(80)">🚶 80 BPM (Vừa)</button>
+            <button type="button" class="gf-story-pill ${activePianoBpm===100?'active':''}" onclick="setPianoMetronomeBpm(100)">🐇 100 BPM (Nhanh)</button>
+            <button type="button" class="primary" style="padding:8px 14px;font-size:13px;background:${pianoMetronomeTimer?'#ef4444':'#0284c7'}" onclick="togglePianoMetronome()">
+              ${pianoMetronomeTimer ? '⏹ Dừng gõ nhịp' : '▶ Bật nhịp gõ Đàn'}
+            </button>
+            <span id="pianoBeatIndicator" style="font-weight:900;font-size:13px;color:#0284c7;padding:4px 10px;background:#e0f2fe;border-radius:10px;transition:transform 0.1s">Nhịp 1 / 4</span>
+          </div>
+        </div>
+        <div class="piano-songs-list">${songsHtml}</div>
+      </div>
+    `;
+    return;
+  }
+
+  if(activeCoreStudyTab === 'english_lf'){
+    box.innerHTML = `
+      <div class="gf-reader-card" style="background:linear-gradient(135deg,#fff7ed,#eff6ff)">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+          <div style="max-width:620px">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px">
+              <span class="study-badge" style="background:linear-gradient(135deg,#ea580c,#f59e0b)">🦊 LITTLE FOX ENGLISH</span>
+              <span class="study-badge" style="background:linear-gradient(135deg,#0284c7,#4f46e5)">LEVEL 1 → LEVEL 4</span>
+            </div>
+            <h3 style="margin:0 0 6px;font-size:19px;color:#1e293b">Bộ thẻ 3D Little Fox &amp; Bậc thang luyện nói câu Tiếng Anh</h3>
+            <p class="note" style="margin:0;font-size:13.5px;color:#334155">
+              Con học từ vựng theo chủ đề và tập nói từ câu ngắn 3 từ (🌱 Bậc 1) ➔ Mở rộng tính từ/hành động (🌿 Bậc 2) ➔ Nói câu hoàn chỉnh tự nhiên (🌳 Bậc 3), có giọng đọc chuẩn Mỹ/Anh và đố vui nhận sao!
+            </p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button type="button" class="primary" style="padding:12px 20px;font-size:14px;background:linear-gradient(135deg,#ea580c,#f59e0b)" onclick="showSection('flashcards')">
+              🦊 Mở Bộ thẻ Little Fox &amp; Luyện nói ngay ➔
+            </button>
+            <button type="button" class="primary" style="padding:12px 16px;font-size:13.5px;background:linear-gradient(135deg,#10b981,#059669)" onclick="quickAwardCoreStudy('Tiếng Anh','Hoàn thành bài học Tiếng Anh Little Fox',15)">
+              ⭐ +15 ⭐ Đã học Tiếng Anh
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  if(activeCoreStudyTab === 'chinese_kids'){
+    const topics = ['all', 'Chào hỏi', 'Gia đình', 'Số đếm', 'Động vật', 'Đồ ăn'];
+    const topicBar = topics.map(tp => `
+      <button type="button" class="gf-story-pill ${activeChineseTopic===tp?'active':''}" onclick="setChineseTopicFilter('${tp}')">
+        ${tp === 'all' ? '🐼 Tất cả chủ đề' : tp}
+      </button>
+    `).join('');
+
+    const cards = (activeChineseTopic === 'all')
+      ? CHINESE_KIDS_CARDS
+      : CHINESE_KIDS_CARDS.filter(c => c.topic === activeChineseTopic);
+
+    const cardsHtml = cards.map(item => `
+      <div class="cn-flashcard">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <span class="study-badge" style="background:#e11d48;font-size:10.5px">${safe(item.topic)}</span>
+          <span style="font-size:28px">${item.emoji}</span>
+        </div>
+        <div class="cn-hanzi">${safe(item.hanzi)}</div>
+        <div class="cn-pinyin">${safe(item.pinyin)}</div>
+        <div class="cn-meaning">${safe(item.vi)}</div>
+        <div class="cn-sentence-box">
+          <div><b>💬 Câu mẫu:</b> ${safe(item.sentenceHz)}</div>
+          <div style="color:#be123c;font-size:12px">${safe(item.sentencePy)}</div>
+          <div class="note" style="font-size:11.5px">${safe(item.sentenceVi)}</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button type="button" class="secondary" style="flex:1;padding:6px 8px;font-size:12px" onclick="speakChineseText('${safe(item.hanzi)}',0.85)">🔊 Đọc từ</button>
+          <button type="button" class="secondary" style="flex:1;padding:6px 8px;font-size:12px" onclick="speakChineseText('${safe(item.sentenceHz)}',0.8)">🗣️ Đọc câu</button>
+        </div>
+      </div>
+    `).join('');
+
+    box.innerHTML = `
+      <div class="gf-reader-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+          <div class="gf-story-selector" style="margin-bottom:0">${topicBar}</div>
+          <button type="button" class="primary" style="padding:8px 14px;font-size:13px;background:linear-gradient(135deg,#e11d48,#f43f5e)" onclick="quickAwardCoreStudy('Tiếng Trung','Hoàn thành luyện từ & phát âm Tiếng Trung',15)">
+            ⭐ Cộng +15 ⭐ Học Tiếng Trung
+          </button>
+        </div>
+        <div class="cn-cards-grid">${cardsHtml}</div>
+      </div>
+    `;
+  }
+}
+
+/* ============================================================
+   🦊 BỘ THẺ TIẾNG ANH LITTLE FOX (LEVEL 1 → LEVEL 4) & BẬC THANG CÂU
+   ============================================================ */
+const LITTLE_FOX_LEVELS = [
+  { id: 1, name: 'Level 1', badge: '🌱 Level 1: Bắt đầu nói câu ngắn', color: '#10b981', pattern: 'It is a... / I see a... / This is my...', guide: 'Dành cho bé bắt đầu ghép 2–4 từ thành câu ngắn tự nhiên.' },
+  { id: 2, name: 'Level 2', badge: '🌿 Level 2: Mở rộng tính từ & hành động', color: '#0ea5e9', pattern: 'I like to... / The [adj] [noun] can...', guide: 'Mở rộng câu với màu sắc, kích thước và động từ chỉ hoạt động.' },
+  { id: 3, name: 'Level 3', badge: '🌳 Level 3: Giao tiếp & Kể chuyện ngắn', color: '#8b5cf6', pattern: 'When I..., I... / Because...', guide: 'Nói câu hoàn chỉnh có thời gian, địa điểm và lý do đơn giản.' },
+  { id: 4, name: 'Level 4', badge: '🚀 Level 4: Tự tin thuyết trình ý tưởng', color: '#f59e0b', pattern: 'If we..., we will... / My favorite...', guide: 'Diễn đạt suy nghĩ, so sánh và kể lại câu chuyện mạch lạc.' }
+];
+
+const DEFAULT_FLASHCARDS = [
+  // Level 1
+  { id: 'lf_1', level: 1, topic: '🐾 Động vật', word: 'Elephant', ipa: '/ˈel.ɪ.fənt/', meaning: 'Con voi', emoji: '🐘', step1En: 'It is an elephant.', step1Vi: 'Đó là một con voi.', step2En: 'The big elephant has long ears.', step2Vi: 'Con voi to lớn có đôi tai dài.', step3En: 'I see a friendly elephant drinking water.', step3Vi: 'Con thấy một chú voi thân thiện đang uống nước.' },
+  { id: 'lf_2', level: 1, topic: '🐾 Động vật', word: 'Rabbit', ipa: '/ˈræb.ɪt/', meaning: 'Con thỏ', emoji: '🐰', step1En: 'I see a rabbit.', step1Vi: 'Con thấy một chú thỏ.', step2En: 'The white rabbit can hop fast.', step2Vi: 'Chú thỏ trắng có thể nhảy rất nhanh.', step3En: 'The cute white rabbit likes eating carrots.', step3Vi: 'Chú thỏ trắng đáng yêu thích ăn cà rốt.' },
+  { id: 'lf_3', level: 1, topic: '🍎 Đồ ăn & Quả', word: 'Apple', ipa: '/ˈæp.əl/', meaning: 'Quả táo', emoji: '🍎', step1En: 'This is an apple.', step1Vi: 'Đây là một quả táo.', step2En: 'It is a sweet red apple.', step2Vi: 'Đó là một quả táo đỏ ngọt ngào.', step3En: 'I eat a crunchy red apple every morning.', step3Vi: 'Con ăn một quả táo đỏ giòn mỗi buổi sáng.' },
+  { id: 'lf_4', level: 1, topic: '👨‍👩‍👧 Gia đình', word: 'Mother', ipa: '/ˈmʌð.ər/', meaning: 'Mẹ', emoji: '👩', step1En: 'She is my mother.', step1Vi: 'Cô ấy là mẹ của con.', step2En: 'My mother is very kind.', step2Vi: 'Mẹ của con rất dịu dàng tốt bụng.', step3En: 'I love my mother and help her every day.', step3Vi: 'Con yêu mẹ và phụ giúp mẹ mỗi ngày.' },
+  // Level 2
+  { id: 'lf_5', level: 2, topic: '🏫 Trường học', word: 'Backpack', ipa: '/ˈbæk.pæk/', meaning: 'Cặp sách / Ba lô', emoji: '🎒', step1En: 'I have a backpack.', step1Vi: 'Con có một chiếc cặp sách.', step2En: 'My blue backpack is neat and clean.', step2Vi: 'Chiếc cặp màu xanh của con rất gọn gàng.', step3En: 'I pack my books into my backpack before school.', step3Vi: 'Con xếp sách vở vào cặp trước khi đi học.' },
+  { id: 'lf_6', level: 2, topic: '🎹 Âm nhạc & Đàn', word: 'Piano', ipa: '/piˈæn.əʊ/', meaning: 'Đàn dương cầm (Piano)', emoji: '🎹', step1En: 'I play the piano.', step1Vi: 'Con chơi đàn Piano.', step2En: 'I practice the piano every evening.', step2Vi: 'Con luyện đàn Piano mỗi buổi tối.', step3En: 'Playing the piano makes my family happy.', step3Vi: 'Tiếng đàn Piano làm cả gia đình con vui vẻ.' },
+  { id: 'lf_7', level: 2, topic: '🌈 Thiên nhiên', word: 'Rainbow', ipa: '/ˈreɪn.bəʊ/', meaning: 'Cầu vồng', emoji: '🌈', step1En: 'Look at the rainbow!', step1Vi: 'Hãy nhìn cầu vồng kìa!', step2En: 'The rainbow has seven bright colors.', step2Vi: 'Cầu vồng có bảy màu rực rỡ.', step3En: 'A beautiful rainbow appears in the sky after the rain.', step3Vi: 'Một chiếc cầu vồng tuyệt đẹp hiện lên sau cơn mưa.' },
+  // Level 3
+  { id: 'lf_8', level: 3, topic: '🚀 Hành động', word: 'Explore', ipa: '/ɪkˈsplɔːr/', meaning: 'Khám phá', emoji: '🧭', step1En: 'Let us explore!', step1Vi: 'Chúng mình cùng khám phá nào!', step2En: 'We like to explore new books.', step2Vi: 'Chúng con thích khám phá những cuốn sách mới.', step3En: 'When I read books, I can explore the wonderful world.', step3Vi: 'Khi đọc sách, con có thể khám phá thế giới kỳ diệu.' },
+  { id: 'lf_9', level: 3, topic: '💖 Cảm xúc & Tính cách', word: 'Patient', ipa: '/ˈpeɪ.ʃənt/', meaning: 'Kiên nhẫn, kiên trì', emoji: '🌱', step1En: 'I am patient.', step1Vi: 'Con là người kiên nhẫn.', step2En: 'Be patient when solving math puzzles.', step2Vi: 'Hãy kiên nhẫn khi giải các câu đố Toán.', step3En: 'Because I am patient, I can learn difficult songs on the piano.', step3Vi: 'Vì kiên trì nên con có thể tập được những bản nhạc khó.' },
+  // Level 4
+  { id: 'lf_10', level: 4, topic: '👑 Vĩ nhân & Ước mơ', word: 'Inventor', ipa: '/ɪnˈven.tər/', meaning: 'Nhà phát minh', emoji: '💡', step1En: 'He is an inventor.', step1Vi: 'Ông ấy là một nhà phát minh.', step2En: 'Thomas Edison was a great inventor.', step2Vi: 'Thomas Edison là một nhà phát minh vĩ đại.', step3En: 'Like great inventors, I never give up when I face challenges.', step3Vi: 'Giống như các nhà phát minh vĩ đại, con không bao giờ bỏ cuộc trước thử thách.' }
+];
+
+let fcCurrentLevel = 'all';
+let fcCurrentTopic = 'all';
+let fcCurrentFilter = 'all';
+let fcCurrentMode = 'card';
+let fcCurrentIdx = 0;
+let fcAccent = 'en-US';
+let fcAutoSpeak = true;
+let fcAutoPlayTimer = null;
+let fcQuizTarget = null;
+let fcQuizStreak = 0;
+
+function getAllFlashcards(){
+  const custom = Array.isArray(data.customFlashcards) ? data.customFlashcards : [];
+  return [...DEFAULT_FLASHCARDS, ...custom];
+}
+
+function getMasteredSet(){
+  const c = child();
+  if(!c) return new Set();
+  if(!Array.isArray(c.masteredFlashcards)) c.masteredFlashcards = [];
+  return new Set(c.masteredFlashcards);
+}
+
+function getFilteredFlashcards(){
+  const all = getAllFlashcards();
+  const mastered = getMasteredSet();
+  return all.filter(item => {
+    if(fcCurrentLevel !== 'all' && Number(item.level || 1) !== Number(fcCurrentLevel)) return false;
+    if(fcCurrentTopic !== 'all' && item.topic !== fcCurrentTopic) return false;
+    if(fcCurrentFilter === 'mastered' && !mastered.has(item.id)) return false;
+    if(fcCurrentFilter === 'learning' && mastered.has(item.id)) return false;
+    return true;
+  });
+}
+
+function speakEnglishText(text, rate = 0.88){
+  try{
+    if(!('speechSynthesis' in window) || !text) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = fcAccent || 'en-US';
+    u.rate = rate;
+    const voices = window.speechSynthesis.getVoices();
+    const enVoice = voices.find(v => v.lang === fcAccent) || voices.find(v => v.lang.startsWith('en'));
+    if(enVoice) u.voice = enVoice;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function setFlashcardLevel(lv){
+  fcCurrentLevel = lv;
+  fcCurrentIdx = 0;
+  renderFlashcards();
+}
+
+function setFlashcardTopic(tp){
+  fcCurrentTopic = tp;
+  fcCurrentIdx = 0;
+  renderFlashcards();
+}
+
+function setFlashcardFilter(flt){
+  fcCurrentFilter = flt;
+  fcCurrentIdx = 0;
+  document.querySelectorAll('.fc-subfilter-btn').forEach(b => b.classList.remove('active'));
+  const btnId = flt === 'mastered' ? 'fcFilterMastered' : (flt === 'learning' ? 'fcFilterLearning' : 'fcFilterAll');
+  document.getElementById(btnId)?.classList.add('active');
+  renderFlashcards();
+}
+
+function setFlashcardMode(mode){
+  fcCurrentMode = mode;
+  ['card','grid','quiz','guide'].forEach(m => {
+    const btn = document.getElementById('fcMode' + m.charAt(0).toUpperCase() + m.slice(1) + 'Btn');
+    const view = document.getElementById('fc' + m.charAt(0).toUpperCase() + m.slice(1) + 'View');
+    if(btn) btn.classList.toggle('active', m === mode);
+    if(view) view.style.display = (m === mode) ? 'block' : 'none';
+  });
+  if(mode === 'quiz') nextFlashcardQuizQuestion();
+  renderFlashcards();
+}
+
+function setFlashcardAccent(acc){
+  fcAccent = acc;
+  document.getElementById('fcAccentUS')?.classList.toggle('active', acc === 'en-US');
+  document.getElementById('fcAccentUK')?.classList.toggle('active', acc === 'en-GB');
+}
+
+function toggleFlashcardAutoSpeak(checked){
+  fcAutoSpeak = !!checked;
+}
+
+function flipCurrentFlashcard(){
+  const card3d = document.getElementById('fcCard3D');
+  if(card3d) card3d.classList.toggle('is-flipped');
+}
+
+function prevFlashcard(){
+  const deck = getFilteredFlashcards();
+  if(!deck.length) return;
+  fcCurrentIdx = (fcCurrentIdx - 1 + deck.length) % deck.length;
+  document.getElementById('fcCard3D')?.classList.remove('is-flipped');
+  renderFlashcards();
+  if(fcAutoSpeak) speakCurrentWord(0.9);
+}
+
+function nextFlashcard(){
+  const deck = getFilteredFlashcards();
+  if(!deck.length) return;
+  fcCurrentIdx = (fcCurrentIdx + 1) % deck.length;
+  document.getElementById('fcCard3D')?.classList.remove('is-flipped');
+  renderFlashcards();
+  if(fcAutoSpeak) speakCurrentWord(0.9);
+}
+
+function shuffleFlashcards(){
+  const deck = getFilteredFlashcards();
+  if(deck.length > 1){
+    fcCurrentIdx = Math.floor(Math.random() * deck.length);
+    renderFlashcards();
+    showToast('🔀 Đã chọn thẻ ngẫu nhiên!');
+  }
+}
+
+function toggleFlashcardAutoPlay(){
+  const btn = document.getElementById('fcAutoPlayBtn');
+  if(fcAutoPlayTimer){
+    clearInterval(fcAutoPlayTimer);
+    fcAutoPlayTimer = null;
+    if(btn) btn.textContent = '▶️ Tự động đọc cả chủ đề';
+    return;
+  }
+  if(btn) btn.textContent = '⏹ Dừng tự động đọc';
+  speakCurrentWord(0.9);
+  fcAutoPlayTimer = setInterval(() => {
+    nextFlashcard();
+  }, 4200);
+}
+
+function speakCurrentWord(rate = 0.9){
+  const deck = getFilteredFlashcards();
+  const card = deck[fcCurrentIdx] || deck[0];
+  if(card) speakEnglishText(card.word, rate);
+}
+
+function speakCurrentExample(){
+  const deck = getFilteredFlashcards();
+  const card = deck[fcCurrentIdx] || deck[0];
+  if(card) speakEnglishText(card.step2En || card.step1En, 0.86);
+}
+
+function speakCurrentLadderStep(stepNum){
+  const deck = getFilteredFlashcards();
+  const card = deck[fcCurrentIdx] || deck[0];
+  if(!card) return;
+  const txt = stepNum === 1 ? card.step1En : (stepNum === 2 ? card.step2En : card.step3En);
+  speakEnglishText(txt, 0.85);
+}
+
+function speakAllLadderSteps(){
+  const deck = getFilteredFlashcards();
+  const card = deck[fcCurrentIdx] || deck[0];
+  if(!card) return;
+  speakEnglishText(`${card.word}. ${card.step1En} ${card.step2En} ${card.step3En}`, 0.84);
+}
+
+function toggleCurrentCardMastered(){
+  const c = child();
+  if(!c) return;
+  const deck = getFilteredFlashcards();
+  const card = deck[fcCurrentIdx] || deck[0];
+  if(!card) return;
+  if(!Array.isArray(c.masteredFlashcards)) c.masteredFlashcards = [];
+  const idx = c.masteredFlashcards.indexOf(card.id);
+  if(idx >= 0){
+    c.masteredFlashcards.splice(idx, 1);
+  }else{
+    c.masteredFlashcards.push(card.id);
+    c.score += 2;
+    logPoint(c, 'study', 2, `[Tiếng Anh] Thuộc thẻ từ Little Fox: ${card.word}`);
+    playChime('success');
+    showToast(`🌟 Thuộc từ "${card.word}"! Thưởng +2 ⭐`);
+  }
+  save();
+  renderFlashcards();
+}
+
+function startVoicePractice(){
+  const statusEl = document.getElementById('fcSpeakStatus');
+  if(statusEl) statusEl.innerHTML = '🎙️ <b>Con hãy đọc to từ và 3 bậc câu cùng bố mẹ nhé!</b> Sau khi đọc xong, bấm nút <b>“👏 Con đã nói to rõ (+2 ⭐)”</b> bên cạnh!';
+  speakAllLadderSteps();
+}
+
+function rewardChildSpeakingPractice(){
+  const deck = getFilteredFlashcards();
+  const card = deck[fcCurrentIdx] || deck[0];
+  quickAwardCoreStudy('Tiếng Anh', `Luyện nói to rõ bậc thang câu từ "${card ? card.word : 'Little Fox'}"`, 2);
+}
+
+function nextFlashcardQuizQuestion(){
+  const all = getAllFlashcards();
+  if(!all.length) return;
+  fcQuizTarget = all[Math.floor(Math.random() * all.length)];
+  const emojiEl = document.getElementById('fcQuizEmoji');
+  const viEl = document.getElementById('fcQuizVi');
+  const ipaEl = document.getElementById('fcQuizIpa');
+  const hintEl = document.getElementById('fcQuizSentenceHint');
+  const optBox = document.getElementById('fcQuizOptions');
+  const fb = document.getElementById('fcQuizFeedback');
+  if(!emojiEl || !optBox) return;
+
+  emojiEl.textContent = fcQuizTarget.emoji || '🌟';
+  if(viEl) viEl.textContent = fcQuizTarget.meaning;
+  if(ipaEl) ipaEl.textContent = fcQuizTarget.ipa || '';
+  if(hintEl) hintEl.textContent = `🌱 Gợi ý câu: "${fcQuizTarget.step1En}"`;
+  if(fb) fb.innerHTML = '';
+
+  const others = all.filter(x => x.id !== fcQuizTarget.id).sort(() => Math.random() - 0.5).slice(0, 3);
+  const choices = [fcQuizTarget, ...others].sort(() => Math.random() - 0.5);
+
+  optBox.innerHTML = '';
+  choices.forEach(ch => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'fc-quiz-opt-btn';
+    btn.innerHTML = `<b>${safe(ch.word)}</b> <span class="note">(${safe(ch.meaning)})</span>`;
+    btn.onclick = () => {
+      if(ch.id === fcQuizTarget.id){
+        fcQuizStreak++;
+        playChime('success');
+        document.getElementById('fcQuizProgressText').textContent = `${fcQuizStreak} / 5`;
+        if(fb) fb.innerHTML = `<div style="color:#059669;font-weight:800;margin-top:8px">🎉 Đúng rồi! ${safe(ch.word)} — ${safe(ch.step1En)}</div>`;
+        if(fcQuizStreak >= 5){
+          fcQuizStreak = 0;
+          document.getElementById('fcQuizProgressText').textContent = `0 / 5`;
+          quickAwardCoreStudy('Tiếng Anh', 'Hoàn thành xuất sắc 5 câu đố Tiếng Anh Little Fox', 10);
+        }
+        setTimeout(nextFlashcardQuizQuestion, 1100);
+      }else{
+        playPenaltySound();
+        if(fb) fb.innerHTML = `<div style="color:#dc2626;font-weight:800;margin-top:8px">💡 Thử lại nhé con! Hãy bấm nghe lại phát âm chuẩn.</div>`;
+      }
+    };
+    optBox.appendChild(btn);
+  });
+}
+
+function speakQuizTarget(rate = 0.9){
+  if(fcQuizTarget) speakEnglishText(fcQuizTarget.word, rate);
+}
+
+function speakQuizSentence(){
+  if(fcQuizTarget) speakEnglishText(fcQuizTarget.step1En, 0.85);
+}
+
+function openAddFlashcardModal(){
+  const sel = document.getElementById('newFcTopic');
+  if(sel){
+    sel.innerHTML = '';
+    ['🐾 Động vật','🍎 Đồ ăn & Quả','👨‍👩‍👧 Gia đình','🏫 Trường học','🎹 Âm nhạc & Đàn','🌈 Thiên nhiên','🚀 Hành động'].forEach(t => sel.add(new Option(t, t)));
+  }
+  document.getElementById('addFlashcardModal')?.classList.add('show');
+}
+
+function closeAddFlashcardModal(){
+  document.getElementById('addFlashcardModal')?.classList.remove('show');
+}
+
+function submitNewFlashcard(){
+  const word = document.getElementById('newFcWord')?.value.trim();
+  const meaning = document.getElementById('newFcMeaning')?.value.trim();
+  if(!word || !meaning) return alert('Vui lòng nhập Từ Tiếng Anh và Nghĩa Tiếng Việt.');
+  const level = Number(document.getElementById('newFcLevel')?.value || 1);
+  const topic = document.getElementById('newFcTopic')?.value || '🐾 Động vật';
+  const emoji = document.getElementById('newFcEmoji')?.value.trim() || '🌟';
+  const ipa = document.getElementById('newFcIpa')?.value.trim() || '';
+  const step1En = document.getElementById('newFcStep1En')?.value.trim() || `It is a ${word.toLowerCase()}.`;
+  const step2En = document.getElementById('newFcExampleEn')?.value.trim() || `I like this ${word.toLowerCase()}.`;
+  const step3En = document.getElementById('newFcStep3En')?.value.trim() || `I can see a nice ${word.toLowerCase()} today.`;
+  const stepVi = document.getElementById('newFcExampleVi')?.value.trim() || meaning;
+
+  if(!Array.isArray(data.customFlashcards)) data.customFlashcards = [];
+  data.customFlashcards.push({
+    id: uid('lf'), level, topic, word, ipa, meaning, emoji,
+    step1En, step1Vi: stepVi, step2En, step2Vi: stepVi, step3En, step3Vi: stepVi
+  });
+  save();
+  closeAddFlashcardModal();
+  renderFlashcards();
+  showToast(`🎉 Đã thêm thẻ từ "${word}" vào bộ Little Fox!`);
+}
+
+function renderFlashcards(){
+  const sec = document.getElementById('flashcardsSection');
+  if(!sec) return;
+  const c = child();
+  const all = getAllFlashcards();
+  const mastered = getMasteredSet();
+
+  const nameEl = document.getElementById('fcChildName');
+  if(nameEl) nameEl.textContent = c ? c.name : 'bé';
+
+  const mCountEl = document.getElementById('fcMasteredCount');
+  if(mCountEl) mCountEl.textContent = `${mastered.size}/${all.length}`;
+
+  const cAll = document.getElementById('fcCountAll');
+  const cLearn = document.getElementById('fcCountLearning');
+  const cMast = document.getElementById('fcCountMastered');
+  if(cAll) cAll.textContent = all.length;
+  if(cLearn) cLearn.textContent = Math.max(0, all.length - mastered.size);
+  if(cMast) cMast.textContent = mastered.size;
+
+  // Level bar
+  const lvBar = document.getElementById('fcLevelBar');
+  if(lvBar){
+    let html = `<button type="button" class="tools-filter-btn ${fcCurrentLevel==='all'?'active':''}" onclick="setFlashcardLevel('all')">🌟 Tất cả Level (1–4)</button>`;
+    LITTLE_FOX_LEVELS.forEach(lv => {
+      html += `<button type="button" class="tools-filter-btn ${Number(fcCurrentLevel)===lv.id?'active':''}" onclick="setFlashcardLevel(${lv.id})">${lv.badge}</button>`;
+    });
+    lvBar.innerHTML = html;
+  }
+
+  // Topic bar
+  const tpBar = document.getElementById('fcTopicBar');
+  if(tpBar){
+    const topics = Array.from(new Set(all.map(x => x.topic)));
+    let html = `<button type="button" class="tools-filter-btn ${fcCurrentTopic==='all'?'active':''}" onclick="setFlashcardTopic('all')">📚 Tất cả chủ đề</button>`;
+    topics.forEach(tp => {
+      html += `<button type="button" class="tools-filter-btn ${fcCurrentTopic===tp?'active':''}" onclick="setFlashcardTopic('${safe(tp)}')">${safe(tp)}</button>`;
+    });
+    tpBar.innerHTML = html;
+  }
+
+  const deck = getFilteredFlashcards();
+  if(fcCurrentIdx >= deck.length) fcCurrentIdx = 0;
+  const current = deck[fcCurrentIdx] || all[0];
+  if(!current) return;
+
+  const isMast = mastered.has(current.id);
+  const setTxt = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  setTxt('fcFrontLevel', `🌱 Level ${current.level || 1}`);
+  setTxt('fcFrontTopic', current.topic);
+  setTxt('fcFrontEmoji', current.emoji || '🌟');
+  setTxt('fcFrontWord', current.word);
+  setTxt('fcFrontIpa', current.ipa || '');
+  setTxt('fcFrontStarterSentence', `🌱 Câu ngắn: "${current.step1En}"`);
+  setTxt('fcBackTopic', current.topic);
+  setTxt('fcBackWordMini', `${current.word} • ${current.ipa || ''}`);
+  setTxt('fcBackEmoji', current.emoji || '🌟');
+  setTxt('fcBackMeaning', current.meaning);
+  setTxt('fcCurrentIndex', deck.length ? (fcCurrentIdx + 1) : 0);
+  setTxt('fcTotalInDeck', deck.length);
+
+  const badgeEl = document.getElementById('fcFrontMasteredBadge');
+  if(badgeEl) badgeEl.style.display = isMast ? 'inline-block' : 'none';
+
+  const progBar = document.getElementById('fcDeckProgressBar');
+  if(progBar) progBar.style.width = (deck.length ? Math.round(((fcCurrentIdx + 1) / deck.length) * 100) : 0) + '%';
+
+  const backPreview = document.getElementById('fcBackLadderPreview');
+  if(backPreview){
+    backPreview.innerHTML = `
+      <div>🌱 <b>Bậc 1:</b> ${safe(current.step1En)} <i>(${safe(current.step1Vi)})</i></div>
+      <div>🌿 <b>Bậc 2:</b> ${safe(current.step2En)} <i>(${safe(current.step2Vi)})</i></div>
+      <div>🌳 <b>Bậc 3:</b> ${safe(current.step3En)} <i>(${safe(current.step3Vi)})</i></div>
+    `;
+  }
+
+  const ladderBox = document.getElementById('fcLadderStepsBox');
+  if(ladderBox){
+    ladderBox.innerHTML = [1, 2, 3].map(step => {
+      const en = step === 1 ? current.step1En : (step === 2 ? current.step2En : current.step3En);
+      const vi = step === 1 ? current.step1Vi : (step === 2 ? current.step2Vi : current.step3Vi);
+      const label = step === 1 ? '🌱 Bậc 1 (Câu ngắn 3–4 từ)' : (step === 2 ? '🌿 Bậc 2 (Mở rộng tính từ / hành động)' : '🌳 Bậc 3 (Câu giao tiếp hoàn chỉnh)');
+      return `
+        <div class="lf-step-item">
+          <div>
+            <div style="font-size:12px;font-weight:800;color:#047857">${label}</div>
+            <div style="font-size:15px;font-weight:900;color:#0f172a;margin-top:2px">${safe(en)}</div>
+            <div class="note">${safe(vi)}</div>
+          </div>
+          <button type="button" class="secondary" style="padding:6px 12px;font-size:12px" onclick="speakCurrentLadderStep(${step})">🔊 Nghe Bậc ${step}</button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Grid view
+  const gridBox = document.getElementById('fcGridContainer');
+  if(gridBox && fcCurrentMode === 'grid'){
+    gridBox.innerHTML = deck.map(item => `
+      <div class="tool-card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:28px">${item.emoji}</span>
+          <span class="study-badge" style="background:#0284c7">Level ${item.level}</span>
+        </div>
+        <div style="font-size:18px;font-weight:900;margin-top:6px">${safe(item.word)} <span class="note">${safe(item.ipa||'')}</span></div>
+        <div style="font-weight:700;color:#059669">${safe(item.meaning)}</div>
+        <div class="note" style="margin-top:4px">🌱 ${safe(item.step1En)}<br>🌿 ${safe(item.step2En)}</div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button type="button" class="secondary" style="padding:6px 10px;font-size:12px" onclick="speakEnglishText('${safe(item.word)}',0.9)">🔊 Từ</button>
+          <button type="button" class="secondary" style="padding:6px 10px;font-size:12px" onclick="speakEnglishText('${safe(item.step2En)}',0.85)">💬 Câu</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Guide view
+  const guideBox = document.getElementById('fcGuideContainer');
+  if(guideBox && fcCurrentMode === 'guide'){
+    guideBox.innerHTML = LITTLE_FOX_LEVELS.map(lv => `
+      <div class="tool-card" style="margin-bottom:10px">
+        <div style="font-weight:900;font-size:16px;color:${lv.color}">${lv.badge}</div>
+        <div style="margin-top:4px;font-weight:700">Mẫu câu trọng tâm: <code>${safe(lv.pattern)}</code></div>
+        <div class="note" style="margin-top:4px">${safe(lv.guide)}</div>
+      </div>
+    `).join('');
+  }
+}
 
 function applyInitialHash() {
   const urlParams = new URLSearchParams(window.location.search);

@@ -2150,3 +2150,593 @@ textarea{min-height:80px;resize:vertical}
     margin-top: 0;
   }
 }
+
+/* ============================================================
+   🌟 5 MÔN HỌC TRỌNG TÂM CỦA CON & KHỐI THU GỌN NỘI DUNG KHÁC
+   ============================================================ */
+.core-subjects-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.core-subj-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 2px solid #e2e8f0;
+  background: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+}
+
+.core-subj-tab:hover {
+  border-color: #c4b5fd;
+  background: #faf5ff;
+  transform: translateY(-2px);
+}
+
+.core-subj-tab.active {
+  border-color: #7c3aed;
+  background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.16);
+}
+
+.core-subj-icon {
+  font-size: 28px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.core-subj-tab.active .core-subj-icon {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.14);
+}
+
+.core-subj-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.core-subj-text b {
+  font-size: 14px;
+  font-weight: 900;
+  color: #1e293b;
+}
+
+.core-subj-text span {
+  font-size: 11.5px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.core-subj-tab.active .core-subj-text b {
+  color: #5b21b6;
+}
+
+.gf-reader-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.gf-story-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.gf-story-pill {
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #334155;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+
+.gf-story-pill:hover {
+  border-color: #a78bfa;
+  background: #f5f3ff;
+}
+
+.gf-story-pill.active {
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.25);
+}
+
+.gf-story-main {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1.5px solid #ede9fe;
+}
+
+.gf-story-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.gf-story-avatar {
+  font-size: 32px;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #f5f3ff;
+  border: 1.5px solid #ddd6fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gf-story-content {
+  font-size: 14.5px;
+  line-height: 1.68;
+  color: #1e293b;
+  margin: 12px 0;
+  text-align: justify;
+}
+
+.gf-lesson-box {
+  background: linear-gradient(135deg, #fefce8, #f0fdf4);
+  border: 1.5px solid #bbf7d0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #065f46;
+}
+
+/* Toán tư duy options */
+.core-math-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.core-math-opt-btn {
+  padding: 11px 14px;
+  border-radius: 14px;
+  border: 1.5px solid #cbd5e1;
+  background: #f8fafc;
+  font-size: 14px;
+  font-weight: 800;
+  color: #1e293b;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.core-math-opt-btn:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+/* Học Đàn Piano */
+.piano-metronome-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #ffffff;
+  border: 1.5px solid #bae6fd;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+.piano-songs-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.piano-song-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Tiếng Trung Pinyin Cards */
+.cn-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.cn-flashcard {
+  background: #ffffff;
+  border: 1.5px solid #ffe4e6;
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cn-hanzi {
+  font-size: 28px;
+  font-weight: 900;
+  color: #be123c;
+  margin-top: 6px;
+}
+
+.cn-pinyin {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0284c7;
+}
+
+.cn-meaning {
+  font-size: 14px;
+  font-weight: 800;
+  color: #059669;
+  margin-bottom: 6px;
+}
+
+.cn-sentence-box {
+  background: #fff1f2;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+/* Khối Thu gọn các nội dung khác */
+.other-study-collapse {
+  margin-top: 22px;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 16px;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.other-study-summary {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  user-select: none;
+  font-size: 13.5px;
+  color: #475569;
+}
+
+.other-study-summary::-webkit-details-marker {
+  display: none;
+}
+
+.other-study-chevron {
+  font-size: 12px;
+  font-weight: 800;
+  color: #6366f1;
+  background: #eef2ff;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.other-study-collapse[open] .other-study-chevron {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.other-study-body {
+  padding: 14px 16px 16px;
+  border-top: 1px dashed #cbd5e1;
+  background: #ffffff;
+}
+
+.today-other-presets-details,
+.study-other-chips-details {
+  margin-top: 8px;
+  width: 100%;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 6px 10px;
+}
+
+.today-other-presets-details summary,
+.study-other-chips-details summary {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.lf-step-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1.5px solid #d1fae5;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   🎁 NÂNG CẤP CỬA HÀNG ĐỔI QUÀ (THIẾT KẾ ĐẸP MẮT, GỌN GÀNG)
+   100 ⭐ = 10.000đ • ĐỔI TIỀN KHÓ HƠN ĐỔI QUÀ (150 ⭐ = 10.000đ)
+   ============================================================ */
+.reward-rate-banner {
+  background: #ecfdf5;
+  border: 1.5px solid #a7f3d0;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #065f46;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.gift-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+.gift-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+.gift-card.can-afford {
+  background: #f0fdf4;
+  border-color: #86efac;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
+}
+
+.gift-card-top {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.gift-emoji {
+  font-size: 30px;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid #f1f5f9;
+}
+.gift-card.can-afford .gift-emoji {
+  background: #dcfce7;
+  border-color: #bbf7d0;
+}
+.gift-content {
+  flex: 1;
+  min-width: 0;
+}
+.gift-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.gift-name {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1.3;
+}
+.gift-cat-chip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #ede9fe;
+  color: #6d28d9;
+}
+.gift-price-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.gift-pts {
+  font-size: 15px;
+  font-weight: 900;
+  color: #f59e0b;
+}
+.gift-vnd-tag {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #059669;
+  background: #dcfce7;
+  padding: 2px 7px;
+  border-radius: 8px;
+  border: 1px solid #bbf7d0;
+}
+.gift-rule {
+  font-size: 11.5px;
+  color: #64748b;
+  margin-top: 3px;
+}
+
+/* Progress bar khích lệ rèn luyện mỗi ngày */
+.gift-progress-wrap {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed #e2e8f0;
+}
+.gift-progress-bar {
+  background: #e2e8f0;
+  height: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.gift-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #8b5cf6, #f59e0b);
+  transition: width 0.3s ease;
+}
+.gift-progress-fill.fill-ready {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+.gift-progress-label {
+  font-size: 11.5px;
+  color: #64748b;
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+.gift-progress-label .ready-text {
+  color: #059669;
+  font-weight: 800;
+}
+
+.gift-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.gift-card-actions .btn-set-goal {
+  flex: 1;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.gift-card-actions .btn-set-goal.active {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+}
+.gift-card-actions .btn-redeem {
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.gift-card-actions .btn-redeem.ready {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+.gift-card-actions .btn-redeem.locked {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: 1px solid #e2e8f0;
+}
+
+/* Thẻ quà gọn gàng trên Tab Hôm nay */
+.today-reward-mini-card {
+  background: #ffffff;
+  border: 1.5px solid #f1f5f9;
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+.today-reward-mini-card.can-afford {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+.today-reward-mini-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.today-reward-mini-title {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1.3;
+}
+.today-reward-mini-btn {
+  border: none;
+  border-radius: 14px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.today-reward-mini-btn.ready {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+.today-reward-mini-btn.locked {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: 1px solid #e2e8f0;
+}
+.gift-progress-track {
+  background: #e2e8f0;
+  height: 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+/* Modal Heo Đất Tiết Kiệm */
+.money-rule-badge {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #92400e;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
