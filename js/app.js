@@ -1801,124 +1801,211 @@ function filterRewards(cat,btn){
   renderRewards();
 }
 
+function scrollToRewardSection(elemId){
+  const el = document.getElementById(elemId);
+  if(el){
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function quickRedeemPiggy(stars, vnd, pkgName){
+  const c = child();
+  if(!c) return alert('Chưa có hồ sơ bé.');
+  if(c.score < stars){
+    document.getElementById('missingPoints').textContent = (stars - c.score).toLocaleString('vi-VN');
+    document.getElementById('encourageModal').classList.add('show');
+    return;
+  }
+  const giftName = 'Tiền Nuôi Heo Đất ' + fmtVND(vnd) + ' (' + pkgName + ')';
+  askConfirm('Nuôi Heo Đất Tiết Kiệm', 'Con chắc chắn muốn đổi ' + stars.toLocaleString('vi-VN') + ' ⭐ lấy ' + fmtVND(vnd) + ' tiền mặt bỏ ống heo tiết kiệm?', () => {
+    if(!Array.isArray(c.giftHistory)) c.giftHistory = [];
+    if(!Array.isArray(c.pointHistory)) c.pointHistory = [];
+    c.giftHistory.push({
+      id: uid('g'),
+      rewardId: 'piggy_' + stars,
+      name: giftName,
+      cost: stars,
+      status: 'pending',
+      receivedAt: new Date().toISOString()
+    });
+    c.score -= stars;
+    logPoint(c, 'reward', -stars, 'Nuôi Heo Đất: ' + giftName);
+    save();
+    render();
+    playChime('success');
+    triggerConfetti();
+    document.getElementById('successGiftName').textContent = giftName;
+    document.getElementById('successGiftPoints').textContent = stars.toLocaleString('vi-VN');
+    document.getElementById('rewardSuccessModal').classList.add('show');
+  }, { yesText: 'Có, bỏ heo tiết kiệm', icon: '🐷' });
+}
+
 function renderRewards(){
-  const c=child();
-  const nameChildEl=document.getElementById('rewardNameChild');
-  if(nameChildEl) nameChildEl.textContent=c?(childIcon(c)+' '+c.name):'bé';
-  const scoreEl=document.getElementById('rewardCurrentScore');
-  if(scoreEl) scoreEl.textContent=c?(c.score+' ⭐'):'0 ⭐';
+  const c = child();
+  const curScore = c ? Number(c.score || 0) : 0;
+  const curVnd = starsToVND(curScore);
 
-  const boxToday=document.getElementById('rewardShopToday');
-  const boxMain=document.getElementById('rewardShopStandalone');
-  if(boxToday) boxToday.innerHTML='';
-  if(boxMain) boxMain.innerHTML='';
+  // Cập nhật Header Ví MoMo
+  const nameEl = document.getElementById('rewardNameChild');
+  if(nameEl) nameEl.textContent = c ? (childIcon(c) + ' ' + c.name) : 'bé';
+  const scoreEl = document.getElementById('rewardCurrentScore');
+  if(scoreEl) scoreEl.textContent = curScore.toLocaleString('vi-VN') + ' ⭐';
+  const vndEquivEl = document.getElementById('momoVndEquiv');
+  if(vndEquivEl) vndEquivEl.textContent = '≈ ' + fmtVND(curVnd);
 
-  const rewards=currentRewards();
+  // Cập nhật trạng thái các nút Heo Đất nhanh
+  [150, 300, 750, 1500].forEach(st => {
+    const btn = document.getElementById('piggyBtn' + st);
+    if(btn){
+      if(curScore >= st){
+        btn.textContent = 'Đổi ngay 🐷';
+        btn.style.background = '#10b981';
+      } else {
+        btn.textContent = 'Thiếu ' + (st - curScore) + ' ⭐';
+        btn.style.background = '#e2e8f0';
+        btn.style.color = '#64748b';
+      }
+    }
+  });
+
+  const boxToday = document.getElementById('rewardShopToday');
+  const boxMain = document.getElementById('rewardShopStandalone');
+  if(boxToday) boxToday.innerHTML = '';
+  if(boxMain) boxMain.innerHTML = '';
+
+  const rewards = currentRewards();
   if(!rewards.length){
-    const e=document.createElement('div');e.className='empty';e.textContent='Chưa có phần quà nào được thiết lập cho bé.';
-    if(boxToday) boxToday.appendChild(e.cloneNode(true));
-    if(boxMain) boxMain.appendChild(e);
+    if(boxMain) boxMain.innerHTML = '<div class="empty">Chưa có phần quà nào được thiết lập cho bé.</div>';
     renderPendingGifts();
     return;
   }
 
-  const curScore = c ? Number(c.score || 0) : 0;
-
-  // 1. Render trên Tab Hôm nay (Gọn gàng, thanh tiến độ khích lệ)
+  // 1. Render trên Tab Hôm nay (Lưới MoMo Mini: Icon trên, chữ nhỏ dưới)
   if(boxToday){
-    // Ưu tiên hiển thị các món bé sắp đủ đổi hoặc đã đủ đổi
-    const sorted = [...rewards].sort((a,b)=>{
+    const sorted = [...rewards].sort((a,b) => {
       const aAfford = curScore >= a.cost ? 0 : 1;
       const bAfford = curScore >= b.cost ? 0 : 1;
       if(aAfford !== bAfford) return aAfford - bAfford;
       return a.cost - b.cost;
     });
 
-    sorted.slice(0, 4).forEach(r=>{
+    const grid = document.createElement('div');
+    grid.className = 'momo-gifts-grid';
+    grid.style.marginTop = '4px';
+
+    sorted.slice(0, 4).forEach(r => {
       const canAfford = (curScore >= r.cost);
       const pct = Math.min(100, Math.round((curScore / r.cost) * 100));
       const diff = Math.max(0, r.cost - curScore);
       const vndVal = fmtVND(starsToVND(r.cost));
 
-      const card = document.createElement('div');
-      card.className = 'today-reward-mini-card ' + (canAfford ? 'can-afford' : '');
-      card.innerHTML = `
-        <div class="today-reward-mini-top">
-          <span style="font-size:24px">${r.icon || '🎁'}</span>
-          <div style="flex:1;min-width:0">
-            <div class="today-reward-mini-title">${safe(r.name)}</div>
-            <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
-              <span style="font-weight:900;color:#f59e0b;font-size:13px">${r.cost} ⭐</span>
-              <span class="gift-vnd-tag">${vndVal}</span>
-            </div>
-          </div>
-          <button type="button" class="today-reward-mini-btn ${canAfford ? 'ready' : 'locked'}" onclick="redeemById('${r.id}')">
-            ${canAfford ? 'Đổi 🎁' : 'Thiếu ' + diff + '⭐'}
+      const item = document.createElement('div');
+      item.className = 'momo-gift-item ' + (canAfford ? 'can-afford' : '');
+      item.innerHTML = `
+        <div class="momo-gift-icon-bubble">${r.icon || '🎁'}</div>
+        <div class="momo-gift-title">${safe(r.name)}</div>
+        <div class="momo-gift-price-row">
+          <span class="momo-gift-pts">${r.cost} ⭐</span>
+          <span class="momo-gift-vnd">${vndVal}</span>
+        </div>
+        <div class="momo-gift-progress-track">
+          <div class="momo-gift-progress-fill ${canAfford ? 'ready' : ''}" style="width:${pct}%"></div>
+        </div>
+        <div class="momo-gift-progress-text">${canAfford ? '🎉 Đủ đổi ngay!' : 'Thiếu ' + diff + ' ⭐'}</div>
+        <div class="momo-gift-actions">
+          <button type="button" class="momo-gift-btn ${canAfford ? 'redeem-ready' : 'redeem-locked'}" onclick="redeemById('${r.id}')">
+            ${canAfford ? 'Đổi quà 🎁' : 'Xem quà'}
           </button>
         </div>
-        <div class="gift-progress-track">
-          <div class="gift-progress-fill ${canAfford ? 'fill-ready' : ''}" style="width:${pct}%"></div>
-        </div>
       `;
-      boxToday.appendChild(card);
+      grid.appendChild(item);
     });
+    boxToday.appendChild(grid);
   }
 
-  // 2. Render trên Trang Đổi quà chính (Đẹp mắt, thanh tiến độ khích lệ rèn luyện mỗi ngày)
+  // 2. Render trên Trang Đổi quà chính (Chia các khối MoMo Sections: Icon trên, chữ nhỏ dưới)
   if(boxMain){
-    const filtered = (selectedRewardCategory === 'all') ? rewards : rewards.filter(r => r.category === selectedRewardCategory);
-    if(!filtered.length){
-      boxMain.innerHTML = '<div class="empty">Không có món quà nào trong nhóm này. Bố mẹ có thể thêm phần quà mới ở khu vực Phụ huynh!</div>';
-    } else {
-      filtered.forEach(r => {
+    const CATEGORIES = [
+      { key: 'Đồ dùng học tập', icon: '✏️', title: 'Đồ Dùng Học Tập (Ưu Tiên Số 1)', desc: 'Dụng cụ học tập, tập vở, sách truyện rèn luyện tri thức' },
+      { key: 'Bánh & Món ngon', icon: '🍪', title: 'Bánh & Món Ngon Ấm Bụng', desc: 'Món ngon ăn xế, sữa hạt ấm (Tuyệt đối không dùng đồ lạnh)' },
+      { key: 'Quà & Đồ chơi', icon: '🎁', title: 'Quà & Đồ Chơi Sáng Tạo', desc: 'Đất nặn, Lego mini, sticker, gấu bông & quà ước mơ' },
+      { key: 'Đi chơi & Dã ngoại', icon: '🎡', title: 'Đi Chơi & Dã Ngoại Cuối Tuần', desc: 'Công viên, nhà sách Fahasa, tiNiWorld & dã ngoại gia đình' }
+    ];
+
+    CATEGORIES.forEach(cat => {
+      if(selectedRewardCategory !== 'all' && selectedRewardCategory !== cat.key && selectedRewardCategory !== 'Nuôi Heo Đất') return;
+      if(selectedRewardCategory === 'Nuôi Heo Đất') return; // Sẽ hiển thị ở khối Heo Đất phía dưới
+
+      const catRewards = rewards.filter(r => r.category === cat.key);
+      if(!catRewards.length) return;
+
+      const block = document.createElement('div');
+      block.className = 'momo-section-card';
+
+      // Header khối
+      const head = document.createElement('div');
+      head.className = 'momo-section-head';
+      head.innerHTML = `
+        <div class="momo-section-title-wrap">
+          <span class="momo-section-icon">${cat.icon}</span>
+          <div>
+            <div class="momo-section-title">${cat.title}</div>
+            <div class="momo-section-desc">${cat.desc}</div>
+          </div>
+        </div>
+        <span class="momo-section-badge">${catRewards.length} món</span>
+      `;
+      block.appendChild(head);
+
+      // Grid các món quà (Icon lớn ở trên, chữ nhỏ ở dưới)
+      const grid = document.createElement('div');
+      grid.className = 'momo-gifts-grid';
+
+      catRewards.forEach(r => {
         const isTarget = c && c.targetRewardId === r.id;
         const canAfford = (curScore >= r.cost);
         const pct = Math.min(100, Math.round((curScore / r.cost) * 100));
         const diff = Math.max(0, r.cost - curScore);
         const vndVal = fmtVND(starsToVND(r.cost));
 
-        const card = document.createElement('div');
-        card.className = 'gift-card ' + (canAfford ? 'can-afford' : '');
-        card.innerHTML = `
-          <div class="gift-card-top">
-            <div class="gift-emoji">${r.icon || '🎁'}</div>
-            <div class="gift-content">
-              <div class="gift-title-row">
-                <b class="gift-name">${safe(r.name)}</b>
-                <span class="gift-cat-chip">${safe(r.category || 'Quà')}</span>
-              </div>
-              <div class="gift-price-row">
-                <span class="gift-pts">${r.cost} ⭐</span>
-                <span class="gift-vnd-tag">~ ${vndVal}</span>
-              </div>
-              ${r.rule ? `<div class="gift-rule">${safe(r.rule)}</div>` : ''}
-            </div>
+        const item = document.createElement('div');
+        item.className = 'momo-gift-item ' + (canAfford ? 'can-afford' : '');
+        item.innerHTML = `
+          <div class="momo-gift-icon-bubble">${r.icon || '🎁'}</div>
+          <div class="momo-gift-title">${safe(r.name)}</div>
+          <div class="momo-gift-price-row">
+            <span class="momo-gift-pts">${r.cost} ⭐</span>
+            <span class="momo-gift-vnd">${vndVal}</span>
           </div>
-
-          <!-- Thanh tiến độ khích lệ rèn luyện mỗi ngày -->
-          <div class="gift-progress-wrap">
-            <div class="gift-progress-bar">
-              <div class="gift-progress-fill ${canAfford ? 'fill-ready' : ''}" style="width: ${pct}%"></div>
-            </div>
-            <div class="gift-progress-label">
-              ${canAfford
-                ? '<span class="ready-text">🎉 Đã đủ sao để đổi ngay!</span>'
-                : `<span>Đã đạt <b>${pct}%</b> • Còn thiếu <b>${diff} ⭐</b> (Cố gắng tập luyện nhé con! 💪)</span>`
-              }
-            </div>
+          <div class="momo-gift-progress-track">
+            <div class="momo-gift-progress-fill ${canAfford ? 'ready' : ''}" style="width:${pct}%"></div>
           </div>
-
-          <div class="gift-card-actions">
-            <button class="btn-set-goal ${isTarget ? 'active' : ''}" onclick="setTargetGoal('${r.id}')">
-              ${isTarget ? '🎯 Mục tiêu đang chọn' : '🎯 Đặt mục tiêu'}
+          <div class="momo-gift-progress-text">${canAfford ? '🎉 Đã đủ sao để đổi!' : 'Đã đạt ' + pct + '% (Thiếu ' + diff + ' ⭐)'}</div>
+          <div class="momo-gift-actions">
+            <button type="button" class="momo-gift-btn goal-btn ${isTarget ? 'active' : ''}" onclick="setTargetGoal('${r.id}')" title="${isTarget ? 'Đang là mục tiêu' : 'Đặt làm mục tiêu'}">
+              🎯
             </button>
-            <button class="btn-redeem ${canAfford ? 'ready' : 'locked'}" onclick="redeemById('${r.id}')">
-              ${canAfford ? 'Đổi quà ngay 🎁' : 'Thiếu ' + diff + ' ⭐'}
+            <button type="button" class="momo-gift-btn ${canAfford ? 'redeem-ready' : 'redeem-locked'}" onclick="redeemById('${r.id}')">
+              ${canAfford ? 'Đổi quà 🎁' : 'Thiếu ' + diff + ' ⭐'}
             </button>
           </div>
         `;
-        boxMain.appendChild(card);
+        grid.appendChild(item);
       });
+
+      block.appendChild(grid);
+      boxMain.appendChild(block);
+    });
+
+    // Ẩn/Hiện khối Heo Đất theo bộ lọc
+    const piggyBlock = document.getElementById('momoPiggySectionBlock');
+    if(piggyBlock){
+      if(selectedRewardCategory === 'all' || selectedRewardCategory === 'Nuôi Heo Đất'){
+        piggyBlock.style.display = 'block';
+      } else {
+        piggyBlock.style.display = 'none';
+      }
     }
   }
 

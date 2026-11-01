@@ -695,71 +695,148 @@
       </div>
     </section>
 
-    <!-- 5. MÀN HÌNH ĐỔI QUÀ (CƠ CHẾ ĐỔI ĐIỂM LINH HOẠT) -->
+    <!-- 5. MÀN HÌNH ĐỔI QUÀ (THIẾT KẾ PHONG CÁCH VÍ MOMO - ICON & CHỮ NHỎ BÊN DƯỚI) -->
     <section id="rewardsSection" class="app-section">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:14px">
-          <div>
-            <h2 style="margin:0">🎁 Cửa hàng đổi quà & Quy đổi sao</h2>
-            <p class="note" style="margin:4px 0 0">Đổi điểm tích lũy của <b id="rewardNameChild">bé</b> thành phần quà mong ước hoặc tiền thưởng</p>
+      <!-- 🪙 1. THẺ VÍ SAO MOMO (WALLET CARD) -->
+      <div class="momo-wallet-card">
+        <div class="momo-wallet-header">
+          <div class="momo-wallet-brand">
+            <span class="momo-brand-badge">🪙 VÍ SAO THÔNG MINH</span>
+            <span class="momo-child-name" id="rewardNameChild">Bảo Nhi</span>
           </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="note">Điểm của con:</span>
-            <span class="big" style="font-size:28px" id="rewardCurrentScore">0 ⭐</span>
+          <div class="momo-rate-tag">
+            <span>💡 100 ⭐ = 10.000 đ</span>
           </div>
         </div>
 
-        <!-- Thanh công cụ đổi linh hoạt -->
-        <div class="rewards-action-bar">
-          <button class="reward-action-btn" onclick="openCustomRewardModal()">
-            <span class="reward-action-icon">⚡</span>
-            <div>
-              <div class="reward-action-title">Đổi quà theo thỏa thuận</div>
-              <div class="reward-action-sub">Tự do đổi việc/quà bất kỳ giữa con &amp; bố mẹ</div>
-            </div>
+        <div class="momo-balance-box">
+          <div class="momo-balance-label">SỐ DƯ SAO HIỆN CÓ CỦA BÉ</div>
+          <div class="momo-balance-row">
+            <div class="momo-stars-num" id="rewardCurrentScore">0 ⭐</div>
+            <div class="momo-vnd-equiv" id="momoVndEquiv">≈ 0 đ</div>
+          </div>
+          <div class="momo-calc-hint">✨ Cực dễ tính: Bé chỉ cần thêm 2 số 0 vào số sao là ra số tiền mặt! (100 ⭐ = 10.000đ)</div>
+        </div>
+
+        <!-- 4 Nút tính năng nhanh phong cách MoMo (Icon tròn ở trên, chữ nhỏ ở dưới) -->
+        <div class="momo-quick-actions-grid">
+          <button type="button" class="momo-quick-btn" onclick="openFlexibleMoneyModal()">
+            <div class="momo-quick-icon-circle pig">🐷</div>
+            <span class="momo-quick-text">Nuôi Heo Đất</span>
           </button>
-          <button class="reward-action-btn" onclick="openFlexibleMoneyModal()">
-            <span class="reward-action-icon">💰</span>
-            <div>
-              <div class="reward-action-title">Đổi sao ra tiền mặt linh hoạt</div>
-              <div class="reward-action-sub">Tự chọn số sao muốn đổi (20, 50, 100...)</div>
-            </div>
+          <button type="button" class="momo-quick-btn" onclick="scrollToRewardSection('momoTargetGoalBlock')">
+            <div class="momo-quick-icon-circle target">🎯</div>
+            <span class="momo-quick-text">Mục Tiêu</span>
+          </button>
+          <button type="button" class="momo-quick-btn" onclick="openCustomRewardModal()">
+            <div class="momo-quick-icon-circle barter">⚡</div>
+            <span class="momo-quick-text">Thỏa Thuận</span>
+          </button>
+          <button type="button" class="momo-quick-btn" onclick="scrollToRewardSection('pendingGiftsContainer')">
+            <div class="momo-quick-icon-circle history">⏳</div>
+            <span class="momo-quick-text">Quà Chờ Trao</span>
           </button>
         </div>
+      </div>
 
-        <!-- Khối mục tiêu phấn đấu của bé -->
-        <div id="rewardsTargetGoalCard" style="display:none"></div>
+      <!-- 🎯 KHỐI MỤC TIÊU PHẤN ĐẤU (HIỂN THỊ NẾU CÓ) -->
+      <div id="rewardsTargetGoalCard" style="display:none"></div>
 
-        <!-- Bộ lọc danh mục quà -->
-        <!-- Banner tỷ giá quy đổi 100đ = 10.000đ & Đổi tiền khó hơn đổi quà -->
-        <div class="reward-rate-banner">
-          <span>💡 <b>Tỷ giá chuẩn:</b> 100 ⭐ = 10.000đ (Ưu tiên đồ dùng học tập, sách truyện &amp; dã ngoại). <b>Đổi tiền mặt nuôi heo đất:</b> 150 ⭐ = 10.000đ (khó hơn để rèn luyện kiên nhẫn).</span>
-        </div>
+      <!-- 🏷️ BỘ LỌC DANH MỤC QUÀ PHONG CÁCH MOMO -->
+      <div class="momo-filter-bar" id="rewardFilterBar">
+        <button type="button" class="momo-filter-pill active" onclick="filterRewards('all',this)">
+          <span>🌟</span> <span>Tất cả</span>
+        </button>
+        <button type="button" class="momo-filter-pill" onclick="filterRewards('Đồ dùng học tập',this)">
+          <span>✏️</span> <span>Học tập</span>
+        </button>
+        <button type="button" class="momo-filter-pill" onclick="filterRewards('Bánh & Món ngon',this)">
+          <span>🍪</span> <span>Bánh ngon</span>
+        </button>
+        <button type="button" class="momo-filter-pill" onclick="filterRewards('Quà & Đồ chơi',this)">
+          <span>🎁</span> <span>Đồ chơi</span>
+        </button>
+        <button type="button" class="momo-filter-pill" onclick="filterRewards('Đi chơi & Dã ngoại',this)">
+          <span>🎡</span> <span>Đi chơi</span>
+        </button>
+        <button type="button" class="momo-filter-pill" onclick="filterRewards('Nuôi Heo Đất',this)">
+          <span>🐷</span> <span>Đổi tiền heo</span>
+        </button>
+      </div>
 
-        <!-- Bộ lọc danh mục quà chuẩn -->
-        <div class="rewards-filter-bar" id="rewardFilterBar">
-          <button type="button" class="rewards-filter-btn active" onclick="filterRewards('all',this)">🌟 Tất cả quà</button>
-          <button type="button" class="rewards-filter-btn" onclick="filterRewards('Đồ dùng học tập',this)">✏️ Đồ dùng học tập</button>
-          <button type="button" class="rewards-filter-btn" onclick="filterRewards('Bánh &amp; Món ngon',this)">🍪 Bánh &amp; Món ngon</button>
-          <button type="button" class="rewards-filter-btn" onclick="filterRewards('Quà &amp; Đồ chơi',this)">🎁 Quà &amp; Đồ chơi</button>
-          <button type="button" class="rewards-filter-btn" onclick="filterRewards('Đi chơi &amp; Dã ngoại',this)">🎡 Đi chơi &amp; Dã ngoại</button>
-        </div>
+      <!-- 📦 KHU VỰC CÁC KHỐI QUÀ TẶNG (MOMO BLOCKS) -->
+      <div id="rewardShopStandalone"></div>
 
-        <!-- Danh sách phần quà -->
-        <div id="rewardShopStandalone"></div>
-
-        <!-- Danh sách quà đang chờ bố mẹ trao (Pending fulfillment) -->
-        <div id="pendingGiftsContainer" style="display:none">
-          <div class="pending-gifts-box">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-              <div style="font-weight:900;color:#92400e;display:flex;align-items:center;gap:6px">
-                <span>⏳</span>
-                <span>Quà con đã đổi — Chờ bố mẹ thực hiện:</span>
-              </div>
-              <span class="note" style="color:#b45309">Bố mẹ bấm để đánh dấu đã trao</span>
+      <!-- 🐷 KHỐI ĐỔI TIỀN MẶT NUÔI HEO ĐẤT (ĐỔI TIỀN KHÓ HƠN ĐỔI QUÀ) -->
+      <div class="momo-section-card piggy-block" id="momoPiggySectionBlock">
+        <div class="momo-section-head">
+          <div class="momo-section-title-wrap">
+            <span class="momo-section-icon">🐷💵</span>
+            <div>
+              <div class="momo-section-title">Nuôi Heo Đất Tiết Kiệm (Đổi Tiền Mặt)</div>
+              <div class="momo-section-desc">Đổi sao thành tiền mặt để con bỏ ống heo tiết kiệm</div>
             </div>
-            <div id="pendingGiftsList"></div>
           </div>
+          <span class="momo-piggy-badge">⚖️ Đổi tiền khó hơn đổi quà</span>
+        </div>
+
+        <div class="momo-piggy-rule-banner">
+          <span>💡 <b>Quy tắc rèn luyện:</b> Đổi tiền mặt cần <b>150 ⭐ = 10.000đ</b> (khó hơn đổi quà 100 ⭐ = 10.000đ) để rèn luyện tính kiên nhẫn, không tiêu xài lãng phí và chỉ dành để bỏ ống heo tiết kiệm!</span>
+        </div>
+
+        <!-- 4 Gói nạp heo đất 1 chạm MoMo style (Icon trên, chữ nhỏ dưới) -->
+        <div class="momo-piggy-packages-grid">
+          <div class="momo-piggy-pkg-card" onclick="quickRedeemPiggy(150, 10000, 'Heo Con Tiết Kiệm')">
+            <div class="momo-pkg-icon">🐷</div>
+            <div class="momo-pkg-vnd">10.000 đ</div>
+            <div class="momo-pkg-stars">150 ⭐</div>
+            <div class="momo-pkg-sub">Gói Heo Con</div>
+            <button type="button" class="momo-pkg-btn" id="piggyBtn150">Đổi ngay</button>
+          </div>
+
+          <div class="momo-piggy-pkg-card" onclick="quickRedeemPiggy(300, 20000, 'Ống Vàng Tiết Kiệm')">
+            <div class="momo-pkg-icon">🏺</div>
+            <div class="momo-pkg-vnd">20.000 đ</div>
+            <div class="momo-pkg-stars">300 ⭐</div>
+            <div class="momo-pkg-sub">Gói Ống Vàng</div>
+            <button type="button" class="momo-pkg-btn" id="piggyBtn300">Đổi ngay</button>
+          </div>
+
+          <div class="momo-piggy-pkg-card" onclick="quickRedeemPiggy(750, 50000, 'Heo Đất Siêng Năng')">
+            <div class="momo-pkg-icon">🐖</div>
+            <div class="momo-pkg-vnd">50.000 đ</div>
+            <div class="momo-pkg-stars">750 ⭐</div>
+            <div class="momo-pkg-sub">Heo Siêng Năng</div>
+            <button type="button" class="momo-pkg-btn" id="piggyBtn750">Đổi ngay</button>
+          </div>
+
+          <div class="momo-piggy-pkg-card" onclick="quickRedeemPiggy(1500, 100000, 'Quỹ Học Bổng Bé Ngoan')">
+            <div class="momo-pkg-icon">🏆</div>
+            <div class="momo-pkg-vnd">100.000 đ</div>
+            <div class="momo-pkg-stars">1.500 ⭐</div>
+            <div class="momo-pkg-sub">Quỹ Học Bổng</div>
+            <button type="button" class="momo-pkg-btn" id="piggyBtn1500">Đổi ngay</button>
+          </div>
+        </div>
+
+        <div style="text-align:center;margin-top:12px">
+          <button type="button" class="secondary" style="padding:8px 16px;font-size:12.5px" onclick="openFlexibleMoneyModal()">
+            ⚙️ Tự nhập số sao khác để đổi tiền...
+          </button>
+        </div>
+      </div>
+
+      <!-- ⏳ DANH SÁCH QUÀ CHỜ BỐ MẸ TRAO (PENDING GIFTS) -->
+      <div id="pendingGiftsContainer" style="display:none;margin-top:16px">
+        <div class="pending-gifts-box">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-weight:900;color:#92400e;display:flex;align-items:center;gap:6px">
+              <span style="font-size:20px">⏳</span>
+              <span>Quà con đã đổi — Chờ bố mẹ trao:</span>
+            </div>
+            <span class="note" style="color:#b45309">Bố mẹ bấm để xác nhận đã trao</span>
+          </div>
+          <div id="pendingGiftsList"></div>
         </div>
       </div>
     </section>

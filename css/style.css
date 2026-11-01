@@ -2740,3 +2740,441 @@ textarea{min-height:80px;resize:vertical}
   line-height: 1.4;
   margin-bottom: 8px;
 }
+
+/* ============================================================
+   🌟 THIẾT KẾ ĐỔI QUÀ PHONG CÁCH VÍ MOMO (FINTECH CHO BÉ)
+   ICON VÀ CHỮ NHỎ BÊN DƯỚI • CHIA CÁC KHỐI THAO TÁC TIỆN LỢI
+   ============================================================ */
+
+/* 1. Thẻ ví MoMo Header */
+.momo-wallet-card {
+  background: linear-gradient(135deg, #a50064 0%, #d82d8b 55%, #7c3aed 100%);
+  border-radius: 22px;
+  padding: 16px 18px;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(216, 45, 139, 0.22);
+  margin-bottom: 14px;
+}
+.momo-wallet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.momo-wallet-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.momo-brand-badge {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  background: rgba(255, 255, 255, 0.22);
+  padding: 3px 8px;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+}
+.momo-child-name {
+  font-size: 13px;
+  font-weight: 800;
+  opacity: 0.95;
+}
+.momo-rate-tag {
+  font-size: 11.5px;
+  font-weight: 800;
+  background: #fef08a;
+  color: #854d0e;
+  padding: 3px 9px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.momo-balance-box {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 12px 14px;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  margin-bottom: 14px;
+}
+.momo-balance-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  opacity: 0.85;
+  margin-bottom: 2px;
+}
+.momo-balance-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.momo-stars-num {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.1;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.momo-vnd-equiv {
+  font-size: 18px;
+  font-weight: 800;
+  color: #a7f3d0;
+  background: rgba(6, 78, 59, 0.4);
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+.momo-calc-hint {
+  font-size: 11.5px;
+  margin-top: 6px;
+  opacity: 0.9;
+  font-weight: 600;
+}
+
+/* 2. Thanh 4 nút tính năng MoMo (Icon tròn ở trên, chữ nhỏ ở dưới) */
+.momo-quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 12px 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.momo-quick-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  transition: transform 0.15s;
+}
+.momo-quick-btn:active {
+  transform: scale(0.92);
+}
+.momo-quick-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s;
+}
+.momo-quick-icon-circle.pig {
+  background: #fdf2f8;
+  border: 1.5px solid #fbcfe8;
+}
+.momo-quick-icon-circle.target {
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+}
+.momo-quick-icon-circle.barter {
+  background: #fefce8;
+  border: 1.5px solid #fef08a;
+}
+.momo-quick-icon-circle.history {
+  background: #fff7ed;
+  border: 1.5px solid #fed7aa;
+}
+.momo-quick-text {
+  font-size: 11px;
+  font-weight: 800;
+  color: #334155;
+  white-space: nowrap;
+}
+
+/* 3. Thanh lọc danh mục dạng Pill MoMo */
+.momo-filter-bar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 2px 12px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.momo-filter-bar::-webkit-scrollbar {
+  display: none;
+}
+.momo-filter-pill {
+  border: 1.5px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 6px 13px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.momo-filter-pill.active {
+  background: #a50064;
+  color: #ffffff;
+  border-color: #a50064;
+  box-shadow: 0 2px 8px rgba(165, 0, 100, 0.28);
+}
+
+/* 4. Khối danh mục MoMo (Section Blocks) */
+.momo-section-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1.5px solid #e2e8f0;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+.momo-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.momo-section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.momo-section-icon {
+  font-size: 24px;
+}
+.momo-section-title {
+  font-size: 15px;
+  font-weight: 900;
+  color: #1e293b;
+}
+.momo-section-desc {
+  font-size: 11.5px;
+  color: #64748b;
+  margin-top: 1px;
+}
+.momo-section-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+/* 5. Lưới quà MoMo Style: Icon ở trên, chữ nhỏ ở dưới */
+.momo-gifts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media(min-width: 640px) {
+  .momo-gifts-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.momo-gift-item {
+  background: #f8fafc;
+  border: 1.5px solid #f1f5f9;
+  border-radius: 16px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.2s;
+  position: relative;
+}
+.momo-gift-item.can-afford {
+  background: #f0fdf4;
+  border-color: #86efac;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.1);
+}
+.momo-gift-icon-bubble {
+  font-size: 32px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  margin-bottom: 8px;
+}
+.momo-gift-title {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1.3;
+  min-height: 32px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.momo-gift-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.momo-gift-pts {
+  font-size: 13.5px;
+  font-weight: 900;
+  color: #f59e0b;
+}
+.momo-gift-vnd {
+  font-size: 11px;
+  font-weight: 800;
+  color: #059669;
+  background: #dcfce7;
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+.momo-gift-progress-track {
+  width: 100%;
+  background: #e2e8f0;
+  height: 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.momo-gift-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #8b5cf6, #f59e0b);
+}
+.momo-gift-progress-fill.ready {
+  background: #10b981;
+}
+.momo-gift-progress-text {
+  font-size: 10px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+.momo-gift-actions {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  margin-top: auto;
+}
+.momo-gift-btn {
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  padding: 6px 8px;
+  font-size: 11.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.momo-gift-btn.redeem-ready {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+.momo-gift-btn.redeem-locked {
+  background: #e2e8f0;
+  color: #64748b;
+}
+.momo-gift-btn.goal-btn {
+  width: 32px;
+  flex: 0 0 32px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+}
+.momo-gift-btn.goal-btn.active {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+}
+
+/* 6. Khối Nuôi Heo Đất Tiết Kiệm (Piggy Block) */
+.momo-piggy-badge {
+  font-size: 11px;
+  font-weight: 800;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+.momo-piggy-rule-banner {
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #92400e;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+.momo-piggy-packages-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media(min-width: 640px) {
+  .momo-piggy-packages-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.momo-piggy-pkg-card {
+  background: linear-gradient(135deg, #fdf4ff 0%, #fff1f2 100%);
+  border: 1.5px solid #fbcfe8;
+  border-radius: 16px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.momo-piggy-pkg-card:active {
+  transform: scale(0.96);
+}
+.momo-pkg-icon {
+  font-size: 28px;
+  margin-bottom: 4px;
+}
+.momo-pkg-vnd {
+  font-size: 15px;
+  font-weight: 900;
+  color: #a50064;
+}
+.momo-pkg-stars {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #f59e0b;
+}
+.momo-pkg-sub {
+  font-size: 10.5px;
+  color: #64748b;
+  margin: 2px 0 8px;
+}
+.momo-pkg-btn {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 6px 8px;
+  font-size: 11.5px;
+  font-weight: 800;
+  background: #a50064;
+  color: #ffffff;
+  cursor: pointer;
+}
