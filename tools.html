@@ -61,6 +61,10 @@
             <h2 style="margin:0;font-size:21px">💡 Góc Học Tập Riêng Của <span id="studyHubChildName">Con</span></h2>
           </div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="primary" style="padding:8px 14px;font-size:13px;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#10b981,#059669)" onclick="switchCoreStudyTab('study_games')">
+              <span>🎮</span>
+              <span>Game Ôn Tập (Bong bóng, Bắn cung)</span>
+            </button>
             <button class="primary" style="padding:8px 14px;font-size:13px;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#ea580c,#f59e0b)" onclick="showSection('flashcards')">
               <span>🦊</span>
               <span>Bộ thẻ Tiếng Anh Little Fox (Level 1–4)</span>
@@ -107,6 +111,13 @@
             <div class="core-subj-text">
               <b>Tiếng Trung</b>
               <span>Thẻ Pinyin &amp; Phát âm</span>
+            </div>
+          </button>
+          <button type="button" class="core-subj-tab" data-core-tab="study_games" onclick="switchCoreStudyTab('study_games')">
+            <span class="core-subj-icon">🎮</span>
+            <div class="core-subj-text">
+              <b>Game Ôn Tập</b>
+              <span>Bong bóng, Bắn cung, Thả câu</span>
             </div>
           </button>
         </div>
@@ -1295,6 +1306,7 @@
 
 <script src="js/app.js" defer></script>
 <script src="js/sync.js" defer></script>
+<script src="js/games.js" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

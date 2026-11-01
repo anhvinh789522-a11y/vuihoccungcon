@@ -5108,6 +5108,15 @@ function renderCoreInteractiveHub(){
         <div class="cn-cards-grid">${cardsHtml}</div>
       </div>
     `;
+    return;
+  }
+
+  if(activeCoreStudyTab === 'study_games'){
+    box.innerHTML = '<div id="gameArenaContainer"></div>';
+    if(window.EduGames && typeof window.EduGames.mountToContainer === 'function'){
+      window.EduGames.mountToContainer('gameArenaContainer');
+    }
+    return;
   }
 }
 
@@ -5568,6 +5577,10 @@ function applyInitialHash() {
   const tabParam = urlParams.get('tab');
   if (tabParam && typeof switchTimetableTab === 'function') {
     switchTimetableTab(tabParam);
+  }
+  const coreTabParam = urlParams.get('coreTab');
+  if (coreTabParam && typeof switchCoreStudyTab === 'function') {
+    switchCoreStudyTab(coreTabParam);
   }
 }
 applyInitialHash();

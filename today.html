@@ -98,6 +98,33 @@
       <!-- 🐷 WIDGET CHĂM HEO ĐẤT MỖI NGÀY BẰNG SAO & CẢNH BÁO ĐÓI -->
       <div id="todayPiggyWidget" style="margin-bottom:12px"></div>
 
+      <!-- 🎮 CARD TRUY CẬP NHANH GAME ÔN TẬP TIẾNG ANH & TIẾNG TRUNG -->
+      <div class="quick-game-launcher-card" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:32px">🎮🎈</span>
+          <div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <b style="font-size:15px;color:#065f46">Game Ôn Tập Vui Nhộn</b>
+              <span class="quick-game-badge">+15 ⭐</span>
+            </div>
+            <div style="font-size:12px;color:#047857;margin-top:2px">
+              Chọn bong bóng, Bắn cung, Thả câu ôn từ vựng Tiếng Anh &amp; Tiếng Trung!
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button type="button" class="primary" style="padding:7px 12px;font-size:12px;background:linear-gradient(135deg,#10b981,#059669)" onclick="if(window.EduGames) window.EduGames.openModal('bubble'); else window.location.href='tools.html?coreTab=study_games';">
+            🎈 Bong Bóng
+          </button>
+          <button type="button" class="primary" style="padding:7px 12px;font-size:12px;background:linear-gradient(135deg,#0284c7,#0369a1)" onclick="if(window.EduGames) window.EduGames.openModal('archery'); else window.location.href='tools.html?coreTab=study_games';">
+            🏹 Bắn Cung
+          </button>
+          <button type="button" class="primary" style="padding:7px 12px;font-size:12px;background:linear-gradient(135deg,#f59e0b,#d97706)" onclick="if(window.EduGames) window.EduGames.openModal('fishing'); else window.location.href='tools.html?coreTab=study_games';">
+            🎣 Thả Câu
+          </button>
+        </div>
+      </div>
+
       <!-- 🏷️ THANH LỌC 3 NHÓM (HỌC Ở NHÀ - TRÊN LỚP - PHỤ BỐ MẸ) -->
       <div class="today-cat-filter-bar" id="todayCatFilterBar">
         <button type="button" class="today-cat-pill active" onclick="setTodayCategoryFilter('all')">
@@ -1021,6 +1048,7 @@
 
 <script src="js/app.js" defer></script>
 <script src="js/sync.js" defer></script>
+<script src="js/games.js" defer></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

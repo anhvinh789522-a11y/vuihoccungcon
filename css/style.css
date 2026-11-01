@@ -1,3 +1,5 @@
+@import url('games.css');
+
 :root{
   --bg:#f6f8fc;--card:#ffffff;--ink:#1e293b;--muted:#64748b;
   --brand:#7c3aed;--brand-light:#8b5cf6;--brand2:#ede9fe;--brand-glow:rgba(124,58,237,0.18);

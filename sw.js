@@ -8,7 +8,9 @@ const ASSETS = [
   './achievements.html',
   './rewards.html',
   './css/style.css',
+  './css/games.css',
   './js/app.js',
+  './js/games.js',
   './js/sync.js',
   './icon.svg',
   './manifest.json'
