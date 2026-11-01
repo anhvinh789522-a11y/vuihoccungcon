@@ -3178,3 +3178,318 @@ textarea{min-height:80px;resize:vertical}
   color: #ffffff;
   cursor: pointer;
 }
+
+/* ============================================================
+   🐷 TRANG TRẠI CHĂM HEO ĐẤT THÔNG MINH (PIGGY PET SYSTEM)
+   ============================================================ */
+.piggy-care-widget {
+  background: linear-gradient(135deg, #ffffff 0%, #fff1f2 40%, #fdf2f8 100%);
+  border: 1.5px solid #fecdd3;
+  border-radius: 20px;
+  padding: 13px 14px;
+  box-shadow: 0 4px 18px rgba(225, 29, 72, 0.08);
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.piggy-hungry-alert {
+  background: linear-gradient(135deg, #fef2f2 0%, #fffbeb 100%);
+  border: 1.5px solid #f87171;
+  border-radius: 14px;
+  padding: 9px 12px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 10px rgba(239, 68, 68, 0.12);
+  animation: pulse-gentle 2.5s infinite;
+}
+
+@keyframes pulse-gentle {
+  0%, 100% { transform: scale(1); box-shadow: 0 2px 10px rgba(239, 68, 68, 0.12); }
+  50% { transform: scale(1.01); box-shadow: 0 4px 16px rgba(239, 68, 68, 0.22); }
+}
+
+.piggy-alert-icon {
+  font-size: 26px;
+  animation: shake-head 1.8s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes shake-head {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+.piggy-alert-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.piggy-alert-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #b91c1c;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.piggy-alert-desc {
+  font-size: 11.5px;
+  color: #7f1d1d;
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+.piggy-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.piggy-card-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.piggy-card-title {
+  font-size: 14px;
+  font-weight: 900;
+  color: #9d174d;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.piggy-level-pill {
+  font-size: 11px;
+  font-weight: 800;
+  background: #fce7f3;
+  color: #be185d;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid #fbcfe8;
+}
+
+.piggy-hero-stage {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 9px 11px;
+  border: 1px solid #fecdd3;
+  margin-bottom: 9px;
+}
+
+.piggy-avatar-box {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffe4e6 0%, #fecdd3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  position: relative;
+  flex-shrink: 0;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.15);
+  animation: piggy-bob 3s ease-in-out infinite;
+}
+
+@keyframes piggy-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.piggy-avatar-box.hungry {
+  background: radial-gradient(circle, #fee2e2 0%, #fecaca 100%);
+  animation: shake-head 2.5s infinite;
+}
+
+.piggy-mood-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 22px;
+  height: 22px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  border: 1px solid #fbcfe8;
+}
+
+.piggy-stats-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.piggy-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.piggy-stat-chip {
+  font-size: 11px;
+  font-weight: 800;
+  color: #475569;
+  background: #f8fafc;
+  padding: 2px 7px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.piggy-meter-wrap {
+  margin-bottom: 4px;
+}
+
+.piggy-meter-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.piggy-meter-bar {
+  height: 7px;
+  background: #f1f5f9;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.piggy-meter-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.piggy-meter-fill.fullness {
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+}
+
+.piggy-meter-fill.fullness.hungry {
+  background: linear-gradient(90deg, #f59e0b 0%, #ef4444 100%);
+}
+
+.piggy-meter-fill.exp {
+  background: linear-gradient(90deg, #ec4899 0%, #be185d 100%);
+}
+
+.piggy-encourage-quote {
+  font-size: 11px;
+  color: #9d174d;
+  background: #fdf2f8;
+  border-radius: 10px;
+  padding: 5px 8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.35;
+}
+
+.piggy-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.piggy-action-btn {
+  background: #ffffff;
+  border: 1.5px solid #fecdd3;
+  border-radius: 12px;
+  padding: 7px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.piggy-action-btn:active {
+  transform: scale(0.95);
+  background: #ffe4e6;
+}
+
+.piggy-action-btn.free {
+  border-color: #a7f3d0;
+  background: #f0fdf4;
+}
+
+.piggy-btn-icon {
+  font-size: 20px;
+  margin-bottom: 1px;
+}
+
+.piggy-btn-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #1e293b;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.piggy-btn-sub {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #be185d;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.piggy-btn-free {
+  color: #059669;
+}
+
+/* Nông trại Heo Đất trên Tab Đổi quà */
+.piggy-farm-full-card {
+  background: #ffffff;
+  border: 1.5px solid #fecdd3;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.piggy-farm-headline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.piggy-harvest-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.piggy-harvest-btn:active {
+  transform: scale(0.96);
+}
