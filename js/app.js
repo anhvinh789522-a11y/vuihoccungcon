@@ -1071,9 +1071,24 @@ document.querySelectorAll('a[data-section]').forEach(a=>{
   });
 });
 function showSection(name){
+  const targetSec = document.getElementById(name+'Section');
+  if(!targetSec){
+    const pageMap = {
+      today: 'today.html',
+      schedule: 'schedule.html',
+      tools: 'tools.html',
+      flashcards: 'tools.html',
+      achievements: 'achievements.html',
+      rewards: 'rewards.html'
+    };
+    if (pageMap[name]) {
+      window.location.href = pageMap[name];
+      return;
+    }
+  }
   currentSection=name;
   document.querySelectorAll('.app-section').forEach(s=>s.classList.remove('active'));
-  document.getElementById(name+'Section')?.classList.add('active');
+  targetSec?.classList.add('active');
   document.querySelectorAll('a[data-section]').forEach(a=>a.classList.toggle('active',a.dataset.section===name));
   render();
 }
@@ -1238,6 +1253,7 @@ function setTodayCategoryFilter(cat){
 }
 
 function renderToday(){
+  if(!document.getElementById("todaySection")) return;
   const c=child();
   const avatarEl=document.getElementById('todayHeroAvatar');
   const helloEl=document.getElementById('hello');
@@ -2081,6 +2097,7 @@ function filterStudyTools(cat,btn){
 }
 
 function renderStudyTools(){
+  if(!document.getElementById("toolsSection")) return;
   const c=child();
   const childNameEl=document.getElementById('studyHubChildName');
   if(childNameEl) childNameEl.textContent=c?(childIcon(c)+' '+c.name):'Con';
@@ -2186,6 +2203,7 @@ function toggleTaskCompletion(childId,taskId){
 }
 
 function renderAchievements(){
+  if(!document.getElementById("achievementsSection")) return;
   const c=child();document.getElementById('achievementName').textContent=c?(childIcon(c)+' '+c.name):'bé';
   const earnedBox=document.getElementById('earnedAchievements');
   earnedBox.innerHTML='';
@@ -2448,6 +2466,7 @@ function quickRedeemPiggy(stars, vnd, pkgName){
 }
 
 function renderRewards(){
+  if(!document.getElementById("rewardsSection")) return;
   const c = child();
   const curScore = c ? Number(c.score || 0) : 0;
   const curVnd = starsToVND(curScore);
@@ -2660,6 +2679,7 @@ function renderRateManager(){
 }
 
 function renderCalendar(){
+  if(!document.getElementById("calendarGrid")) return;
   const c=child();document.getElementById('scheduleName').textContent=c?(childIcon(c)+' '+c.name):'bé';
   const grid=document.getElementById('calendarGrid');grid.innerHTML='';
   ['T2','T3','T4','T5','T6','T7','CN'].forEach(x=>{const d=document.createElement('div');d.className='weekday';d.textContent=x;grid.appendChild(d)});
@@ -3896,6 +3916,7 @@ function renderTimetableTable(){
 }
 
 function renderTimetable(){
+  if(!document.getElementById("scheduleSection")) return;
   const c=child();
   const nameEl=document.getElementById('scheduleName');
   if(nameEl) nameEl.textContent=c?(childIcon(c)+' '+c.name):'bé';
@@ -3978,6 +3999,7 @@ function getTomorrowDayNumber(){
 }
 
 function renderSchoolBagChecklist(){
+  if(!document.getElementById("scheduleSection")) return;
   const c=child();
   const targetDay=getTomorrowDayNumber();
   const dayLabels={'2':'Thứ 2','3':'Thứ 3','4':'Thứ 4','5':'Thứ 5','6':'Thứ 6','7':'Thứ 7'};

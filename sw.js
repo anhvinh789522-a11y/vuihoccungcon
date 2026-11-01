@@ -1,7 +1,12 @@
-const CACHE_NAME = 'vuihoc-cache-v6';
+const CACHE_NAME = 'vuihoc-cache-v7';
 const ASSETS = [
   './',
   './index.html',
+  './today.html',
+  './schedule.html',
+  './tools.html',
+  './achievements.html',
+  './rewards.html',
   './css/style.css',
   './js/app.js',
   './js/sync.js',
